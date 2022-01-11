@@ -1,0 +1,4 @@
+### AL ###
+.__pycache__/
+.MNIST/
+.wandb/
