@@ -20,7 +20,7 @@ sigma_prior = 1.
 init_rho_post = np.log(np.exp(sigma_prior)-1)
 mu_prior = 0.
 batch_size = 1024
-nb_epochs = 200
+nb_epochs = 5
 dataset_name = 'MNIST'
 
 def load_mnist(batch_size):
@@ -80,7 +80,7 @@ def get_exp_name(regime, N, p, alpha, lr, nb_samples):
         raise ValueError('To implement')
 
 def main(N, lr, nb_samples, alpha, regime):
-    trainset, testset, p, nb_batches, dist_params, train_params, alpha, lr = load_data(batch_size, alpha, regime, nb_samples, lr, N)
+    trainset, testset, p, nb_batches, dist_params, train_params, alpha, lr = load_data(batch_size, alpha, regime, nb_samples, lr, N, dataset_name)
     model = get_model(regime, p, dist_params, train_params, lr, N)
     exp_name = get_exp_name(regime, N, p, alpha, lr, nb_samples)
     wandb_logger = WandbLogger(name=exp_name,project='BNN_regimes')
@@ -88,7 +88,6 @@ def main(N, lr, nb_samples, alpha, regime):
     #trainer = pl.Trainer(gpus=-1, max_epochs=nb_epochs, logger= wandb_logger, strategy="ddp")
     #trainer = pl.Trainer(max_epochs=nb_epochs, logger= wandb_logger, track_grad_norm=2)
     trainer.fit(model, trainset, testset)
-
     result = trainer.test(model, testset)
     wandb.finish()
 
@@ -109,5 +108,5 @@ def exp_3(range_N, alpha):
 
 
 if __name__ == '__main__':
-    exp_1([1000, 5000, 10000])
+    exp_1([500])
 

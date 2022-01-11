@@ -80,12 +80,10 @@ class Linear_bnn(nn.Module):
             value = torch.where(rho < 50, torch.log1p(torch.exp(rho)), rho)
 
         elif self.regime == 2:
-            f_inf = f_inf = torch.sqrt(self.sigma_prior**2 * (torch.log((self.sigma_prior**2) / torch.log1p(torch.exp(rho))**2) + (torch.log1p(torch.exp(rho))**2) / (self.sigma_prior**2) - 1) / np.sqrt(self.alpha * self.p))
-            kernel = 1 / (1 + self.N * (rho - np.log(np.exp(self.sigma_prior))**2))
-            value = self.sigma_prior * np.sqrt(self.N / (self.p * self.alpha)) * (1 - kernel) + f_inf
-            # cosh = 1 / torch.cosh(self.N * (rho - np.log(np.exp(self.sigma_prior) - 1)))
-            # f_inf = torch.sqrt(self.sigma_prior**2 * (torch.log((self.sigma_prior**2) / torch.log1p(torch.exp(rho))**2) + (torch.log1p(torch.exp(rho))**2) / (self.sigma_prior**2) - 1) / np.sqrt(self.alpha * self.p))
-            # value = self.sigma_prior * np.sqrt(self.N / (self.p * self.alpha)) * (1 - cosh) + f_inf
+            value = torch.log(torch.exp(self.sigma_prior * np.sqrt(self.N / (self.p * self.alpha)) + rho) + 1)
+            # f_inf = f_inf = torch.sqrt(self.sigma_prior**2 * (torch.log((self.sigma_prior**2) / torch.log1p(torch.exp(rho))**2) + (torch.log1p(torch.exp(rho))**2) / (self.sigma_prior**2) - 1) / np.sqrt(self.alpha * self.p))
+            # kernel = 1 / (1 + self.N * (rho - np.log(np.exp(self.sigma_prior))**2))
+            # value = self.sigma_prior * np.sqrt(self.N / (self.p * self.alpha)) * (1 - kernel) + f_inf
         else:
             raise ValueError('To implement')
         check(value, items=(rho, self.N, self.p))
@@ -108,7 +106,7 @@ class Linear_bnn(nn.Module):
     def forward(self, x):
         """
         [args]
-    
+
         [objective]
         """
         w = self.sample(self.weight_mu, self.weight_rho)

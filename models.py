@@ -87,7 +87,7 @@ class BNN(pl.LightningModule):
         return kl
     
     def _step_1_sample(self, x, y):
-        pred = self.seq(x) / self.N
+        pred = self.seq(x) / self.N**2
         nll = self.train_params['criterion'](pred, y) / self.T
         kl = self._get_kl() / self.train_params['nb_batches']
         obj_loss = nll + kl
@@ -112,9 +112,9 @@ class BNN(pl.LightningModule):
 
         for idx in range(self.train_params['nb_samples']):
             o, n, k, p = self._step_1_sample(x, y)
-            obj_loss = obj_loss + o
-            nll = nll + n
-            kl = kl + k
+            obj_loss = obj_loss + o / self.train_params['nb_samples']
+            nll = nll + n / self.train_params['nb_samples']
+            kl = kl + k / self.train_params['nb_samples']
             pred = pred + p / self.train_params['nb_samples']
         
         obj_loss = self.re_balance_loss(obj_loss)
