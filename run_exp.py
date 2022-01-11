@@ -3,7 +3,7 @@ from numpy.lib.function_base import average
 import pytorch_lightning as pl
 import torch
 from torchvision import transforms
-from torchvision.datasets import MNIST
+from torchvision.datasets import MNIST, CIFAR10
 from torch.utils.data import DataLoader, random_split
 import os
 from pytorch_lightning.loggers.wandb import WandbLogger
@@ -21,13 +21,31 @@ init_rho_post = np.log(np.exp(sigma_prior)-1)
 mu_prior = 0.
 batch_size = 1024
 nb_epochs = 200
+dataset_name = 'MNIST'
 
-# Functions & Classes
-def load_data(batch_size, alpha, regime, nb_samples, lr, N):
+def load_mnist(batch_size):
     dataset = MNIST(os.getcwd(), download=True, transform=transforms.ToTensor(), train=True)
     trainset = DataLoader(dataset, batch_size=batch_size, num_workers=8)
     dataset = MNIST(os.getcwd(), download=True, transform=transforms.ToTensor(), train=False)
     testset = DataLoader(dataset, batch_size=batch_size, num_workers=8)
+    return trainset, testset
+
+def load_cifar(batch_size):
+    trainset = CIFAR10(os.getcwd(), download=True, transform=transforms.ToTensor(), train=True)
+    trainset = DataLoader(trainset, batch_size=batch_size, shuffle=True, num_workers=8)
+    
+    testset = CIFAR10(os.getcwd(), download=True, transform=transforms.ToTensor(), train=False)
+    testset = DataLoader(testset, batch_size=batch_size, shuffle=False, num_workers=8)
+    return trainset, testset    
+
+# Functions & Classes
+def load_data(batch_size, alpha, regime, nb_samples, lr, N, dataset_name):
+    if dataset_name == 'MNIST':
+        trainset, testset = load_mnist(batch_size)
+    elif dataset_name == 'CIFAR10':
+        trainset, testset = load_cifar(batch_size)
+    else:
+        raise ValueError('To implement')
     p = trainset.dataset.__len__()
     nb_batches = len(trainset)
 
