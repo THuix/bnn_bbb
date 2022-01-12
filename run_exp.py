@@ -10,6 +10,7 @@ from pytorch_lightning.loggers.wandb import WandbLogger
 import wandb
 from models import Model_regime_1, Model_regime_2, Model_regime_3, NN
 import numpy as np
+import argparse
 
 # Hyperparameters
 criterion = torch.nn.CrossEntropyLoss(reduction='sum')
@@ -20,14 +21,15 @@ sigma_prior = 1.
 init_rho_post = np.log(np.exp(sigma_prior)-1)
 mu_prior = 0.
 batch_size = 1024
-nb_epochs = 5
+nb_epochs = 200
 dataset_name = 'MNIST'
+num_works=16
 
 def load_mnist(batch_size):
     dataset = MNIST(os.getcwd(), download=True, transform=transforms.ToTensor(), train=True)
-    trainset = DataLoader(dataset, batch_size=batch_size, num_workers=8)
+    trainset = DataLoader(dataset, batch_size=batch_size, num_workers=num_works)
     dataset = MNIST(os.getcwd(), download=True, transform=transforms.ToTensor(), train=False)
-    testset = DataLoader(dataset, batch_size=batch_size, num_workers=8)
+    testset = DataLoader(dataset, batch_size=batch_size, num_workers=num_works)
     return trainset, testset
 
 def load_cifar(batch_size):
@@ -79,34 +81,70 @@ def get_exp_name(regime, N, p, alpha, lr, nb_samples):
     else:
         raise ValueError('To implement')
 
-def main(N, lr, nb_samples, alpha, regime):
+def save_config_file(N, p, alpha, nb_samples, lr):
+    wandb.config.N = N
+    wandb.config.p = p 
+    wandb.config.alpha = alpha
+    wandb.config.nb_samples = nb_samples
+    wandb.config.lr = lr
+    wandb.config.batch_size = batch_size
+    wandb.config.sigma_prior = sigma_prior 
+    wandb.config.init_rho_post = init_rho_post
+    wandb.config.init_mu_post = init_mu_post
+    wandb.config.mu_prior = mu_prior
+    wandb.finish()
+
+def main(N, lr, nb_samples, alpha, regime, project_name):
     trainset, testset, p, nb_batches, dist_params, train_params, alpha, lr = load_data(batch_size, alpha, regime, nb_samples, lr, N, dataset_name)
     model = get_model(regime, p, dist_params, train_params, lr, N)
     exp_name = get_exp_name(regime, N, p, alpha, lr, nb_samples)
-    wandb_logger = WandbLogger(name=exp_name,project='BNN_regimes')
+    wandb_logger = WandbLogger(name=exp_name,project=project_name)
     trainer = pl.Trainer(gpus=-1, max_epochs=nb_epochs, logger= wandb_logger)
     #trainer = pl.Trainer(gpus=-1, max_epochs=nb_epochs, logger= wandb_logger, strategy="ddp")
     #trainer = pl.Trainer(max_epochs=nb_epochs, logger= wandb_logger, track_grad_norm=2)
     trainer.fit(model, trainset, testset)
     result = trainer.test(model, testset)
-    wandb.finish()
-
+    save_config_file(N, p, alpha, nb_samples, lr)
+    
 def exp_1(range_N):
     lr = 1e-1
-    nb_samples = 10
+    nb_samples = 3
     alpha = None
     regime = 1
+    project_name = 'bnn_bbb_regime_1'
     for N in range_N:
-        main(N, lr, nb_samples, alpha, regime)
+        main(N, lr, nb_samples, alpha, regime, project_name)
 
-def exp_3(range_N, alpha):
+def exp_3(N, alpha):
     lr = 1e-1
-    nb_samples = 1
+    nb_samples = 3
     regime = 3
-    for N in range_N:
-        main(N, lr, nb_samples, alpha, regime)
+    project_name = 'bnn_bbb_regime_3'
+    main(N, lr, nb_samples, alpha, regime, project_name)
 
+def exp_2(range_N, alpha):
+    lr = 1e-1
+    nb_samples = 8
+    regime = 2
+    project_name = 'bnn_bbb_regime_2'
+    for N in range_N:
+        main(N, lr, nb_samples, alpha, regime, project_name)
+
+    
+parser = argparse.ArgumentParser()
+parser.add_argument('regime')
 
 if __name__ == '__main__':
-    exp_1([500])
-
+    args = parser.parse_args()
+    if args.regime == '1':
+        exp_1([100, 500, 1000, 3000, 5000, 8000, 10000])
+    elif args.regime =='2':
+        exp_2([1000, 3000, 5000, 8000, 10000], 1/600)
+    elif args.regime =='3':
+        exp_3(1000, 1/6)
+        exp_3(1000, 1/60)
+        exp_3(1000, 1/600)
+        exp_3(1000, 1/6000)
+        exp_3(1000, 1/60000)
+    else:
+        raise ValueError('To implement')
