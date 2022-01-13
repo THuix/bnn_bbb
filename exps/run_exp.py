@@ -33,7 +33,6 @@ def load_mnist(batch_size):
     return trainset, testset
 
 def load_cifar(batch_size):
-    raise ValueError(os.getcwd())
     trainset = CIFAR10(os.getcwd(), download=False, transform=transforms.ToTensor(), train=True)
     trainset = DataLoader(trainset, batch_size=batch_size, shuffle=True, num_workers=8)
     
