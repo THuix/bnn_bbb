@@ -1,14 +1,13 @@
 import sys
 import os
 sys.path.insert(0,'../utils')
-print('TEST', os.getcwd())
 import numpy as np
 from numpy.lib.function_base import average
 import pytorch_lightning as pl
 import torch
 from torchvision import transforms
 from torchvision.datasets import MNIST, CIFAR10
-from torch.utils.data import DataLoader, random_split
+from torch.utils.data import DataLoader
 from pytorch_lightning.loggers.wandb import WandbLogger
 import wandb
 from models import Model_regime_1, Model_regime_2, Model_regime_3, NN

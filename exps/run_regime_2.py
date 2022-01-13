@@ -10,9 +10,11 @@ parser = argparse.ArgumentParser()
 parser.add_argument('dataset')
 if __name__ == '__main__':
     args = parser.parse_args()
-    if args.dataset == 0:
+    if args.dataset == '0':
+        print('CIFAR10 DATASET')
         dataset_name = "CIFAR10"
     else:
+        print('MNIST dataset')
         dataset_name = 'MNIST'
 
     range_alpha = [0.013, 0.008, 0.01, 0.005]
