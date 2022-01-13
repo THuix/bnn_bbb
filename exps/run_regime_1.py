@@ -1,4 +1,4 @@
-from exps.run_exp import main
+from run_exp import main
 import argparse
 
 lr = 1e-1
