@@ -1,3 +1,5 @@
+import os
+os.chdir("..")
 import numpy as np
 from numpy.lib.function_base import average
 import pytorch_lightning as pl
@@ -8,13 +10,12 @@ from torch.utils.data import DataLoader, random_split
 import os
 from pytorch_lightning.loggers.wandb import WandbLogger
 import wandb
-from models import Model_regime_1, Model_regime_2, Model_regime_3, NN
+from utils.models import Model_regime_1, Model_regime_2, Model_regime_3, NN
 import numpy as np
 import argparse
 
 # Hyperparameters
 criterion = torch.nn.CrossEntropyLoss(reduction='sum')
-in_size = 28*28
 out_size = 10
 init_mu_post = 0.
 sigma_prior = 1.
@@ -22,8 +23,7 @@ init_rho_post = np.log(np.exp(sigma_prior)-1)
 mu_prior = 0.
 batch_size = 1024
 nb_epochs = 200
-dataset_name = 'MNIST'
-num_works=16
+num_works=8
 
 def load_mnist(batch_size):
     dataset = MNIST(os.getcwd(), download=True, transform=transforms.ToTensor(), train=True)
@@ -44,8 +44,10 @@ def load_cifar(batch_size):
 def load_data(batch_size, alpha, regime, nb_samples, lr, N, dataset_name):
     if dataset_name == 'MNIST':
         trainset, testset = load_mnist(batch_size)
+        in_size = 28*28
     elif dataset_name == 'CIFAR10':
         trainset, testset = load_cifar(batch_size)
+        in_size = 32*32*3
     else:
         raise ValueError('To implement')
     p = trainset.dataset.__len__()
@@ -56,9 +58,9 @@ def load_data(batch_size, alpha, regime, nb_samples, lr, N, dataset_name):
         
     dist_params = {'init_rho_post': init_rho_post, 'init_mu_post': init_mu_post, 'sigma_prior': sigma_prior, 'mu_prior':mu_prior}
     train_params = {'lr': lr, 'nb_samples': nb_samples, 'nb_batches': nb_batches, 'criterion': criterion, "alpha": alpha}
-    return trainset, testset, p, nb_batches, dist_params, train_params, train_params['alpha'], lr
+    return trainset, testset, p, dist_params, train_params, train_params['alpha'], lr, in_size
 
-def get_model(regime, p, dist_params, train_params, lr, N):
+def get_model(regime, p, dist_params, train_params, lr, N, in_size):
     if regime == 1:
         bnn = Model_regime_1(in_size, out_size, N, p, dist_params, train_params)
     elif regime == 2:
@@ -94,9 +96,9 @@ def save_config_file(N, p, alpha, nb_samples, lr):
     wandb.config.mu_prior = mu_prior
     wandb.finish()
 
-def main(N, lr, nb_samples, alpha, regime, project_name):
-    trainset, testset, p, nb_batches, dist_params, train_params, alpha, lr = load_data(batch_size, alpha, regime, nb_samples, lr, N, dataset_name)
-    model = get_model(regime, p, dist_params, train_params, lr, N)
+def main(N, lr, nb_samples, alpha, regime, project_name, dataset_name):
+    trainset, testset, p, dist_params, train_params, alpha, lr, in_size = load_data(batch_size, alpha, regime, nb_samples, lr, N, dataset_name)
+    model = get_model(regime, p, dist_params, train_params, lr, N, in_size)
     exp_name = get_exp_name(regime, N, p, alpha, lr, nb_samples)
     wandb_logger = WandbLogger(name=exp_name,project=project_name)
     trainer = pl.Trainer(gpus=-1, max_epochs=nb_epochs, logger= wandb_logger)
@@ -105,46 +107,3 @@ def main(N, lr, nb_samples, alpha, regime, project_name):
     trainer.fit(model, trainset, testset)
     result = trainer.test(model, testset)
     save_config_file(N, p, alpha, nb_samples, lr)
-    
-def exp_1(range_N):
-    lr = 1e-1
-    nb_samples = 3
-    alpha = None
-    regime = 1
-    project_name = 'bnn_bbb_regime_1'
-    for N in range_N:
-        main(N, lr, nb_samples, alpha, regime, project_name)
-
-def exp_3(N, alpha):
-    lr = 1e-1
-    nb_samples = 3
-    regime = 3
-    project_name = 'bnn_bbb_regime_3'
-    main(N, lr, nb_samples, alpha, regime, project_name)
-
-def exp_2(range_N, alpha):
-    lr = 1e-1
-    nb_samples = 8
-    regime = 2
-    project_name = 'bnn_bbb_regime_2'
-    for N in range_N:
-        main(N, lr, nb_samples, alpha, regime, project_name)
-
-    
-parser = argparse.ArgumentParser()
-parser.add_argument('regime')
-
-if __name__ == '__main__':
-    args = parser.parse_args()
-    if args.regime == '1':
-        exp_1([100, 500, 1000, 3000, 5000, 8000, 10000])
-    elif args.regime =='2':
-        exp_2([1000, 3000, 5000, 8000, 10000], 1/600)
-    elif args.regime =='3':
-        exp_3(1000, 1/6)
-        exp_3(1000, 1/60)
-        exp_3(1000, 1/600)
-        exp_3(1000, 1/6000)
-        exp_3(1000, 1/60000)
-    else:
-        raise ValueError('To implement')
