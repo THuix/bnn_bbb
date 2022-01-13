@@ -1,6 +1,6 @@
 import os
-os.chdir("..")
-raise ValueError(os.getcwd())
+os.chdir("../utils")
+print('TEST', os.getcwd())
 import numpy as np
 from numpy.lib.function_base import average
 import pytorch_lightning as pl
@@ -8,10 +8,9 @@ import torch
 from torchvision import transforms
 from torchvision.datasets import MNIST, CIFAR10
 from torch.utils.data import DataLoader, random_split
-import os
 from pytorch_lightning.loggers.wandb import WandbLogger
 import wandb
-from utils.models import Model_regime_1, Model_regime_2, Model_regime_3, NN
+from models import Model_regime_1, Model_regime_2, Model_regime_3, NN
 import numpy as np
 import argparse
 
