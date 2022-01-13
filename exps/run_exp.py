@@ -1,5 +1,6 @@
 import os
 os.chdir("..")
+raise ValueError(os.getcwd())
 import numpy as np
 from numpy.lib.function_base import average
 import pytorch_lightning as pl
