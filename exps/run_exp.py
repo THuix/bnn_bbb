@@ -1,5 +1,6 @@
+import sys
 import os
-os.chdir("../utils")
+sys.path.insert(0,'../utils')
 print('TEST', os.getcwd())
 import numpy as np
 from numpy.lib.function_base import average
