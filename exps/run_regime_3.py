@@ -5,7 +5,7 @@ import argparse
 lr = 1e-1
 nb_samples = 3
 regime = 3
-N = 500
+N = 1000
 
 parser = argparse.ArgumentParser()
 parser.add_argument('dataset')
