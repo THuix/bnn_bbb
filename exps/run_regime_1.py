@@ -17,7 +17,7 @@ if __name__ == '__main__':
         print('MNIST dataset')
         dataset_name = 'MNIST'
 
-    range_N = [1000]#, 3000, 5000, 8000] #, 20, 30, 40, 50, 60, 70, 80, 90]
+    range_N = [50, 250, 400, 660, 833, 1250]
     project_name = f'bnn_bbb_regime_1_{dataset_name}'
     for N in range_N:
-        main(N, lr, nb_samples, alpha, 'nn', project_name, dataset_name)
+        main(N, lr, nb_samples, alpha, 1, project_name, dataset_name)
