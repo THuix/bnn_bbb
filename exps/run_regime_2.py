@@ -36,4 +36,4 @@ if __name__ == '__main__':
     project_name = f'bnn_bbb_regime_2_M_study_{dataset_name}'
     alpha = 1/600
     for nb_samples in nb_samples_range:
-        main(N, lr, nb_samples, alpha, regime, project_name)
+        main(N, lr, nb_samples, alpha, regime, project_name, dataset_name)
