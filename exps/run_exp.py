@@ -22,7 +22,7 @@ sigma_prior = 1.
 init_rho_post = np.log(np.exp(sigma_prior)-1)
 mu_prior = 0.
 batch_size = 1024
-nb_epochs = 1000
+nb_epochs = 200
 num_works=8
 
 def load_mnist(batch_size):
