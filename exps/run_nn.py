@@ -1,7 +1,7 @@
 from run_exp import main
 import argparse
 
-lr = 1e-1
+lr = 10.
 regime = "nn"
 p = 5000
 parser = argparse.ArgumentParser()
