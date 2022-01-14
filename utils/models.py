@@ -224,7 +224,7 @@ class NN(pl.LightningModule):
     
     def training_step(self, batch, batch_idx):
         loss, logs = self.step(batch, batch_idx)
-        self.log_dict({f"train_{k}": v for k, v in logs.items()}, on_step=False, on_epoch=False, sync_dist=True)
+        self.log_dict({f"train_{k}": v for k, v in logs.items()}, on_step=False, on_epoch=True, sync_dist=True)
         return loss
 
     def validation_step(self, batch, batch_idx):
@@ -232,7 +232,12 @@ class NN(pl.LightningModule):
         self.log_dict({f"val_{k}": v for k, v in logs.items()}, sync_dist=True)
         return loss
 
+    def test_step(self, batch, batch_idx):
+        loss, logs = self.step(batch, batch_idx)
+        self.log_dict({f"test_{k}": v for k, v in logs.items()}, sync_dist=True)
+        return loss
+
     def configure_optimizers(self):
-        optimizer = torch.optim.SGD(self.parameters(), lr=self.lr)
+        optimizer = torch.optim.Adagrad(self.parameters(), lr=self.lr)
         return optimizer
 
