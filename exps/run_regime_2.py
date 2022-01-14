@@ -18,7 +18,7 @@ if __name__ == '__main__':
         dataset_name = 'MNIST'
 
     range_alpha = [0.013, 0.008, 0.01, 0.005]
-    project_name = f'bnn_bbb_regime_1_{args.dataset}'
+    project_name = f'bnn_bbb_regime_2_{dataset_name}'
     for alpha in range_alpha:
         nb_samples = int(sigma_prior**2 * N / (alpha * 60000))
         main(N, lr, nb_samples, alpha, regime, project_name)

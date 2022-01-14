@@ -80,6 +80,8 @@ def get_exp_name(regime, N, p, alpha, lr, nb_samples):
         return f"regime_{regime}_N_{N}_p_{p}_alpha_{alpha}_sigmaprior_{sigma_prior}_lr_{lr}_nb_samples_{nb_samples}"
     elif regime == 3:
         return f"regime_{regime}_N_{N}_p_{p}_alpha_{alpha}_sigmaprior_{sigma_prior}_lr_{lr}_nb_samples_{nb_samples}"
+    elif regime == 'nn':
+        return f"regime_{regime}_N_{N}_p_{p}_lr_{lr}"
     else:
         raise ValueError('To implement')
 
