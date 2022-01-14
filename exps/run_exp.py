@@ -44,12 +44,12 @@ def load_cifar(batch_size, p=50000):
     return trainset, testset    
 
 # Functions & Classes
-def load_data(batch_size, alpha, regime, nb_samples, lr, N, dataset_name):
+def load_data(batch_size, alpha, regime, nb_samples, lr, N, dataset_name, p=60000):
     if dataset_name == 'MNIST':
         trainset, testset = load_mnist(batch_size)
         in_size = 28*28
     elif dataset_name == 'CIFAR10':
-        trainset, testset = load_cifar(batch_size)
+        trainset, testset = load_cifar(batch_size, p=p)
         in_size = 32*32*3
     else:
         raise ValueError('To implement')
