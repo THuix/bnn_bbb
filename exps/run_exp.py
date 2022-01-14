@@ -15,7 +15,7 @@ import numpy as np
 import argparse
 
 # Hyperparameters
-criterion = torch.nn.CrossEntropyLoss(reduction='sum')
+criterion = torch.nn.CrossEntropyLoss(reduction='mean')
 out_size = 10
 init_mu_post = 0.
 sigma_prior = 1.
