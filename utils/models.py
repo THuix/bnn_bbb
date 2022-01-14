@@ -250,8 +250,9 @@ class CNN(pl.LightningModule):
         self.seq = nn.Sequential(
             nn.Conv2d(3, N, 3, bias=False),
             nn.ReLU(),
+            nn.Conv2d(N, N, 3, bias=False),
             nn.Flatten(),
-            nn.Linear(30*30*N, out_size, bias=False))
+            nn.Linear(28*28*N, out_size, bias=False))
 
         self.accuracy = torchmetrics.Accuracy()
         self.criterion = criterion
