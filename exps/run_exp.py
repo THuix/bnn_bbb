@@ -109,6 +109,6 @@ def main(N, lr, nb_samples, alpha, regime, project_name, dataset_name, p=60000):
     trainer = pl.Trainer(gpus=-1, max_epochs=nb_epochs, logger= wandb_logger)
     #trainer = pl.Trainer(gpus=-1, max_epochs=nb_epochs, logger= wandb_logger, strategy="ddp")
     #trainer = pl.Trainer(max_epochs=nb_epochs, logger= wandb_logger, track_grad_norm=2)
-    trainer.fit(model, trainset, testset)
+    trainer.fit(model, train_dataloaders = trainset, val_dataloaders = testset)
     result = trainer.test(model, testset)
     save_config_file(N, p, alpha, nb_samples, lr)
