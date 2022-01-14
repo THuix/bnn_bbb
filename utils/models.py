@@ -140,7 +140,6 @@ class BNN(pl.LightningModule):
         return loss
 
     def validation_step(self, batch, batch_idx):
-        raise ValueError(batch[0].size())
         loss, logs = self.step(batch, batch_idx)
         self.log_dict({f"val_{k}": v for k, v in logs.items()}, sync_dist=True)
         return loss
