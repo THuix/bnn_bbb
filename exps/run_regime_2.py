@@ -3,7 +3,7 @@ import argparse
 
 lr = 1e-1
 regime = 2
-N = 500
+N = 3000
 sigma_prior = 1.
 
 parser = argparse.ArgumentParser()
@@ -32,7 +32,7 @@ if __name__ == '__main__':
         print('MNIST dataset')
         dataset_name = 'MNIST'
 
-    nb_samples_range = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+    nb_samples_range = [11, 12, 13, 14, 15, 16, 17]
     project_name = f'bnn_bbb_regime_2_M_study_{dataset_name}'
     alpha = 1/600
     for nb_samples in nb_samples_range:
