@@ -3,7 +3,7 @@ import argparse
 
 lr = 1e-1
 regime = 2
-N = 1000
+N = 500
 sigma_prior = 1.
 
 parser = argparse.ArgumentParser()
