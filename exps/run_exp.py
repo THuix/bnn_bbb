@@ -15,7 +15,7 @@ import numpy as np
 import argparse
 
 # Hyperparameters
-criterion = torch.nn.CrossEntropyLoss(reduction='mean')
+criterion = torch.nn.CrossEntropyLoss(reduction='sum')
 out_size = 10
 init_mu_post = 0.
 sigma_prior = 1.
@@ -29,7 +29,7 @@ def load_mnist(batch_size):
     dataset = MNIST(os.getcwd(), download=True, transform=transforms.ToTensor(), train=True)
     trainset = DataLoader(dataset, batch_size=batch_size, num_workers=num_works)
     dataset = MNIST(os.getcwd(), download=True, transform=transforms.ToTensor(), train=False)
-    testset = DataLoader(dataset, batch_size=batch_size, num_workers=num_works)
+    testset = DataLoader(dataset, batch_size=30, num_workers=num_works)
     return trainset, testset
 
 def load_cifar(batch_size, p=50000):
