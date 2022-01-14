@@ -248,7 +248,7 @@ class CNN(pl.LightningModule):
         self.save_hyperparameters()
     
         self.seq = nn.Sequential(
-            nn.Conv2d(32, N, 3, bias=False),
+            nn.Conv2d(3, N, 3, bias=False),
             nn.ReLU(),
             nn.Flatten(),
             nn.Linear(29*29*N, out_size, bias=False))
