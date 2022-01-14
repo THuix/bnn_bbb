@@ -244,11 +244,9 @@ class NN(pl.LightningModule):
 
 class CNN(pl.LightningModule):
     def __init__(self, in_size, out_size, N, criterion, lr):
-        super().__init__()
+        super(CNN, self).__init__()
         self.save_hyperparameters()
-        super(NN, self).__init__()
-        
-  
+    
         self.seq = nn.Sequential(
             nn.Conv2d(in_size, N, 3, bias=False),
             nn.ReLU(),
