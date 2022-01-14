@@ -3,7 +3,7 @@ import argparse
 
 lr = 1e-1
 regime = "nn"
-
+p = 10000
 parser = argparse.ArgumentParser()
 parser.add_argument('dataset')
 if __name__ == '__main__':
@@ -18,4 +18,4 @@ if __name__ == '__main__':
     range_N = [5000]
     project_name = f'bnn_bbb_regime_nn_{dataset_name}'
     for N in range_N:
-        main(N, lr, None, None, 'nn', project_name, dataset_name)
+        main(N, lr, None, None, 'nn', project_name, dataset_name, p)

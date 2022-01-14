@@ -7,7 +7,7 @@ import pytorch_lightning as pl
 import torch
 from torchvision import transforms
 from torchvision.datasets import MNIST, CIFAR10
-from torch.utils.data import DataLoader
+from torch.utils.data import DataLoader, Subset
 from pytorch_lightning.loggers.wandb import WandbLogger
 import wandb
 from models import Model_regime_1, Model_regime_2, Model_regime_3, NN
@@ -32,8 +32,11 @@ def load_mnist(batch_size):
     testset = DataLoader(dataset, batch_size=batch_size, num_workers=num_works)
     return trainset, testset
 
-def load_cifar(batch_size):
+def load_cifar(batch_size, p=50000):
     trainset = CIFAR10(os.getcwd(), download=False, transform=transforms.ToTensor(), train=True)
+    if p < 50000:
+        indices = np.random.randint(0, 50000, size=p)
+        trainset = Subset(trainset, indices)
     trainset = DataLoader(trainset, batch_size=batch_size, shuffle=True, num_workers=8)
     
     testset = CIFAR10(os.getcwd(), download=False, transform=transforms.ToTensor(), train=False)
@@ -98,8 +101,8 @@ def save_config_file(N, p, alpha, nb_samples, lr):
     wandb.config.mu_prior = mu_prior
     wandb.finish()
 
-def main(N, lr, nb_samples, alpha, regime, project_name, dataset_name):
-    trainset, testset, p, dist_params, train_params, alpha, lr, in_size = load_data(batch_size, alpha, regime, nb_samples, lr, N, dataset_name)
+def main(N, lr, nb_samples, alpha, regime, project_name, dataset_name, p=60000):
+    trainset, testset, p, dist_params, train_params, alpha, lr, in_size = load_data(batch_size, alpha, regime, nb_samples, lr, N, dataset_name, p=p)
     model = get_model(regime, p, dist_params, train_params, lr, N, in_size)
     exp_name = get_exp_name(regime, N, p, alpha, lr, nb_samples)
     wandb_logger = WandbLogger(name=exp_name,project=project_name)
