@@ -1,7 +1,7 @@
 from run_exp import main
 import argparse
 
-lr = 1.e-3
+lr = 1-3
 regime = "nn"
 p = 5000
 parser = argparse.ArgumentParser()
@@ -15,7 +15,7 @@ if __name__ == '__main__':
         print('MNIST dataset')
         dataset_name = 'MNIST'
 
-    range_N = [5000]
+    range_N = [50000]
     project_name = f'bnn_bbb_regime_nn_{dataset_name}'
     for N in range_N:
         main(N, lr, None, None, 'nn', project_name, dataset_name, p)
