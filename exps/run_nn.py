@@ -3,7 +3,7 @@ import argparse
 
 lr = 1e-1
 regime = "nn"
-p = 10000
+p = 5000
 parser = argparse.ArgumentParser()
 parser.add_argument('dataset')
 if __name__ == '__main__':
