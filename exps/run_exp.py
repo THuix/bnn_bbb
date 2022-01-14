@@ -10,7 +10,7 @@ from torchvision.datasets import MNIST, CIFAR10
 from torch.utils.data import DataLoader, Subset
 from pytorch_lightning.loggers.wandb import WandbLogger
 import wandb
-from models import Model_regime_1, Model_regime_2, Model_regime_3, NN
+from models import Model_regime_1, Model_regime_2, Model_regime_3, NN, CNN
 import numpy as np
 import argparse
 
@@ -72,6 +72,8 @@ def get_model(regime, p, dist_params, train_params, lr, N, in_size):
         bnn = Model_regime_3(in_size, out_size, N, p, dist_params, train_params)
     elif regime == 'nn':
         bnn = NN(in_size, out_size, N, criterion, lr)
+    elif regime == 'cnn':
+        bnn = CNN(in_size, out_size, N, criterion, lr)
     else:
         raise ValueError('To implement')
     return bnn
@@ -84,6 +86,8 @@ def get_exp_name(regime, N, p, alpha, lr, nb_samples):
     elif regime == 3:
         return f"regime_{regime}_N_{N}_p_{p}_alpha_{alpha}_sigmaprior_{sigma_prior}_lr_{lr}_nb_samples_{nb_samples}"
     elif regime == 'nn':
+        return f"regime_{regime}_N_{N}_p_{p}_lr_{lr}"
+    elif regime == 'cnn':
         return f"regime_{regime}_N_{N}_p_{p}_lr_{lr}"
     else:
         raise ValueError('To implement')
