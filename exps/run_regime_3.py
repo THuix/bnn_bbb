@@ -1,11 +1,14 @@
 
 from run_exp import main
 import argparse
+import torch
 
 lr = 1e-1
 nb_samples = 3
 regime = 3
-N = 8000
+N = 500
+criterion = torch.nn.CrossEntropyLoss(reduction='sum')
+nb_epochs = 200
 
 parser = argparse.ArgumentParser()
 parser.add_argument('dataset')
