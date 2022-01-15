@@ -24,6 +24,6 @@ if __name__ == '__main__':
 
     range_alpha = [1/6, 1/60, 1/600, 1/6000, 1/60000, 1/600000, 1/6000000, 1/60000000]
     #range_alpha = [1/60000, 1/600000, 1/6000000, 1/60000000]
-    project_name = f'bnn_bbb_regime_3_{dataset_name}'
+    project_name = f'new_bnn_bbb_regime_3_{dataset_name}'
     for alpha in range_alpha:
         main(N, lr, nb_samples, alpha, regime, project_name, dataset_name)
