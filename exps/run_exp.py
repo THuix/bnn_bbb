@@ -42,7 +42,7 @@ def load_cifar(batch_size, p=50000):
     return trainset, testset    
 
 # Functions & Classes
-def load_data(batch_size, alpha, regime, nb_samples, lr, N, dataset_name, p=60000):
+def load_data(batch_size, alpha, regime, nb_samples, lr, N, dataset_name, criterion, p=60000):
     if dataset_name == 'MNIST':
         trainset, testset = load_mnist(batch_size)
         in_size = 28*28
@@ -104,7 +104,7 @@ def save_config_file(N, p, alpha, nb_samples, lr):
     wandb.finish()
 
 def main(N, lr, nb_samples, alpha, regime, project_name, dataset_name, criterion, nb_epochs, p=60000):
-    trainset, testset, p, dist_params, train_params, alpha, lr, in_size = load_data(batch_size, alpha, regime, nb_samples, lr, N, dataset_name, p=p)
+    trainset, testset, p, dist_params, train_params, alpha, lr, in_size = load_data(batch_size, alpha, regime, nb_samples, lr, N, dataset_name, criterion, p=p)
     model = get_model(regime, p, dist_params, train_params, lr, N, in_size, criterion)
     exp_name = get_exp_name(regime, N, p, alpha, lr, nb_samples)
     wandb_logger = WandbLogger(name=exp_name,project=project_name)
