@@ -254,7 +254,7 @@ class CNN(pl.LightningModule):
             nn.ReLU(),
             nn.MaxPool2d(2),
             nn.Flatten(),
-            nn.Linear(14*14*N, 128),
+            nn.Linear(6272, 128),
             nn.ReLU(),
             nn.Linear(32, 10))
 
