@@ -1,10 +1,13 @@
 from run_exp import main
 import argparse
+import torch
 
+criterion = torch.nn.CrossEntropyLoss(reduction='sum')
 lr = 1e-1
 regime = 2
 N = 1000
 sigma_prior = 1.
+nb_epochs = 200
 
 parser = argparse.ArgumentParser()
 parser.add_argument('dataset')
@@ -36,4 +39,4 @@ if __name__ == '__main__':
     project_name = f'bnn_bbb_regime_2_M_study_{dataset_name}'
     alpha = 1/600
     for nb_samples in nb_samples_range:
-        main(N, lr, nb_samples, alpha, regime, project_name, dataset_name)
+        main(N, lr, nb_samples, alpha, regime, project_name, dataset_name, criterion, nb_epochs)
