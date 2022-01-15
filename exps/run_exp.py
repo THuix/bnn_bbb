@@ -15,14 +15,12 @@ import numpy as np
 import argparse
 
 # Hyperparameters
-criterion = torch.nn.CrossEntropyLoss(reduction='sum')
 out_size = 10
 init_mu_post = 0.
 sigma_prior = 1.
 init_rho_post = np.log(np.exp(sigma_prior)-1)
 mu_prior = 0.
 batch_size = 1024
-nb_epochs = 200
 num_works=8
 
 def load_mnist(batch_size):
@@ -63,7 +61,7 @@ def load_data(batch_size, alpha, regime, nb_samples, lr, N, dataset_name, p=6000
     train_params = {'lr': lr, 'nb_samples': nb_samples, 'nb_batches': nb_batches, 'criterion': criterion, "alpha": alpha}
     return trainset, testset, p, dist_params, train_params, train_params['alpha'], lr, in_size
 
-def get_model(regime, p, dist_params, train_params, lr, N, in_size):
+def get_model(regime, p, dist_params, train_params, lr, N, in_size, criterion):
     if regime == 1:
         bnn = Model_regime_1(in_size, out_size, N, p, dist_params, train_params)
     elif regime == 2:
@@ -105,9 +103,9 @@ def save_config_file(N, p, alpha, nb_samples, lr):
     wandb.config.mu_prior = mu_prior
     wandb.finish()
 
-def main(N, lr, nb_samples, alpha, regime, project_name, dataset_name, p=60000):
+def main(N, lr, nb_samples, alpha, regime, project_name, dataset_name, criterion, nb_epochs, p=60000):
     trainset, testset, p, dist_params, train_params, alpha, lr, in_size = load_data(batch_size, alpha, regime, nb_samples, lr, N, dataset_name, p=p)
-    model = get_model(regime, p, dist_params, train_params, lr, N, in_size)
+    model = get_model(regime, p, dist_params, train_params, lr, N, in_size, criterion)
     exp_name = get_exp_name(regime, N, p, alpha, lr, nb_samples)
     wandb_logger = WandbLogger(name=exp_name,project=project_name)
     trainer = pl.Trainer(gpus=-1, max_epochs=nb_epochs, logger= wandb_logger)

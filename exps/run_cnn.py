@@ -1,9 +1,13 @@
 from run_exp import main
 import argparse
+import torch
 
-lr = 1e-1
+lr = 1e-2
 regime = "cnn"
 p = 60000
+criterion = torch.nn.CrossEntropyLoss(reduction='mean')
+nb_epochs = 100
+
 parser = argparse.ArgumentParser()
 parser.add_argument('dataset')
 if __name__ == '__main__':
@@ -15,7 +19,7 @@ if __name__ == '__main__':
         print('MNIST dataset')
         dataset_name = 'MNIST'
 
-    range_N = [100]
+    range_N = [128]
     project_name = f'bnn_bbb_regime_cnn_{dataset_name}'
     for N in range_N:
-        main(N, lr, None, None, 'cnn', project_name, dataset_name, p)
+        main(N, lr, None, None, 'cnn', project_name, dataset_name, criterion, nb_epochs, p)
