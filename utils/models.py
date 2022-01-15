@@ -16,9 +16,8 @@ os.environ["KMP_DUPLICATE_LIB_OK"]="TRUE"
 
 class BNN(pl.LightningModule):
     def __init__(self, in_size, out_size, N, p, dist_params, train_params, regime):
-        super().__init__()
-        self.save_hyperparameters()
         super(BNN, self).__init__()
+        self.save_hyperparameters()
         
         self.dist_params = self.check_params(dist_params, ['init_rho_post', 'init_mu_post', 'sigma_prior', 'mu_prior'])
         self.train_params = self.check_params(train_params, ['lr', 'nb_samples', 'nb_batches', 'criterion', 'alpha'])
@@ -190,11 +189,9 @@ class Model_regime_3(BNN):
 
 class NN(pl.LightningModule):
     def __init__(self, in_size, out_size, N, criterion, lr):
-        super().__init__()
-        self.save_hyperparameters()
         super(NN, self).__init__()
-        
-  
+        self.save_hyperparameters()
+          
         self.seq = nn.Sequential(
             nn.Linear(in_size, N, bias=False),
             nn.ReLU(),
