@@ -2,7 +2,7 @@ from run_exp import main
 import argparse
 import torch
 
-lr = 1e-1
+lr = 1e-3
 regime = "cnn"
 p = 60000
 criterion = torch.nn.CrossEntropyLoss(reduction='mean')
