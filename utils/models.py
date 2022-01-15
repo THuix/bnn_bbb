@@ -131,7 +131,7 @@ class BNN(pl.LightningModule):
             "ratio_nll_kl": nll / kl,
         }
         
-        return obj_loss, logs       
+        return obj_loss, logs   
     
     def training_step(self, batch, batch_idx):
         loss, logs = self.step(batch, batch_idx)
@@ -171,7 +171,8 @@ class BNN(pl.LightningModule):
 
     def configure_optimizers(self):
         optimizer = torch.optim.Adagrad(self.parameters(), lr=self.train_params['lr'])
-        return optimizer
+        scheduler = torch.optim.lr_scheduler.StepLR(optimizer, 20, gamma=0.1)
+        return optimizer, scheduler
 
 class Model_regime_1(BNN):
     def __init__(self, in_size, out_size, N, p, dist_params, train_params):
