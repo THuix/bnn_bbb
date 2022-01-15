@@ -268,7 +268,7 @@ class CNN(pl.LightningModule):
 
     def step(self, batch, batch_idx):
         x, y = batch
-        pred = self.seq(x) #/ self.N
+        pred = self.seq(x) / self.N
 
         loss = self.criterion(pred, y)
         self.accuracy.update(pred, y)
