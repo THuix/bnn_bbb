@@ -94,9 +94,9 @@ class BNN(pl.LightningModule):
 
     def re_balance_loss(self, loss):
         if self.regime == 1 or self.regime == 3: 
-            return self.train_params['alpha'] * loss / self.N
+            return self.train_params['alpha'] * loss * self.train_params['nb_batches'] / self.N
         elif self.regime == 2:
-            return loss / self.p
+            return loss * self.train_params['nb_batches'] / self.p
         else:
             raise ValueError('To implement')
 
