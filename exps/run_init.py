@@ -26,7 +26,7 @@ if __name__ == '__main__':
     #     print('MNIST dataset')
     #     dataset_name = 'MNIST'
 
-    range_N = [600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400, 1500, 1600, 1700, 1800, 1900]
+    range_N = range(100, 2000, 100)
     alpha = 1/60000
 
     project_name = f'new_bnn_bbb_regime_{regime}_init_{dataset_name}'
