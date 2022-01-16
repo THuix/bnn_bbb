@@ -5,8 +5,8 @@ import torch
 
 
 lr = 1e-2
-nb_samples = 30
-regime = 2
+nb_samples = 100
+regime = 1
 criterion = torch.nn.MSELoss(reduction='sum')
 nb_epochs = 0
 limit_train_batches = 1.
