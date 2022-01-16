@@ -32,7 +32,7 @@ class BNN(pl.LightningModule):
                        N,
                        p,
                        self.train_params['alpha'],
-                       init_type='normal',
+                       init_type='fixed',
                        regime=regime,
                        bias = False),
             nn.ReLU(),
