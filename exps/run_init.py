@@ -16,12 +16,15 @@ parser.add_argument('dataset')
 
 if __name__ == '__main__':
     args = parser.parse_args()
-    if args.dataset == '0':
-        print('CIFAR10 DATASET')
-        dataset_name = "CIFAR10"
-    else:
-        print('MNIST dataset')
-        dataset_name = 'MNIST'
+
+    dataset_name = 'BOSTON'
+
+    # if args.dataset == '0':
+    #     print('CIFAR10 DATASET')
+    #     dataset_name = "CIFAR10"
+    # else:
+    #     print('MNIST dataset')
+    #     dataset_name = 'MNIST'
 
     range_N = [600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400, 1500, 1600, 1700, 1800, 1900]
     alpha = 1/60000
