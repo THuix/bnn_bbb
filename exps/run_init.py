@@ -29,7 +29,7 @@ if __name__ == '__main__':
         dataset_name = 'BOSTON'
 
     range_N = range(100, 2000, 100)
-    alpha = 300/ (10 * 60000)
+    alpha = 100/ (100 * 60000)
 
     project_name = f'new_bnn_bbb_regime_{regime}_init_{dataset_name}'
     for N in range_N:
