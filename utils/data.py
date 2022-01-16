@@ -12,8 +12,8 @@ class BostonDataset(torch.utils.data.Dataset):
     def __init__(self):
         X, y = load_boston(return_X_y=True)
         X = StandardScaler().fit_transform(X)
-        self.X = torch.from_numpy(X)
-        self.y = torch.from_numpy(y)
+        self.X = torch.from_numpy(X).float()
+        self.y = torch.from_numpy(y).float()
             
     def __len__(self):
         return len(self.X)
