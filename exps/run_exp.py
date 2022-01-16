@@ -17,7 +17,7 @@ import numpy as np
 import argparse
 
 # Hyperparameters
-out_size = 10
+out_size = 1
 init_mu_post = 0.
 sigma_prior = 1.
 init_rho_post = np.log(np.exp(sigma_prior)-1)
