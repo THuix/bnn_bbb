@@ -10,8 +10,6 @@ regime = 2
 #criterion = torch.nn.MSELoss(reduction='sum')
 criterion = torch.nn.CrossEntropyLoss(reduction='sum')
 nb_epochs = 0
-limit_train_batches = 118
-
 parser = argparse.ArgumentParser()
 parser.add_argument('dataset')
 
@@ -33,4 +31,4 @@ if __name__ == '__main__':
 
     project_name = f'new_bnn_bbb_regime_{regime}_init_{dataset_name}'
     for N in range_N:
-        main(N, lr, nb_samples, alpha, regime, project_name, dataset_name, criterion, nb_epochs, limit_train_batches)
+        main(N, lr, nb_samples, alpha, regime, project_name, dataset_name, criterion, nb_epochs)

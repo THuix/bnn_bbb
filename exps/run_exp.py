@@ -46,7 +46,7 @@ def load_cifar(batch_size):
     return trainset, testset    
 
 # Functions & Classes
-def load_data(batch_size, alpha, regime, nb_samples, lr, N, dataset_name, criterion, limit_train_batches):
+def load_data(batch_size, alpha, regime, nb_samples, lr, N, dataset_name, criterion):
     if dataset_name == 'MNIST':
         trainset, testset = load_mnist(batch_size)
         in_size = 28*28
@@ -59,13 +59,14 @@ def load_data(batch_size, alpha, regime, nb_samples, lr, N, dataset_name, criter
     else:
         raise ValueError('To implement')
 
-    p = limit_train_batches * batch_size
+    p = trainset.dataset.__len__()
+    nb_batches = len(trainset)
 
     if regime == 1:
         alpha = N / p
         
     dist_params = {'init_rho_post': init_rho_post, 'init_mu_post': init_mu_post, 'sigma_prior': sigma_prior, 'mu_prior':mu_prior}
-    train_params = {'lr': lr, 'nb_samples': nb_samples, 'nb_batches': limit_train_batches, 'criterion': criterion, "alpha": alpha}
+    train_params = {'lr': lr, 'nb_samples': nb_samples, 'nb_batches': nb_batches, 'criterion': criterion, "alpha": alpha}
     return trainset, testset, p, dist_params, train_params, train_params['alpha'], lr, in_size
 
 def get_model(regime, p, dist_params, train_params, lr, N, in_size, criterion):
@@ -110,13 +111,13 @@ def save_config_file(N, p, alpha, nb_samples, lr, model):
     wandb.config.mu_prior = mu_prior
     wandb.finish()
 
-def main(N, lr, nb_samples, alpha, regime, project_name, dataset_name, criterion, nb_epochs, limit_train_batches):
-    trainset, testset, p, dist_params, train_params, alpha, lr, in_size = load_data(batch_size, alpha, regime, nb_samples, lr, N, dataset_name, criterion, limit_train_batches)
+def main(N, lr, nb_samples, alpha, regime, project_name, dataset_name, criterion, nb_epochs):
+    trainset, testset, p, dist_params, train_params, alpha, lr, in_size = load_data(batch_size, alpha, regime, nb_samples, lr, N, dataset_name, criterion)
     model = get_model(regime, p, dist_params, train_params, lr, N, in_size, criterion)
     exp_name = get_exp_name(regime, N, p, alpha, lr, nb_samples)
     wandb_logger = WandbLogger(name=exp_name,project=project_name)
     lr_monitor = LearningRateMonitor(logging_interval='epoch')
-    trainer = pl.Trainer(gpus=-1, max_epochs=nb_epochs, logger= wandb_logger, callbacks=[lr_monitor], weights_save_path = exp_name, limit_train_batches=limit_train_batches)
+    trainer = pl.Trainer(gpus=-1, max_epochs=nb_epochs, logger= wandb_logger, callbacks=[lr_monitor], weights_save_path = exp_name)
     #trainer = pl.Trainer(gpus=-1, max_epochs=nb_epochs, logger= wandb_logger, strategy="ddp")
     #trainer = pl.Trainer(max_epochs=nb_epochs, logger= wandb_logger, track_grad_norm=2)
     trainer.fit(model, train_dataloaders = trainset, val_dataloaders = testset)
