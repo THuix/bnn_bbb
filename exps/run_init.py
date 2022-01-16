@@ -5,7 +5,7 @@ import torch
 
 
 lr = 1e-2
-nb_samples = 3
+nb_samples = 20
 regime = 3
 criterion = torch.nn.MSELoss(reduction='sum')
 nb_epochs = 0
