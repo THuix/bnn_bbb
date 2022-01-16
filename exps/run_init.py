@@ -6,7 +6,7 @@ import torch
 
 lr = 1e-2
 nb_samples = 100
-regime = 1
+regime = 2
 #criterion = torch.nn.MSELoss(reduction='sum')
 criterion = torch.nn.CrossEntropyLoss(reduction='sum')
 nb_epochs = 0
@@ -29,7 +29,7 @@ if __name__ == '__main__':
         dataset_name = 'BOSTON'
 
     range_N = range(100, 2000, 100)
-    alpha = 1.
+    alpha = 300/ (10 * 60000)
 
     project_name = f'new_bnn_bbb_regime_{regime}_init_{dataset_name}'
     for N in range_N:
