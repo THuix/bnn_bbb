@@ -39,7 +39,7 @@ def load_cifar(batch_size):
     return trainset, testset    
 
 # Functions & Classes
-def load_data(batch_size, alpha, regime, nb_samples, lr, N, dataset_name, criterion):
+def load_data(batch_size, alpha, regime, nb_samples, lr, N, dataset_name, criterion, limit_train_batches):
     if dataset_name == 'MNIST':
         trainset, testset = load_mnist(batch_size)
         in_size = 28*28
@@ -48,14 +48,14 @@ def load_data(batch_size, alpha, regime, nb_samples, lr, N, dataset_name, criter
         in_size = 32*32*3
     else:
         raise ValueError('To implement')
-    p = trainset.dataset.__len__()
-    nb_batches = len(trainset)
+
+    p = limit_train_batches * batch_size
 
     if regime == 1:
         alpha = N / p
         
     dist_params = {'init_rho_post': init_rho_post, 'init_mu_post': init_mu_post, 'sigma_prior': sigma_prior, 'mu_prior':mu_prior}
-    train_params = {'lr': lr, 'nb_samples': nb_samples, 'nb_batches': nb_batches, 'criterion': criterion, "alpha": alpha}
+    train_params = {'lr': lr, 'nb_samples': nb_samples, 'nb_batches': limit_train_batches, 'criterion': criterion, "alpha": alpha}
     return trainset, testset, p, dist_params, train_params, train_params['alpha'], lr, in_size
 
 def get_model(regime, p, dist_params, train_params, lr, N, in_size, criterion):
@@ -101,8 +101,8 @@ def save_config_file(N, p, alpha, nb_samples, lr, model):
     wandb.config.parameters = model.parameters()
     wandb.finish()
 
-def main(N, lr, nb_samples, alpha, regime, project_name, dataset_name, criterion, nb_epochs):
-    trainset, testset, p, dist_params, train_params, alpha, lr, in_size = load_data(batch_size, alpha, regime, nb_samples, lr, N, dataset_name, criterion)
+def main(N, lr, nb_samples, alpha, regime, project_name, dataset_name, criterion, nb_epochs, limit_train_batches):
+    trainset, testset, p, dist_params, train_params, alpha, lr, in_size = load_data(batch_size, alpha, regime, nb_samples, lr, N, dataset_name, criterion, limit_train_batches)
     model = get_model(regime, p, dist_params, train_params, lr, N, in_size, criterion)
     exp_name = get_exp_name(regime, N, p, alpha, lr, nb_samples)
     wandb_logger = WandbLogger(name=exp_name,project=project_name)
