@@ -55,6 +55,7 @@ def load_data(batch_size, alpha, regime, nb_samples, lr, N, dataset_name, criter
         in_size = 32*32*3
     elif dataset_name == 'BOSTON':
         trainset, testset = load_boston(batch_size)
+        in_size = 13
     else:
         raise ValueError('To implement')
 
