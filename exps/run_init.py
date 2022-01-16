@@ -6,7 +6,7 @@ import torch
 
 lr = 1e-2
 nb_samples = 3
-regime = 1
+regime = 3
 criterion = torch.nn.CrossEntropyLoss(reduction='sum')
 nb_epochs = 0
 limit_train_batches = 1.
@@ -26,6 +26,6 @@ if __name__ == '__main__':
     range_N = [600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400, 1500, 1600, 1700, 1800, 1900]
     alpha = 1/60000
 
-    project_name = f'new_bnn_bbb_regime_init_{dataset_name}'
+    project_name = f'new_bnn_bbb_regime_{regime}_init_{dataset_name}'
     for N in range_N:
         main(N, lr, nb_samples, alpha, regime, project_name, dataset_name, criterion, nb_epochs, limit_train_batches)
