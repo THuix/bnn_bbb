@@ -19,7 +19,7 @@ import argparse
 # Hyperparameters
 out_size = 10
 init_mu_post = 0.
-sigma_prior = 0.001
+sigma_prior = 0.01
 init_rho_post = np.log(np.exp(sigma_prior)-1)
 mu_prior = 0.
 batch_size = 512
