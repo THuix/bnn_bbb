@@ -5,8 +5,8 @@ import torch
 
 
 lr = 1e-2
-nb_samples = 20
-regime = 1
+nb_samples = 30
+regime = 2
 criterion = torch.nn.MSELoss(reduction='sum')
 nb_epochs = 0
 limit_train_batches = 1.
@@ -27,7 +27,7 @@ if __name__ == '__main__':
     #     dataset_name = 'MNIST'
 
     range_N = range(100, 2000, 100)
-    alpha = 1/60000
+    alpha = 300 / 506
 
     project_name = f'new_bnn_bbb_regime_{regime}_init_{dataset_name}'
     for N in range_N:
