@@ -6,7 +6,7 @@ import torch
 
 lr = 1e-2
 nb_samples = 100
-regime = 'nn'
+regime = 3
 #criterion = torch.nn.MSELoss(reduction='sum')
 criterion = torch.nn.CrossEntropyLoss(reduction='sum')
 nb_epochs = 0
