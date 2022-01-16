@@ -10,7 +10,7 @@ regime = 2
 #criterion = torch.nn.MSELoss(reduction='sum')
 criterion = torch.nn.CrossEntropyLoss(reduction='sum')
 nb_epochs = 0
-limit_train_batches = 1.
+limit_train_batches = 118
 
 parser = argparse.ArgumentParser()
 parser.add_argument('dataset')
