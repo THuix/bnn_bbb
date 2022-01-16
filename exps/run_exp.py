@@ -12,6 +12,7 @@ from pytorch_lightning.loggers.wandb import WandbLogger
 from pytorch_lightning.callbacks import LearningRateMonitor
 import wandb
 from models import Model_regime_1, Model_regime_2, Model_regime_3, NN, CNN
+from data import BostonDataset
 import numpy as np
 import argparse
 
@@ -23,6 +24,11 @@ init_rho_post = np.log(np.exp(sigma_prior)-1)
 mu_prior = 0.
 batch_size = 512
 num_works=8
+
+def load_boston(batch_size):
+    dataset = BostonDataset()
+    trainloader = DataLoader(dataset, batch_size=batch_size, shuffle=True, num_workers=num_works)
+    return trainloader, trainloader
 
 def load_mnist(batch_size):
     dataset = MNIST(os.getcwd(), download=True, transform=transforms.ToTensor(), train=True)
@@ -47,6 +53,8 @@ def load_data(batch_size, alpha, regime, nb_samples, lr, N, dataset_name, criter
     elif dataset_name == 'CIFAR10':
         trainset, testset = load_cifar(batch_size)
         in_size = 32*32*3
+    elif dataset_name == 'BOSTON':
+        trainset, testset = load_boston(batch_size)
     else:
         raise ValueError('To implement')
 
