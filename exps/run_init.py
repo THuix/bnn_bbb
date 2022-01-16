@@ -17,14 +17,15 @@ parser.add_argument('dataset')
 if __name__ == '__main__':
     args = parser.parse_args()
 
-    dataset_name = 'BOSTON'
-
-    # if args.dataset == '0':
-    #     print('CIFAR10 DATASET')
-    #     dataset_name = "CIFAR10"
-    # else:
-    #     print('MNIST dataset')
-    #     dataset_name = 'MNIST'
+    if args.dataset == '0':
+        print('CIFAR10 DATASET')
+        dataset_name = "CIFAR10"
+    elif args.dataset == "1":
+        print('MNIST dataset')
+        dataset_name = 'MNIST'
+    else:
+        print('BOSTON')
+        dataset_name = 'BOSTON'
 
     range_N = range(100, 2000, 100)
     alpha = 300 / (10 * 506)
