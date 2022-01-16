@@ -3,7 +3,7 @@ from run_exp import main
 import argparse
 import torch
 
-lr = 1e-1
+lr = 1e-2
 nb_samples = 3
 regime = 3
 N = 1000

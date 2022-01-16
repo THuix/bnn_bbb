@@ -9,6 +9,7 @@ from torchvision import transforms
 from torchvision.datasets import MNIST, CIFAR10
 from torch.utils.data import DataLoader, Subset
 from pytorch_lightning.loggers.wandb import WandbLogger
+from pytorch_lightning.callbacks import LearningRateMonitor
 import wandb
 from models import Model_regime_1, Model_regime_2, Model_regime_3, NN, CNN
 import numpy as np
@@ -106,7 +107,8 @@ def main(N, lr, nb_samples, alpha, regime, project_name, dataset_name, criterion
     model = get_model(regime, p, dist_params, train_params, lr, N, in_size, criterion)
     exp_name = get_exp_name(regime, N, p, alpha, lr, nb_samples)
     wandb_logger = WandbLogger(name=exp_name,project=project_name)
-    trainer = pl.Trainer(gpus=-1, max_epochs=nb_epochs, logger= wandb_logger)
+    lr_monitor = LearningRateMonitor(logging_interval='epoch')
+    trainer = pl.Trainer(gpus=-1, max_epochs=nb_epochs, logger= wandb_logger, callbacks=[lr_monitor])
     #trainer = pl.Trainer(gpus=-1, max_epochs=nb_epochs, logger= wandb_logger, strategy="ddp")
     #trainer = pl.Trainer(max_epochs=nb_epochs, logger= wandb_logger, track_grad_norm=2)
     trainer.fit(model, train_dataloaders = trainset, val_dataloaders = testset)
