@@ -26,7 +26,7 @@ if __name__ == '__main__':
         print('BOSTON')
         dataset_name = 'BOSTON'
 
-    range_N = range(100, 2000, 100)
+    range_N = range(10000, 20000, 1000)
     alpha = 1/ (60000)
 
     project_name = f'new_bnn_bbb_regime_{regime}_init_{dataset_name}'
