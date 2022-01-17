@@ -48,8 +48,8 @@ class BNN(pl.LightningModule):
                        init_type='normal',
                        regime=regime,
                        bias = False))
-        #self.accuracy = torchmetrics.Accuracy()
-        #self.ECE = torchmetrics.CalibrationError(n_bins=15, norm='l1')
+        self.accuracy = torchmetrics.Accuracy()
+        self.ECE = torchmetrics.CalibrationError(n_bins=15, norm='l1')
         self.N = N
         self.regime = regime
         self.p = p
@@ -120,11 +120,11 @@ class BNN(pl.LightningModule):
         nll = self.re_balance_loss(nll)
         kl = self.re_balance_loss(kl)
 
-        #self.accuracy.update(pred, y)
-        #self.ECE.update(pred, y)
+        self.accuracy.update(pred, y)
+        self.ECE.update(pred, y)
         logs = {
-            #'acc': self.accuracy.compute(),
-            #'ece': self.ECE.compute(),
+            'acc': self.accuracy.compute(),
+            'ece': self.ECE.compute(),
             "obj": obj_loss,
             "kl": kl,
             "nll": nll,
@@ -198,7 +198,7 @@ class NN(pl.LightningModule):
             nn.ReLU(),
             nn.Linear(N, out_size, bias=False))
 
-        #self.accuracy = torchmetrics.Accuracy()
+        self.accuracy = torchmetrics.Accuracy()
         self.criterion = criterion
         self.lr = lr
         self.N = N
@@ -212,9 +212,9 @@ class NN(pl.LightningModule):
         pred = self.seq(x) / self.N
 
         loss = self.criterion(pred, y)
-        #self.accuracy.update(pred, y)
+        self.accuracy.update(pred, y)
         logs = {
-            #'acc': self.accuracy.compute(),
+            'acc': self.accuracy.compute(),
             'nll': loss.item(),
         }
         
