@@ -22,7 +22,7 @@ init_mu_post = 0.
 sigma_prior = 1.
 init_rho_post = np.log(np.exp(sigma_prior)-1)
 mu_prior = 0.
-batch_size = 512
+batch_size = 128
 num_works=8
 
 def load_boston(batch_size):
