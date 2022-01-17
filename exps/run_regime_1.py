@@ -2,7 +2,7 @@ from run_exp import main
 import argparse
 import torch
 
-lr = 1e-4
+lr = 1e-6
 nb_samples = 3
 alpha = None
 regime = 1
