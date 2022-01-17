@@ -8,7 +8,7 @@ lr = 1e-2
 nb_samples = 3
 init_rho_post = np.log(np.exp(1.)-1)
 regime = 3
-N = 3000
+N = 8000
 criterion = torch.nn.CrossEntropyLoss(reduction='sum')
 nb_epochs = 200
 limit_train_batches = 5
