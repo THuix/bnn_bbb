@@ -3,7 +3,7 @@ import argparse
 import torch
 import numpy as np
 
-lr = 100.
+lr = 200.
 nb_samples = 3
 alpha = None
 init_rho_post = np.log(np.exp(1.)-1)
