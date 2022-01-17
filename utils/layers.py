@@ -163,7 +163,7 @@ class Conv_bnn(nn.Module):
             - init_type([fixed, normal]): strategy for the weights initialization
             - regime([1, 2, 3]): regime used   
         """
-        super(Linear_bnn, self).__init__()
+        super(Conv_bnn, self).__init__()
         self.N = N
         self.p = p
         self.alpha = alpha

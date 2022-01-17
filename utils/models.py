@@ -296,24 +296,17 @@ class CNN(pl.LightningModule):
         optimizer = torch.optim.SGD(self.parameters(), lr=self.lr, momentum=0.9)
         return optimizer
 
-
-
 class Conv_BNN(BNN):
     def __init__(self, in_size, out_size, hidden_channels, p, dist_params, train_params, conv_params, regime):
-        super(Conv_BNN, self).__init__()
+        super(Conv_BNN, self).__init__(in_size, out_size, hidden_channels, p, dist_params, train_params, regime)
         self.save_hyperparameters()
         
-        self.dist_params = self.check_params(dist_params, ['init_rho_post', 'init_mu_post', 'sigma_prior', 'mu_prior', 'hin'])
+        self.dist_params = self.check_params(dist_params, ['init_rho_post', 'init_mu_post', 'sigma_prior', 'mu_prior'])
         self.train_params = self.check_params(train_params, ['lr', 'nb_samples', 'nb_batches', 'criterion', 'alpha'])
         self.conv_params = self.check_params(conv_params, ['hin', 'padding', 'stride', 'dilation', 'kernel_size'])
 
-        self.N = self.get_nb_neurons(hidden_channels,
-                                     dist_params['hin'],
-                                     conv_params['padding'],
-                                     conv_params['dilation'],
-                                     conv_params['kernel_size'],
-                                     conv_params['stride'])
 
+        self.N = conv_params['N']
         self.seq = nn.Sequential(
             Conv_bnn(in_size,
                      hidden_channels,
@@ -321,7 +314,7 @@ class Conv_BNN(BNN):
                        self.dist_params['init_mu_post'],
                        self.dist_params['sigma_prior'],
                        self.dist_params['mu_prior'],
-                       self.N,
+                       self.conv_params['N'],
                        p,
                        self.train_params['alpha'],
                        stride = self.conv_params['stride'],
@@ -338,7 +331,7 @@ class Conv_BNN(BNN):
                        self.dist_params['init_mu_post'],
                        self.dist_params['sigma_prior'],
                        self.dist_params['mu_prior'],
-                       self.N,
+                       self.conv_params['N'],
                        p,
                        self.train_params['alpha'],
                        init_type='normal',
@@ -352,20 +345,11 @@ class Conv_BNN(BNN):
         self.out_size = out_size
         self.T = self.get_temperature(regime)
 
-    def get_nb_neurons(self, out_channels, hin, p, d, k, s):
-        hout = int((hin + 2*p - d * (k-1) - 1 ) / s + 1)
-        return out_channels * hout * hout
+class Conv_Model_regime_1(Conv_BNN):
+    def __init__(self, in_size, out_size, hidden_channels, p, dist_params, train_params, conv_params):
+        super(Conv_Model_regime_1, self).__init__(in_size, out_size, hidden_channels, p, dist_params, train_params, conv_params, 1)
 
-class Conv_Model_regime_1(BNN):
-    def __init__(self, in_size, out_size, N, p, dist_params, train_params, conv_params):
-        super(Conv_Model_regime_1, self).__init__(in_size, out_size, N, p, dist_params, train_params, conv_params, 1)
-
-class Conv_Model_regime_2(BNN):
-    def __init__(self, in_size, out_size, N, p, dist_params, train_params, conv_params):
-        dist_params['sigma_prior'] =  dist_params['sigma_prior'] * np.sqrt(N / (train_params['alpha'] * p))
-        super(Conv_Model_regime_2, self).__init__(in_size, out_size, N, p, dist_params, train_params, conv_params, 2)
-
-class Conv_Model_regime_3(BNN):
-    def __init__(self, in_size, out_size, N, p, dist_params, train_params, conv_params):
-        super(Conv_Model_regime_3, self).__init__(in_size, out_size, N, p, dist_params, train_params, conv_params, 3)
+class Conv_Model_regime_3(Conv_BNN):
+    def __init__(self, in_size, out_size, hidden_channels, p, dist_params, train_params, conv_params):
+        super(Conv_Model_regime_3, self).__init__(in_size, out_size, hidden_channels, p, dist_params, train_params, conv_params, 3)
 
