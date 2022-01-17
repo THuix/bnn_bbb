@@ -5,7 +5,7 @@ import numpy as np
 
 lr = 1e-2
 nb_samples = 3
-alpha = 1 / 600000
+alpha = 1 / 60000
 init_rho_post = np.log(np.exp(1.)-1)
 regime = 1
 nb_epochs = 10
