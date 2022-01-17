@@ -15,7 +15,7 @@ import os
 os.environ["KMP_DUPLICATE_LIB_OK"]="TRUE"
 
 class BNN(pl.LightningModule):
-    def __init__(self, in_size, out_size, N, p, dist_params, train_params, regime):
+    def __init__(self, in_size, out_size, w, N, p, dist_params, train_params, regime):
         super(BNN, self).__init__()
         self.save_hyperparameters()
         
@@ -29,7 +29,7 @@ class BNN(pl.LightningModule):
                        self.dist_params['init_mu_post'],
                        self.dist_params['sigma_prior'],
                        self.dist_params['mu_prior'],
-                       N,
+                       w,
                        p,
                        self.train_params['alpha'],
                        init_type='normal',
@@ -42,7 +42,7 @@ class BNN(pl.LightningModule):
                        self.dist_params['init_mu_post'],
                        self.dist_params['sigma_prior'],
                        self.dist_params['mu_prior'],
-                       N,
+                       w,
                        p,
                        self.train_params['alpha'],
                        init_type='normal',
@@ -50,18 +50,20 @@ class BNN(pl.LightningModule):
                        bias = False))
         self.accuracy = torchmetrics.Accuracy()
         self.ECE = torchmetrics.CalibrationError(n_bins=15, norm='l1')
+        self.w = w
         self.N = N
         self.regime = regime
         self.p = p
         self.out_size = out_size
         self.save_hist = True
+        self.do_flatten = True
         self.T = self.get_temperature(regime)
 
     def get_temperature(self, regime):
         if regime == 1 or regime == 2:
             return 1
         elif regime == 3:
-            return self.train_params['alpha'] * self.p / self.N
+            return self.train_params['alpha'] * self.p / self.w
         else:
             raise ValueError('To implement')
 
@@ -95,7 +97,7 @@ class BNN(pl.LightningModule):
 
     def re_balance_loss(self, loss):
         if self.regime == 1 or self.regime == 3: 
-            return self.train_params['alpha'] * loss * self.train_params['nb_batches'] / self.N
+            return self.train_params['alpha'] * loss * self.train_params['nb_batches'] / self.w
         elif self.regime == 2:
             return loss * self.train_params['nb_batches'] / self.p
         else:
@@ -103,7 +105,8 @@ class BNN(pl.LightningModule):
 
     def step(self, batch, batch_idx):
         x, y = batch
-        x = x.reshape(x.size()[0], -1)
+        if self.do_flatten:
+            x = x.reshape(x.size()[0], -1)
 
         obj_loss = torch.zeros(1, requires_grad=True).type_as(x)
         nll = torch.zeros(1).type_as(x)
@@ -177,17 +180,17 @@ class BNN(pl.LightningModule):
         return [optimizer], [scheduler]
 
 class Model_regime_1(BNN):
-    def __init__(self, in_size, out_size, N, p, dist_params, train_params):
-        super(Model_regime_1, self).__init__(in_size, out_size, N, p, dist_params, train_params, 1)
+    def __init__(self, in_size, out_size, w, N, p, dist_params, train_params):
+        super(Model_regime_1, self).__init__(in_size, out_size, w, N, p, dist_params, train_params, 1)
 
 class Model_regime_2(BNN):
-    def __init__(self, in_size, out_size, N, p, dist_params, train_params):
-        dist_params['sigma_prior'] =  dist_params['sigma_prior'] * np.sqrt(N / (train_params['alpha'] * p))
-        super(Model_regime_2, self).__init__(in_size, out_size, N, p, dist_params, train_params, 2)
+    def __init__(self, in_size, out_size, w, N, p, dist_params, train_params):
+        dist_params['sigma_prior'] =  dist_params['sigma_prior'] * np.sqrt(w / (train_params['alpha'] * p))
+        super(Model_regime_2, self).__init__(in_size, out_size, w, N, p, dist_params, train_params, 2)
 
 class Model_regime_3(BNN):
-    def __init__(self, in_size, out_size, N, p, dist_params, train_params):
-        super(Model_regime_3, self).__init__(in_size, out_size, N, p, dist_params, train_params, 3)
+    def __init__(self, in_size, out_size, w, N, p, dist_params, train_params):
+        super(Model_regime_3, self).__init__(in_size, out_size, w, N, p, dist_params, train_params, 3)
 
 
 class NN(pl.LightningModule):
@@ -300,15 +303,14 @@ class CNN(pl.LightningModule):
 
 class Conv_BNN(BNN):
     def __init__(self, in_size, out_size, hidden_channels, p, dist_params, train_params, conv_params, regime):
-        super(Conv_BNN, self).__init__(in_size, out_size, hidden_channels, p, dist_params, train_params, regime)
+        self.w = conv_params['w']
+        super(Conv_BNN, self).__init__(in_size, out_size, self.w, hidden_channels, p, dist_params, train_params, regime)
         self.save_hyperparameters()
         
         self.dist_params = self.check_params(dist_params, ['init_rho_post', 'init_mu_post', 'sigma_prior', 'mu_prior'])
         self.train_params = self.check_params(train_params, ['lr', 'nb_samples', 'nb_batches', 'criterion', 'alpha'])
         self.conv_params = self.check_params(conv_params, ['hin', 'padding', 'stride', 'dilation', 'kernel_size'])
-
-
-        self.N = conv_params['N']
+        
         self.seq = nn.Sequential(
             Conv_bnn(in_size,
                      hidden_channels,
@@ -316,7 +318,7 @@ class Conv_BNN(BNN):
                        self.dist_params['init_mu_post'],
                        self.dist_params['sigma_prior'],
                        self.dist_params['mu_prior'],
-                       self.conv_params['N'],
+                       self.conv_params['w'],
                        p,
                        self.train_params['alpha'],
                        stride = self.conv_params['stride'],
@@ -333,7 +335,7 @@ class Conv_BNN(BNN):
                        self.dist_params['init_mu_post'],
                        self.dist_params['sigma_prior'],
                        self.dist_params['mu_prior'],
-                       self.conv_params['N'],
+                       self.conv_params['w'],
                        p,
                        self.train_params['alpha'],
                        init_type='normal',
@@ -346,42 +348,9 @@ class Conv_BNN(BNN):
         self.p = p
         self.out_size = out_size
         self.save_hist = False
+        self.do_flatten = False
         self.T = self.get_temperature(regime)
-
-
-    def step(self, batch, batch_idx):
-        x, y = batch
-
-        obj_loss = torch.zeros(1, requires_grad=True).type_as(x)
-        nll = torch.zeros(1).type_as(x)
-        kl = torch.zeros(1).type_as(x)
-        pred = torch.zeros((x.size()[0], self.out_size)).type_as(x)
-
-        for idx in range(self.train_params['nb_samples']):
-            o, n, k, p = self._step_1_sample(x, y)
-            obj_loss = obj_loss + o / self.train_params['nb_samples']
-            nll = nll + n / self.train_params['nb_samples']
-            kl = kl + k / self.train_params['nb_samples']
-            pred = pred + p / self.train_params['nb_samples']
-        
-        obj_loss = self.re_balance_loss(obj_loss)
-        nll = self.re_balance_loss(nll)
-        kl = self.re_balance_loss(kl)
-
-        self.accuracy.update(pred, y)
-        self.ECE.update(pred, y)
-        logs = {
-            'acc': self.accuracy.compute(),
-            'ece': self.ECE.compute(),
-            "obj": obj_loss,
-            "kl": kl,
-            "nll": nll,
-            "ratio_nll_kl": nll / kl,
-        }
-        
-        return obj_loss, logs      
     
-
 class Conv_Model_regime_1(Conv_BNN):
     def __init__(self, in_size, out_size, hidden_channels, p, dist_params, train_params, conv_params):
         super(Conv_Model_regime_1, self).__init__(in_size, out_size, hidden_channels, p, dist_params, train_params, conv_params, 1)
@@ -390,3 +359,54 @@ class Conv_Model_regime_3(Conv_BNN):
     def __init__(self, in_size, out_size, hidden_channels, p, dist_params, train_params, conv_params):
         super(Conv_Model_regime_3, self).__init__(in_size, out_size, hidden_channels, p, dist_params, train_params, conv_params, 3)
 
+
+# class VGG11_BNN(BNN):
+#     def __init__(self, in_size, out_size, hidden_channels, p, dist_params, train_params, conv_params, regime):
+#         super(Conv_BNN, self).__init__(in_size, out_size, hidden_channels, p, dist_params, train_params, regime)
+#         self.save_hyperparameters()
+        
+#         self.dist_params = self.check_params(dist_params, ['init_rho_post', 'init_mu_post', 'sigma_prior', 'mu_prior'])
+#         self.train_params = self.check_params(train_params, ['lr', 'nb_samples', 'nb_batches', 'criterion', 'alpha'])
+#         self.conv_params = self.check_params(conv_params, ['hin', 'padding', 'stride', 'dilation', 'kernel_size'])
+
+#         self.N = conv_params['N']
+#         self.seq = nn.Sequential(
+#             Conv_bnn(in_size,
+#                      hidden_channels,
+#                        self.dist_params['init_rho_post'],
+#                        self.dist_params['init_mu_post'],
+#                        self.dist_params['sigma_prior'],
+#                        self.dist_params['mu_prior'],
+#                        self.conv_params['N'],
+#                        p,
+#                        self.train_params['alpha'],
+#                        stride = self.conv_params['stride'],
+#                        padding = self.conv_params['padding'],
+#                        dilation = self.conv_params['dilation'],
+#                        kernel_size = self.conv_params['kernel_size'],
+#                        init_type='normal',
+#                        regime=regime),
+#             nn.ReLU(),
+#             nn.Flatten(),
+#             Linear_bnn(self.N,
+#                        out_size,
+#                        self.dist_params['init_rho_post'],
+#                        self.dist_params['init_mu_post'],
+#                        self.dist_params['sigma_prior'],
+#                        self.dist_params['mu_prior'],
+#                        self.conv_params['N'],
+#                        p,
+#                        self.train_params['alpha'],
+#                        init_type='normal',
+#                        regime=regime,
+#                        bias = False))
+
+#         self.accuracy = torchmetrics.Accuracy()
+#         self.ECE = torchmetrics.CalibrationError(n_bins=15, norm='l1')
+#         self.regime = regime
+#         self.p = p
+#         self.out_size = out_size
+#         self.save_hist = False
+#         self.do_flatten = False
+#         self.T = self.get_temperature(regime)
+    

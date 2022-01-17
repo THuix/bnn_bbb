@@ -44,7 +44,7 @@ def load_data(batch_size, dataset_name):
     return trainset, testset, in_size, hin
 
 
-def get_nb_neurons(out_channels, hin, p, d, k, s):
+def get_nb_weights(out_channels, hin, p, d, k, s):
     hout = int((hin + 2*p - d * (k-1) - 1 ) / s + 1)
     return out_channels * hout * hout
 
@@ -53,25 +53,25 @@ def init_params(trainset, alpha, regime, nb_samples, lr, hidden_channels, criter
     p = trainset.dataset.__len__()
     nb_batches = len(trainset)
 
-    N = get_nb_neurons(hidden_channels, hin, padding, dilation, kernel_size, stride)
+    w = get_nb_weights(hidden_channels, hin, padding, dilation, kernel_size, stride)
 
     if regime == 1:
-        alpha = N / p
+        alpha = w / p
         
     dist_params = {'init_rho_post': init_rho_post, 'init_mu_post': init_mu_post, 'sigma_prior': sigma_prior, 'mu_prior':mu_prior}
     train_params = {'lr': lr, 'nb_samples': nb_samples, 'nb_batches': nb_batches, 'criterion': criterion, "alpha": alpha}
-    conv_params = {'padding' : padding, 'dilation': dilation, 'stride': stride, 'hin': hin, 'N': N, 'kernel_size': kernel_size}
+    conv_params = {'padding' : padding, 'dilation': dilation, 'stride': stride, 'hin': hin, 'w': w, 'kernel_size': kernel_size}
     return p, dist_params, train_params, conv_params, train_params['alpha'], lr
 
-def get_exp_name(regime, N, p, alpha, lr, nb_samples):
+def get_exp_name(regime, w, p, alpha, lr, nb_samples):
     if regime == 1:
-        return f"regime_{regime}_N_{N}_p_{p}_sigmaprior_{sigma_prior}_lr_{lr}_nb_samples_{nb_samples}"
+        return f"regime_{regime}_w_{w}_p_{p}_sigmaprior_{sigma_prior}_lr_{lr}_nb_samples_{nb_samples}"
     elif regime == 3:
-        return f"regime_{regime}_N_{N}_p_{p}_alpha_{alpha}_sigmaprior_{sigma_prior}_lr_{lr}_nb_samples_{nb_samples}"
+        return f"regime_{regime}_w_{w}_p_{p}_alpha_{alpha}_sigmaprior_{sigma_prior}_lr_{lr}_nb_samples_{nb_samples}"
     else:
         raise ValueError('To implement')
 
-def save_config_file(hidden_channels, N, p, alpha, nb_samples, lr, model, init_rho_post):
+def save_config_file(hidden_channels, p, alpha, nb_samples, lr, model, init_rho_post):
     wandb.config.hidden_channels = hidden_channels
     wandb.config.p = p 
     wandb.config.alpha = alpha
@@ -88,12 +88,12 @@ def main_conv(hidden_channels, lr, nb_samples, alpha, regime, project_name, data
     trainset, testset, in_size, hin = load_data(batch_size, dataset_name)
     p, dist_params, train_params, conv_params, train_params['alpha'], lr = init_params(trainset, alpha, regime, nb_samples, lr, hidden_channels, criterion, init_rho_post, hin)
     model = get_model(regime, hidden_channels, p, dist_params, train_params, conv_params, in_size)
-    exp_name = get_exp_name(regime, conv_params['N'], p, alpha, lr, nb_samples)
+    exp_name = get_exp_name(regime, conv_params['w'], p, alpha, lr, nb_samples)
     wandb_logger = WandbLogger(name=exp_name,project=project_name)
     lr_monitor = LearningRateMonitor(logging_interval='epoch')
     #trainer = pl.Trainer(max_epochs=nb_epochs, logger= wandb_logger, track_grad_norm=2)
     trainer = pl.Trainer(gpus=-1, max_epochs=nb_epochs, logger= wandb_logger, callbacks=[lr_monitor], weights_save_path = exp_name)
     trainer.fit(model, trainset, testset)
     result = trainer.test(model, testset)
-    save_config_file(hidden_channels, conv_params['N'], p, alpha, nb_samples, lr, model, init_rho_post)
+    save_config_file(hidden_channels, p, alpha, nb_samples, lr, model, init_rho_post)
 
