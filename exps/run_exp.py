@@ -20,7 +20,6 @@ import argparse
 out_size = 10
 init_mu_post = 0.
 sigma_prior = 1.
-init_rho_post = np.log(np.exp(sigma_prior)-1)
 mu_prior = 0.
 batch_size = 128
 num_works=8
@@ -46,7 +45,7 @@ def load_cifar(batch_size):
     return trainset, testset    
 
 # Functions & Classes
-def load_data(batch_size, alpha, regime, nb_samples, lr, N, dataset_name, criterion):
+def load_data(batch_size, alpha, regime, nb_samples, lr, N, dataset_name, criterion, init_rho_post):
     if dataset_name == 'MNIST':
         trainset, testset = load_mnist(batch_size)
         in_size = 28*28
@@ -98,7 +97,7 @@ def get_exp_name(regime, N, p, alpha, lr, nb_samples):
     else:
         raise ValueError('To implement')
 
-def save_config_file(N, p, alpha, nb_samples, lr, model):
+def save_config_file(N, p, alpha, nb_samples, lr, model, init_rho_post):
     wandb.config.N = N
     wandb.config.p = p 
     wandb.config.alpha = alpha
@@ -111,8 +110,8 @@ def save_config_file(N, p, alpha, nb_samples, lr, model):
     wandb.config.mu_prior = mu_prior
     wandb.finish()
 
-def main(N, lr, nb_samples, alpha, regime, project_name, dataset_name, criterion, nb_epochs):
-    trainset, testset, p, dist_params, train_params, alpha, lr, in_size = load_data(batch_size, alpha, regime, nb_samples, lr, N, dataset_name, criterion)
+def main(N, lr, nb_samples, alpha, regime, project_name, dataset_name, criterion, nb_epochs, init_rho_post):
+    trainset, testset, p, dist_params, train_params, alpha, lr, in_size = load_data(batch_size, alpha, regime, nb_samples, lr, N, dataset_name, criterion, init_rho_post)
     model = get_model(regime, p, dist_params, train_params, lr, N, in_size, criterion)
     exp_name = get_exp_name(regime, N, p, alpha, lr, nb_samples)
     wandb_logger = WandbLogger(name=exp_name,project=project_name)
@@ -122,4 +121,5 @@ def main(N, lr, nb_samples, alpha, regime, project_name, dataset_name, criterion
     #trainer = pl.Trainer(max_epochs=nb_epochs, logger= wandb_logger, track_grad_norm=2)
     trainer.fit(model, train_dataloaders = trainset, val_dataloaders = testset)
     result = trainer.test(model, testset)
-    save_config_file(N, p, alpha, nb_samples, lr, model)
+    save_config_file(N, p, alpha, nb_samples, lr, model, init_rho_post)
+

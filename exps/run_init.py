@@ -6,6 +6,7 @@ import torch
 
 lr = 1e-2
 nb_samples = 100
+init_rho_post = 0.
 regime = 2
 #criterion = torch.nn.MSELoss(reduction='sum')
 criterion = torch.nn.CrossEntropyLoss(reduction='sum')
@@ -31,4 +32,4 @@ if __name__ == '__main__':
 
     project_name = f'new_bnn_bbb_regime_{regime}_init_{dataset_name}'
     for N in range_N:
-        main(N, lr, nb_samples, alpha, regime, project_name, dataset_name, criterion, nb_epochs)
+        main(N, lr, nb_samples, alpha, regime, project_name, dataset_name, criterion, nb_epochs, init_rho_post)
