@@ -345,6 +345,21 @@ class Conv_BNN(BNN):
         self.out_size = out_size
         self.T = self.get_temperature(regime)
 
+
+    def step(self, batch, batch_idx):
+        x, y = batch
+        pred = self.seq(x) / self.N
+
+        loss = self.criterion(pred, y)
+        self.accuracy.update(pred, y)
+        logs = {
+            'acc': self.accuracy.compute(),
+            'nll': loss.item(),
+        }
+        
+        return loss, logs       
+    
+
 class Conv_Model_regime_1(Conv_BNN):
     def __init__(self, in_size, out_size, hidden_channels, p, dist_params, train_params, conv_params):
         super(Conv_Model_regime_1, self).__init__(in_size, out_size, hidden_channels, p, dist_params, train_params, conv_params, 1)
