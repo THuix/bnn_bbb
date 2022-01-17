@@ -2,11 +2,13 @@
 from run_exp import main
 import argparse
 import torch
+import numpy as np
 
 lr = 1e-2
 nb_samples = 3
+init_rho_post = np.log(np.exp(1.)-1)
 regime = 3
-N = 1000
+N = 3000
 criterion = torch.nn.CrossEntropyLoss(reduction='sum')
 nb_epochs = 200
 limit_train_batches = 5
@@ -28,4 +30,4 @@ if __name__ == '__main__':
 
     project_name = f'new_bnn_bbb_regime_3_{dataset_name}'
     for alpha in range_alpha:
-        main(N, lr, nb_samples, alpha, regime, project_name, dataset_name, criterion, nb_epochs, limit_train_batches)
+        main(N, lr, nb_samples, alpha, regime, project_name, dataset_name, criterion, nb_epochs, init_rho_post)
