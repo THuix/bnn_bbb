@@ -122,4 +122,3 @@ def main(N, lr, nb_samples, alpha, regime, project_name, dataset_name, criterion
     trainer.fit(model, train_dataloaders = trainset, val_dataloaders = testset)
     result = trainer.test(model, testset)
     save_config_file(N, p, alpha, nb_samples, lr, model, init_rho_post)
-

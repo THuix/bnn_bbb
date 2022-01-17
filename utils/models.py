@@ -1,7 +1,7 @@
 import torchmetrics
 from torch import nn
 import numpy as np
-from layers import Linear_bnn
+from layers import Linear_bnn, Conv_bnn
 from security import check, check_is_tensor
 import torch.nn.functional as F
 import pytorch_lightning as pl
@@ -297,4 +297,75 @@ class CNN(pl.LightningModule):
         return optimizer
 
 
+
+class Conv_BNN(BNN):
+    def __init__(self, in_size, out_size, hidden_channels, p, dist_params, train_params, conv_params, regime):
+        super(Conv_BNN, self).__init__()
+        self.save_hyperparameters()
+        
+        self.dist_params = self.check_params(dist_params, ['init_rho_post', 'init_mu_post', 'sigma_prior', 'mu_prior', 'hin'])
+        self.train_params = self.check_params(train_params, ['lr', 'nb_samples', 'nb_batches', 'criterion', 'alpha'])
+        self.conv_params = self.check_params(conv_params, ['hin', 'padding', 'stride', 'dilation', 'kernel_size'])
+
+        self.N = self.get_nb_neurons(hidden_channels,
+                                     dist_params['hin'],
+                                     conv_params['padding'],
+                                     conv_params['dilation'],
+                                     conv_params['kernel_size'],
+                                     conv_params['stride'])
+
+        self.seq = nn.Sequential(
+            Conv_bnn(in_size,
+                     hidden_channels,
+                       self.dist_params['init_rho_post'],
+                       self.dist_params['init_mu_post'],
+                       self.dist_params['sigma_prior'],
+                       self.dist_params['mu_prior'],
+                       self.N,
+                       p,
+                       self.train_params['alpha'],
+                       stride = self.conv_params['stride'],
+                       padding = self.conv_params['padding'],
+                       dilation = self.conv_params['dilation'],
+                       kernel_size = self.conv_params['kernel_size'],
+                       init_type='normal',
+                       regime=regime),
+            nn.ReLU(),
+            nn.Flatten(),
+            Linear_bnn(self.N,
+                       out_size,
+                       self.dist_params['init_rho_post'],
+                       self.dist_params['init_mu_post'],
+                       self.dist_params['sigma_prior'],
+                       self.dist_params['mu_prior'],
+                       self.N,
+                       p,
+                       self.train_params['alpha'],
+                       init_type='normal',
+                       regime=regime,
+                       bias = False))
+
+        self.accuracy = torchmetrics.Accuracy()
+        self.ECE = torchmetrics.CalibrationError(n_bins=15, norm='l1')
+        self.regime = regime
+        self.p = p
+        self.out_size = out_size
+        self.T = self.get_temperature(regime)
+
+    def get_nb_neurons(self, out_channels, hin, p, d, k, s):
+        hout = int((hin + 2*p - d * (k-1) - 1 ) / s + 1)
+        return out_channels * hout * hout
+
+class Conv_Model_regime_1(BNN):
+    def __init__(self, in_size, out_size, N, p, dist_params, train_params, conv_params):
+        super(Conv_Model_regime_1, self).__init__(in_size, out_size, N, p, dist_params, train_params, conv_params, 1)
+
+class Conv_Model_regime_2(BNN):
+    def __init__(self, in_size, out_size, N, p, dist_params, train_params, conv_params):
+        dist_params['sigma_prior'] =  dist_params['sigma_prior'] * np.sqrt(N / (train_params['alpha'] * p))
+        super(Conv_Model_regime_2, self).__init__(in_size, out_size, N, p, dist_params, train_params, conv_params, 2)
+
+class Conv_Model_regime_3(BNN):
+    def __init__(self, in_size, out_size, N, p, dist_params, train_params, conv_params):
+        super(Conv_Model_regime_3, self).__init__(in_size, out_size, N, p, dist_params, train_params, conv_params, 3)
 
