@@ -73,7 +73,6 @@ def get_exp_name(regime, N, p, alpha, lr, nb_samples):
 
 def save_config_file(hidden_channels, N, p, alpha, nb_samples, lr, model, init_rho_post):
     wandb.config.hidden_channels = hidden_channels
-    wandb.config.N = N
     wandb.config.p = p 
     wandb.config.alpha = alpha
     wandb.config.nb_samples = nb_samples
