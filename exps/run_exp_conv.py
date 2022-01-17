@@ -44,16 +44,16 @@ def load_data(batch_size, dataset_name):
     return trainset, testset, in_size, hin
 
 
-def get_nb_weights(out_channels, hin, p, d, k, s):
+def get_nb_weights(hidden_channels, in_channels, hin, p, d, k, s):
     hout = int((hin + 2*p - d * (k-1) - 1 ) / s + 1)
-    return out_channels * hout * hout
+    return hidden_channels * hout**2 * out_size + hidden_channels * in_channels * k**2
 
-def init_params(trainset, alpha, regime, nb_samples, lr, hidden_channels, criterion, init_rho_post, hin):
+def init_params(trainset, alpha, regime, nb_samples, lr, hidden_channels, criterion, init_rho_post, hin, in_size):
 
     p = trainset.dataset.__len__()
     nb_batches = len(trainset)
 
-    w = get_nb_weights(hidden_channels, hin, padding, dilation, kernel_size, stride)
+    w = get_nb_weights(hidden_channels, in_size, hin, padding, dilation, kernel_size, stride)
 
     if regime == 1:
         alpha = w / p
@@ -86,7 +86,7 @@ def save_config_file(hidden_channels, p, alpha, nb_samples, lr, model, init_rho_
 
 def main_conv(hidden_channels, lr, nb_samples, alpha, regime, project_name, dataset_name, criterion, nb_epochs, init_rho_post):
     trainset, testset, in_size, hin = load_data(batch_size, dataset_name)
-    p, dist_params, train_params, conv_params, train_params['alpha'], lr = init_params(trainset, alpha, regime, nb_samples, lr, hidden_channels, criterion, init_rho_post, hin)
+    p, dist_params, train_params, conv_params, train_params['alpha'], lr = init_params(trainset, alpha, regime, nb_samples, lr, hidden_channels, criterion, init_rho_post, hin, in_size)
     model = get_model(regime, hidden_channels, p, dist_params, train_params, conv_params, in_size)
     exp_name = get_exp_name(regime, conv_params['w'], p, alpha, lr, nb_samples)
     wandb_logger = WandbLogger(name=exp_name,project=project_name)
