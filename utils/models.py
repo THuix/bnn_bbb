@@ -54,6 +54,7 @@ class BNN(pl.LightningModule):
         self.regime = regime
         self.p = p
         self.out_size = out_size
+        self.save_hist = True
         self.T = self.get_temperature(regime)
 
     def get_temperature(self, regime):
@@ -160,14 +161,15 @@ class BNN(pl.LightningModule):
         return loss
 
     def test_epoch_end(self, output):
-        mu_1 = self.seq[0].weight_mu.flatten().detach().cpu().numpy()
-        mu_2 = self.seq[2].weight_mu.flatten().detach().cpu().numpy()
-        std_1 = self.seq[0].rho_to_std(self.seq[0].weight_rho.flatten()).detach().cpu().numpy()
-        std_2 = self.seq[2].rho_to_std(self.seq[2].weight_rho.flatten()).detach().cpu().numpy()
-        self.plot_hist(mu_1, 'Layer 1: mean', "mu_1")
-        self.plot_hist(mu_2, 'Layer 2: mean', "mu_2")
-        self.plot_hist(std_1, 'Layer 1: std', "std_1")
-        self.plot_hist(std_2, 'Layer 2: std', "std_2")
+        if self.save_hist:
+            mu_1 = self.seq[0].weight_mu.flatten().detach().cpu().numpy()
+            mu_2 = self.seq[2].weight_mu.flatten().detach().cpu().numpy()
+            std_1 = self.seq[0].rho_to_std(self.seq[0].weight_rho.flatten()).detach().cpu().numpy()
+            std_2 = self.seq[2].rho_to_std(self.seq[2].weight_rho.flatten()).detach().cpu().numpy()
+            self.plot_hist(mu_1, 'Layer 1: mean', "mu_1")
+            self.plot_hist(mu_2, 'Layer 2: mean', "mu_2")
+            self.plot_hist(std_1, 'Layer 1: std', "std_1")
+            self.plot_hist(std_2, 'Layer 2: std', "std_2")
 
     def configure_optimizers(self):
         optimizer = torch.optim.Adam(self.parameters(), lr=self.train_params['lr'])
@@ -343,6 +345,7 @@ class Conv_BNN(BNN):
         self.regime = regime
         self.p = p
         self.out_size = out_size
+        self.save_hist = False
         self.T = self.get_temperature(regime)
 
 
