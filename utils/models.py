@@ -348,16 +348,35 @@ class Conv_BNN(BNN):
 
     def step(self, batch, batch_idx):
         x, y = batch
-        pred = self.seq(x) / self.N
 
-        loss = self.criterion(pred, y)
+        obj_loss = torch.zeros(1, requires_grad=True).type_as(x)
+        nll = torch.zeros(1).type_as(x)
+        kl = torch.zeros(1).type_as(x)
+        pred = torch.zeros((x.size()[0], self.out_size)).type_as(x)
+
+        for idx in range(self.train_params['nb_samples']):
+            o, n, k, p = self._step_1_sample(x, y)
+            obj_loss = obj_loss + o / self.train_params['nb_samples']
+            nll = nll + n / self.train_params['nb_samples']
+            kl = kl + k / self.train_params['nb_samples']
+            pred = pred + p / self.train_params['nb_samples']
+        
+        obj_loss = self.re_balance_loss(obj_loss)
+        nll = self.re_balance_loss(nll)
+        kl = self.re_balance_loss(kl)
+
         self.accuracy.update(pred, y)
+        self.ECE.update(pred, y)
         logs = {
             'acc': self.accuracy.compute(),
-            'nll': loss.item(),
+            'ece': self.ECE.compute(),
+            "obj": obj_loss,
+            "kl": kl,
+            "nll": nll,
+            "ratio_nll_kl": nll / kl,
         }
         
-        return loss, logs       
+        return obj_loss, logs      
     
 
 class Conv_Model_regime_1(Conv_BNN):
