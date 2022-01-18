@@ -9,6 +9,7 @@ parser.add_argument('--dataset')
 parser.add_argument('--range_alpha', default=[], nargs='+')
 parser.add_argument('--nb_epochs', type=int)  
 parser.add_argument('--vgg_type', type=int)
+parser.add_argument('--project_name')
 
 num_works = 8
 batch_size = 128
@@ -28,9 +29,8 @@ def launch_train(args, alpha, model_name):
                     }
 
     dataset_name = args.dataset
-    project_name = f'{model_name}_{dataset_name}'
 
-    main(project_name,
+    main(args.project_name,
         model_name,
         args.dataset,
         num_works,
