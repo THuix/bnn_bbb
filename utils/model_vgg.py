@@ -63,9 +63,9 @@ class VGG(BNN):
                                     dist_params['init_mu_post'],
                                     dist_params['sigma_prior'],
                                     dist_params['mu_prior'],
-                                    stride = self.conv_params['stride'],
-                                    padding = self.conv_params['padding'],
-                                    dilation = self.conv_params['dilation'],
+                                    stride = self.model_params['stride'],
+                                    padding = self.model_params['padding'],
+                                    dilation = self.model_params['dilation'],
                                     kernel_size = layer[3],
                                     init_type='normal',
                                     regime=regime))

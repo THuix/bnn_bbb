@@ -16,6 +16,13 @@ class Conv_BNN(BNN):
 
         super(Conv_BNN, self).__init__(dist_params, train_params, model_params, regime)
 
+
+        hout = self.get_hout(model_params['hin'],
+                             train_params['p'], 
+                             model_params['dilation'],
+                             model_params['kernel_size'],
+                             model_params['stride'])
+
         self.seq = nn.Sequential(
             Conv_bnn(self.model_params['in_size'],
                      self.model_params['N_last_layer'],
@@ -31,7 +38,7 @@ class Conv_BNN(BNN):
                        regime=regime),
             nn.ReLU(),
             nn.Flatten(),
-            Linear_bnn(self.model_params['N_last_layer'],
+            Linear_bnn(self.model_params['N_last_layer'] * hout**2,
                        self.model_params['out_size'],
                        self.dist_params['init_rho_post'],
                        self.dist_params['init_mu_post'],
@@ -49,4 +56,7 @@ class Conv_BNN(BNN):
         self.do_flatten = False
         self.T = self.get_temperature(regime)
         self.save_hyperparameters()  
+
+    def get_hout(self, hin, p, d, k, s):
+        return int((hin + 2 * p - d * (k-1) - 1 ) / s + 1)
     
