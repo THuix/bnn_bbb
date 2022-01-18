@@ -15,9 +15,6 @@ class Linear_bnn(nn.Module):
                  init_mu_post,
                  sigma_prior,
                  mu_prior,
-                 N,
-                 p,
-                 alpha,
                  init_type='fixed',
                  regime=0,
                  bias = False):
@@ -37,9 +34,6 @@ class Linear_bnn(nn.Module):
             - bias(Boolean): add bias to the layer        
         """
         super(Linear_bnn, self).__init__()
-        self.N = N
-        self.p = p
-        self.alpha = alpha
         self.regime = regime
         self.bias = bias
         self.mu_prior = mu_prior
@@ -83,12 +77,9 @@ class Linear_bnn(nn.Module):
 
         elif self.regime == 2:
             value = torch.log(torch.exp(self.sigma_prior + rho) + 1)
-            # f_inf = f_inf = torch.sqrt(self.sigma_prior**2 * (torch.log((self.sigma_prior**2) / torch.log1p(torch.exp(rho))**2) + (torch.log1p(torch.exp(rho))**2) / (self.sigma_prior**2) - 1) / np.sqrt(self.alpha * self.p))
-            # kernel = 1 / (1 + self.N * (rho - np.log(np.exp(self.sigma_prior))**2))
-            # value = self.sigma_prior * np.sqrt(self.N / (self.p * self.alpha)) * (1 - kernel) + f_inf
         else:
             raise ValueError('To implement')
-        check(value, items=(rho, self.N, self.p))
+        check(value, items=(rho))
         return value
 
     def sample(self, mu, rho):
@@ -140,9 +131,6 @@ class Conv_bnn(nn.Module):
                  init_mu_post,
                  sigma_prior,
                  mu_prior,
-                 N,
-                 p,
-                 alpha,
                  stride = 1,
                  padding = 0,
                  dilation = 1,
@@ -164,9 +152,6 @@ class Conv_bnn(nn.Module):
             - regime([1, 2, 3]): regime used   
         """
         super(Conv_bnn, self).__init__()
-        self.N = N
-        self.p = p
-        self.alpha = alpha
         self.regime = regime
         self.mu_prior = mu_prior
         self.sigma_prior = sigma_prior
@@ -211,7 +196,7 @@ class Conv_bnn(nn.Module):
             value = torch.log(torch.exp(self.sigma_prior + rho) + 1)
         else:
             raise ValueError('To implement')
-        check(value, items=(rho, self.N, self.p))
+        check(value, items=(rho))
         return value
 
     def sample(self, mu, rho):

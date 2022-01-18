@@ -18,3 +18,5 @@ srun python ../exps/run_exp.py --dataset MNIST --model_name Linear_regime_1 --re
 srun python ../exps/run_exp.py --dataset BOSTON --model_name Linear_regime_1 --regime 1 --range_N 100 200 300 400 500 600 700 800 900 1000 --range_alpha None --nb_epochs 0 
 srun python ../exps/run_exp.py --dataset MNIST --model_name Linear_regime_3 --regime 3 --range_N 100 200 300 400 500 600 700 800 900 1000 --range_alpha 0.0000167 --nb_epochs 0 
 srun python ../exps/run_exp.py --dataset BOSTON --model_name Linear_regime_3 --regime 3 --range_N 100 200 300 400 500 600 700 800 900 1000 --range_alpha 0.0000167 --nb_epochs 0 
+srun python ../exps/run_exp.py --dataset MNIST --model_name Conv_regime_1 --regime 1 --range_N 100 200 300 400 500 600 700 800 900 1000 --range_alpha None --nb_epochs 0 
+srun python ../exps/run_exp.py --dataset MNIST --model_name Conv_regime_3 --regime 3 --range_N 100 200 300 400 500 600 700 800 900 1000 --range_alpha 0.0000167 --nb_epochs 0 
