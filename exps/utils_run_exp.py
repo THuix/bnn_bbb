@@ -99,7 +99,7 @@ def get_exp_name(train_params, model_params):
 
 def get_trainer(nb_epochs, wandb_logger, lr_monitor, exp_name):
     if torch.cuda.is_available():
-        trainer = pl.Trainer(gpus=-1, max_epochs=nb_epochs, logger= wandb_logger, callbacks=[lr_monitor], weights_save_path = exp_name, strategy='ddp')
+        trainer = pl.Trainer(gpus=-1, max_epochs=nb_epochs, logger= wandb_logger, callbacks=[lr_monitor], weights_save_path = exp_name)
     else:
         trainer = pl.Trainer(max_epochs=nb_epochs, logger= wandb_logger)
     return trainer
