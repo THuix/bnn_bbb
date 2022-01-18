@@ -55,6 +55,7 @@ class VGG(BNN):
         layers = all_layers[vgg_type]
         seq = []
         for layer in layers:
+            print(layer)
             if layer[0] == 'C': # conv layer
                 seq.append(
                     Conv_bnn(   in_size if layer[1] else layer[1],

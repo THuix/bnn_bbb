@@ -219,7 +219,6 @@ class Conv_bnn(nn.Module):
 
         [objective]
         """
-        print('SAMPLE CONV LAYER')
         w = self.sample(self.weight_mu, self.weight_rho)
         log_var_post = norm_log_prob(w, self.weight_mu, self.rho_to_std(self.weight_rho))
         log_prior = norm_log_prob(w, self.mu_prior, self.sigma_prior)
