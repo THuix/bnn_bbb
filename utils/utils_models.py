@@ -75,7 +75,7 @@ class BNN(pl.LightningModule):
         obj_loss = torch.zeros(1, requires_grad=True).type_as(x)
         nll = torch.zeros(1).type_as(x)
         kl = torch.zeros(1).type_as(x)
-        pred = torch.zeros((x.size()[0], self.out_size)).type_as(x)
+        pred = torch.zeros((x.size()[0], self.model_params['out_size'])).type_as(x)
 
         for idx in range(self.train_params['nb_samples']):
             o, n, k, p = self._step_1_sample(x, y)
