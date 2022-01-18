@@ -34,7 +34,7 @@ class VGG_regime_1(VGG):
 
 class VGG_regime_3(VGG):
     def __init__(self, dist_params, train_params, model_params):
-        super(VGG_regime_1, self).__init__(3, dist_params, train_params, model_params)
+        super(VGG_regime_3, self).__init__(3, dist_params, train_params, model_params)
 
 
 
