@@ -50,46 +50,46 @@ class VGG(BNN):
         self.save_hyperparameters()  
 
 
-        def create_seq(self, vgg_type, dist_params, regime, in_size, hin):
+    def create_seq(self, vgg_type, dist_params, regime, in_size, hin):
 
-            layers = all_layers[vgg_type]
-            seq = []
-            for layer in layers:
-                if layer[0] == 'C': # conv layer
-                    self.seq.append(
-                        Conv_bnn(   in_size if layer[1] else layer[1],
-                                    layer[2],
-                                    dist_params['init_rho_post'],
-                                    dist_params['init_mu_post'],
-                                    dist_params['sigma_prior'],
-                                    dist_params['mu_prior'],
-                                    stride = self.model_params['stride'],
-                                    padding = self.model_params['padding'],
-                                    dilation = self.model_params['dilation'],
-                                    kernel_size = layer[3],
-                                    init_type='normal',
-                                    regime=regime))
-                    self.seq.append(nn.ReLU())
+        layers = all_layers[vgg_type]
+        seq = []
+        for layer in layers:
+            if layer[0] == 'C': # conv layer
+                self.seq.append(
+                    Conv_bnn(   in_size if layer[1] else layer[1],
+                                layer[2],
+                                dist_params['init_rho_post'],
+                                dist_params['init_mu_post'],
+                                dist_params['sigma_prior'],
+                                dist_params['mu_prior'],
+                                stride = self.model_params['stride'],
+                                padding = self.model_params['padding'],
+                                dilation = self.model_params['dilation'],
+                                kernel_size = layer[3],
+                                init_type='normal',
+                                regime=regime))
+                self.seq.append(nn.ReLU())
 
-                elif layer[0] == 'MP': #maxpooling
-                    nn.append(nn.MaxPool2d(2))
+            elif layer[0] == 'MP': #maxpooling
+                nn.append(nn.MaxPool2d(2))
 
-                elif layer[0] == 'L': #Linear
-                    seq.append(
-                       Linear_bnn(512 * (hin - 5) ** 2 if layer[1] else layer[1],
-                       layer[2],
-                       dist_params['init_rho_post'],
-                       dist_params['init_mu_post'],
-                       dist_params['sigma_prior'],
-                       dist_params['mu_prior'],
-                       init_type='normal',
-                       regime=regime,
-                       bias = False)
-                       )
-                    if layer[3]:
-                        seq.append(nn.ReLU())
+            elif layer[0] == 'L': #Linear
+                seq.append(
+                    Linear_bnn(512 * (hin - 5) ** 2 if layer[1] else layer[1],
+                    layer[2],
+                    dist_params['init_rho_post'],
+                    dist_params['init_mu_post'],
+                    dist_params['sigma_prior'],
+                    dist_params['mu_prior'],
+                    init_type='normal',
+                    regime=regime,
+                    bias = False)
+                    )
+                if layer[3]:
+                    seq.append(nn.ReLU())
 
-                elif layer[0] == 'F': # flatten
-                    seq.append(nn.Flatten())
-                else:
-                    raise ValueError(f'layer name not find: {layer[0]}')
+            elif layer[0] == 'F': # flatten
+                seq.append(nn.Flatten())
+            else:
+                raise ValueError(f'layer name not find: {layer[0]}')
