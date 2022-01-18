@@ -40,7 +40,6 @@ class VGG(BNN):
 
         super(VGG, self).__init__(dist_params, train_params, model_params, regime)
         
-        self.save_hyperparameters()
         self.seq = nn.Sequential(*self.create_seq(model_params['VGG_type'], dist_params, regime, model_params['in_size'], model_params['hin']))
         self.model_params['w'] = np.sum([m.flatten().detach().cpu().numpy().shape for m in self.parameters()])
         self.regime = regime
@@ -56,7 +55,7 @@ class VGG(BNN):
         seq = []
         for layer in layers:
             if layer[0] == 'C': # conv layer
-                self.seq.append(
+                seq.append(
                     Conv_bnn(   in_size if layer[1] else layer[1],
                                 layer[2],
                                 dist_params['init_rho_post'],
@@ -69,10 +68,10 @@ class VGG(BNN):
                                 kernel_size = layer[3],
                                 init_type='normal',
                                 regime=regime))
-                self.seq.append(nn.ReLU())
+                seq.append(nn.ReLU())
 
             elif layer[0] == 'MP': #maxpooling
-                nn.append(nn.MaxPool2d(2))
+                seq.append(nn.MaxPool2d(2))
 
             elif layer[0] == 'L': #Linear
                 seq.append(
@@ -93,3 +92,4 @@ class VGG(BNN):
                 seq.append(nn.Flatten())
             else:
                 raise ValueError(f'layer name not find: {layer[0]}')
+        return seq
