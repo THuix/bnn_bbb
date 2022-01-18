@@ -42,6 +42,8 @@ class Linear_BNN(BNN):
                        init_type='normal',
                        regime=regime,
                        bias = False))
+
+        self.model_params['w'] = np.sum([m.flatten().detach().cpu().numpy().shape for m in self.parameters()])
         self.regime = regime
         self.save_hist = True
         self.do_flatten = True

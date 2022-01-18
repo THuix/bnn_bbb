@@ -17,10 +17,7 @@ os.environ["KMP_DUPLICATE_LIB_OK"]="TRUE"
 class BNN(pl.LightningModule):
     def __init__(self, dist_params, train_params, model_params, regime):
         super(BNN, self).__init__()
-        self.save_hyperparameters()
-        raise ValueError(list(self.parameters()))
-        self.model_params['w'] = np.sum([m.flatten().detach().cpu().numpy().shape for m in self.parameters()])
-
+        self.save_hyperparameters()        
         self.accuracy = torchmetrics.Accuracy()
         self.ECE = torchmetrics.CalibrationError(n_bins=15, norm='l1')
 

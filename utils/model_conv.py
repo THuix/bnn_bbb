@@ -3,6 +3,7 @@ import torchmetrics
 from torch import nn
 import pytorch_lightning as pl
 import torch
+import numpy as np
 from utils_models import BNN
 from layers import Conv_bnn, Linear_bnn
 
@@ -48,6 +49,7 @@ class Conv_BNN(BNN):
                        regime=regime,
                        bias = False))
 
+        self.model_params['w'] = np.sum([m.flatten().detach().cpu().numpy().shape for m in self.parameters()])
         self.regime = regime
         self.save_hist = False
         self.do_flatten = False
