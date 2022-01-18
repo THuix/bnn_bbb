@@ -2,9 +2,9 @@
 #SBATCH --job-name=train_vgg_11_cifar10 # nom du job
 #SBATCH --nodes=1	# number of nodes
 #SBATCH --gres=gpu:1
-#SBATCH --mem=32G
+#SBATCH --mem=8G
 #SBATCH --partition=gpu
-#SBATCH --cpus-per-task=15  
+#SBATCH --cpus-per-task=10  
 #SBATCH --hint=nomultithread     
 #SBATCH --time=00:05:00             # temps exécution maximum demande (HH:MM:SS)
 #SBATCH --output=output_train_vgg_11_cifar10.txt   # nom du fichier de sortie
