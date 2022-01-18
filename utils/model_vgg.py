@@ -1,4 +1,5 @@
 from numpy.lib import stride_tricks
+from torch._C import INSERT_FOLD_PREPACK_OPS
 import torchmetrics
 from torch import nn
 import pytorch_lightning as pl
@@ -11,7 +12,7 @@ from layers import Conv_bnn, Linear_bnn
 all_layers = {
  11: [('C', True, 0, 64, 3), ('M'), ('C', False, 64, 128, 3), ('M'), ('C', False, 128, 256, 3), ('C', False, 256, 256, 3),
         ('M'), ('C', False, 256, 512, 3), ('C', False, 512, 512, 3), ('M'), ('C', False, 512, 512, 3), ('C', False, 512, 512, 3),
-        ('M'), ('F'), ('L', True, 0, 4096, True), ('L', False, 4096, 4096, True), ('L', False, 4096, 10, False)],
+        ('M'), ('F'), ('L', True, 0, 512, True), ('L', False, 512, 512, True), ('L', False, 512, 10, False)],
 
  13: [('C', True, 64, 3), ('C', 64, 64, 3), ('M'), ('C', 64, 128, 3), ('C', 128, 128, 3), ('M'),
         ('C', 128, 256, 3), ('C', 256, 256, 3), ('M'), ('C', 256, 512, 3), ('C', 512, 512, 3),
@@ -40,7 +41,7 @@ class VGG(BNN):
 
         super(VGG, self).__init__(dist_params, train_params, model_params, regime)
         
-        self.model_params['N_last_layer'] = 512 * (model_params['hin'] - 5) ** 2
+        self.model_params['N_last_layer'] = 512 
         self.seq = nn.Sequential(*self.create_seq(model_params['VGG_type'], dist_params, regime, model_params['in_size'], model_params['hin']))
         self.model_params['w'] = np.sum([m.flatten().detach().cpu().numpy().shape for m in self.parameters()])
         self.regime = regime
@@ -69,14 +70,14 @@ class VGG(BNN):
                                 kernel_size = layer[4],
                                 init_type='normal',
                                 regime=regime))
-                seq.append(nn.ReLU())
+                seq.append(nn.ReLU(inplace=True))
 
             elif layer[0] == 'M': #maxpooling
-                seq.append(nn.MaxPool2d(2))
+                seq.append(nn.MaxPool2d(2, stride=2))
 
             elif layer[0] == 'L': #Linear
                 seq.append(
-                    Linear_bnn(512 * (hin - 5) ** 2 if layer[1] else layer[2],
+                    Linear_bnn(512 if layer[1] else layer[2],
                     layer[3],
                     dist_params['init_rho_post'],
                     dist_params['init_mu_post'],
@@ -87,7 +88,7 @@ class VGG(BNN):
                     bias = False)
                     )
                 if layer[4]:
-                    seq.append(nn.ReLU())
+                    seq.append(nn.ReLU(inplace=True))
 
             elif layer[0] == 'F': # flatten
                 seq.append(nn.Flatten())
