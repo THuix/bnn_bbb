@@ -10,9 +10,7 @@ def norm_log_prob(w, m, s):
         else:
             if s == 0.:
                 s = eps
+        raise ValueError(m.size(), s.size())
         log_prob = torch.distributions.normal.Normal(m, s).log_prob(w)
         check(log_prob, items=(w, m, s))
         return log_prob.sum()
-
-def exact_kl(m1, s1, m2, s2):
-    return torch.log(s2/s1) + (s1**2 + (m1-m2)**2) / (2*s2**2) -0.5
