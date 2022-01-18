@@ -17,8 +17,9 @@ os.environ["KMP_DUPLICATE_LIB_OK"]="TRUE"
 class BNN(pl.LightningModule):
     def __init__(self, dist_params, train_params, model_params, regime):
         super(BNN, self).__init__()
-        self.accuracy = torchmetrics.Accuracy()
-        self.ECE = torchmetrics.CalibrationError(n_bins=15, norm='l1')
+        if train_params['save_acc']:
+            self.accuracy = torchmetrics.Accuracy()
+            self.ECE = torchmetrics.CalibrationError(n_bins=15, norm='l1')
 
     def get_temperature(self, regime):
         if regime == 1 or regime == 2:
@@ -84,17 +85,20 @@ class BNN(pl.LightningModule):
         obj_loss = self.re_balance_loss(obj_loss)
         nll = self.re_balance_loss(nll)
         kl = self.re_balance_loss(kl)
-
-        self.accuracy.update(pred, y)
-        self.ECE.update(pred, y)
+        
         logs = {
-            'acc': self.accuracy.compute(),
-            'ece': self.ECE.compute(),
             "obj": obj_loss,
             "kl": kl,
             "nll": nll,
             "ratio_nll_kl": nll / kl,
         }
+
+        if self.train_params['save_acc']:
+            self.accuracy.update(pred, y)
+            self.ECE.update(pred, y)
+            logs['acc'] = self.accuracy.compute()
+            logs['ece'] = self.ECE.compute()
+
         
         return obj_loss, logs   
     

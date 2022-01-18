@@ -41,16 +41,19 @@ def load_data(batch_size, dataset_name, num_works, train_params, model_params):
         model_params['hin'] = 28
         model_params['in_size'] = 1
         model_params['out_size'] = 10
+        train_params['save_acc'] = True
     elif dataset_name == 'CIFAR10':
         trainset, testset = load_cifar(batch_size, num_works)
         model_params['hin'] = 32
         model_params['in_size'] = 3
         model_params['out_size'] = 10
+        train_params['save_acc'] = True
     elif dataset_name == 'BOSTON':
         trainset, testset = load_boston(batch_size, num_works)
         model_params['hin'] = 1
         model_params['in_size'] = 13
         model_params['out_size'] = 1
+        train_params['save_acc'] = False
     else:
         raise ValueError('To implement')
 
