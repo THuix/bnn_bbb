@@ -1,5 +1,5 @@
 from model_linear import Linear_BNN
-from model_conv import Conv_BNN
+from model_conv import Conv_BNN, VGG
 import numpy as np
 
 # Linear BNN - 1 hidden layer
@@ -25,5 +25,15 @@ class Conv_regime_1(Conv_BNN):
 class Conv_regime_3(Conv_BNN):
     def __init__(self, dist_params, train_params, model_params):
         super(Conv_regime_3, self).__init__(self, 3, dist_params, train_params, model_params)
+
+# VGG models
+class VGG_regime_1(Conv_BNN):
+    def __init__(self, dist_params, train_params, model_params):
+        super(VGG_regime_1, self).__init__(self, 1, dist_params, train_params, model_params)
+
+class VGG_regime_3(Conv_BNN):
+    def __init__(self, dist_params, train_params, model_params):
+        super(VGG_regime_1, self).__init__(self, 3, dist_params, train_params, model_params)
+
 
 

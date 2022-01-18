@@ -6,7 +6,9 @@ from pytorch_lightning.loggers.wandb import WandbLogger
 from pytorch_lightning.callbacks import LearningRateMonitor
 import pytorch_lightning as pl
 import wandb
-from models import Linear_regime_1, Linear_regime_2, Linear_regime_3, Conv_Model_regime_1, Conv_Model_regime_3
+from models import Linear_regime_1, Linear_regime_2, Linear_regime_3
+from models import Conv_regime_1, Conv_regime_3
+from models import VGG_regime_1, VGG_regime_3
 from torchvision import transforms
 from torchvision.datasets import MNIST, CIFAR10
 from torch.utils.data import DataLoader
@@ -66,16 +68,27 @@ def get_model(model_name, dist_params, train_params, model_params):
     if model_name == 'Linear_regime_1':
         model_params['in_size'] = model_params['in_size'] * model_params['hin']**2
         return Linear_regime_1(dist_params, train_params, model_params)
+
     elif model_name == 'Linear_regime_2':
         model_params['in_size'] = model_params['in_size'] * model_params['hin']**2
-        return Linear_regime_1(dist_params, train_params, model_params)
+        return Linear_regime_2(dist_params, train_params, model_params)
+
     elif model_name == 'Linear_regime_3':
         model_params['in_size'] = model_params['in_size'] * model_params['hin']**2
-        return Linear_regime_1(dist_params, train_params, model_params)
+        return Linear_regime_3(dist_params, train_params, model_params)
+
     elif model_name == 'Conv_Model_regime_1':
-        return Conv_Model_regime_1(dist_params, train_params, model_params)
+        return Conv_regime_1(dist_params, train_params, model_params)
+
     elif model_name == 'Conv_Model_regime_3':
-        return Conv_Model_regime_3(dist_params, train_params, model_params)
+        return Conv_regime_3(dist_params, train_params, model_params)
+
+    elif model_name == 'VGG_regime_1':
+        return VGG_regime_1(dist_params, train_params, model_params)
+
+    elif model_name == 'VGG_regime_3':
+        return VGG_regime_3(dist_params, train_params, model_params)
+        
     else:
         raise ValueError(f'To implement: {model_name}')
 
