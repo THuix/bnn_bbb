@@ -12,7 +12,7 @@ parser.add_argument('--vgg_type', type=int)
 parser.add_argument('--project_name')
 
 num_works = 8
-batch_size = 128
+batch_size = 64
 
 def launch_train(args, alpha, model_name):
     train_params = {'lr': 1e-2,
