@@ -2,7 +2,7 @@
 #SBATCH --job-name=init_linear_regime_1_mnist # nom du job
 #SBATCH --nodes=1	# number of nodes
 #SBATCH --gres=gpu:1
-#SBATCH --mem=32G
+#SBATCH --mem=64G
 #SBATCH --partition=gpu
 #SBATCH --cpus-per-task=10       
 #SBATCH --time=0:30:00             # temps exécution maximum demande (HH:MM:SS)
