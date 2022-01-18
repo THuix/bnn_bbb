@@ -9,9 +9,9 @@ from layers import Conv_bnn, Linear_bnn
 
 
 all_layers = {
- 11: [('C', True, 64, 3), ('M'), ('C', 64, 128, 3), ('M'), ('C', 128, 256, 3), ('C', 256, 256, 3),
-        ('M'), ('C', 256, 512, 3), ('C', 512, 512, 3), ('M'), ('C', 512, 512, 3), ('C', 512, 512, 3),
-        ('M'), ('F'), ('L', True, 4096, True), ('L', 4096, 4096, True), ('L', 4096, 10, False)],
+ 11: [('C', True, 0, 64, 3), ('M'), ('C', False, 64, 128, 3), ('M'), ('C', False, 128, 256, 3), ('C', False, 256, 256, 3),
+        ('M'), ('C', False, 256, 512, 3), ('C', False, 512, 512, 3), ('M'), ('C', False, 512, 512, 3), ('C', False, 512, 512, 3),
+        ('M'), ('F'), ('L', True, 0, 4096, True), ('L', False, 4096, 4096, True), ('L', False, 4096, 10, False)],
 
  13: [('C', True, 64, 3), ('C', 64, 64, 3), ('M'), ('C', 64, 128, 3), ('C', 128, 128, 3), ('M'),
         ('C', 128, 256, 3), ('C', 256, 256, 3), ('M'), ('C', 256, 512, 3), ('C', 512, 512, 3),
@@ -21,8 +21,8 @@ all_layers = {
  16: [('C', True, 64, 3), ('C', 64, 64, 3), ('M'), ('C', 64, 128, 3), ('C',128,  128, 3), ('M'),
         ('C', 128, 256, 3), ('C', 256, 256, 3), ('C', 256, 256, 3), ('M'), ('C', 256, 512, 3),
         ('C', 512, 512, 3), ('C', 512, 512, 3), ('M'), ('C', 512, 512, 3), ('C', 512, 512, 3),
-        ('C', 512, 512, 3), ('M'), ('F'),('L', True, 4096, True), ('L', 4096, 4096, True),
-        ('L', 4096, 10, False)],
+        ('C', 512, 512, 3), ('M'), ('F'),('L', True, 0, 4096, True), ('L', False, 4096, 4096, True),
+        ('L', False, 4096, 10, False)],
 
  19: [('C', True, 64, 3), ('C', 64, 64, 3), ('M'), ('C', 128, 128, 3), ('C', 128, 128, 3), 
         ('M'), ('C', 128, 256, 3), ('C', 256, 256, 3), ('C', 256, 256, 3), ('C', 256, 256, 3),
@@ -55,11 +55,10 @@ class VGG(BNN):
         layers = all_layers[vgg_type]
         seq = []
         for layer in layers:
-            print(layer)
             if layer[0] == 'C': # conv layer
                 seq.append(
-                    Conv_bnn(   in_size if layer[1] else layer[1],
-                                layer[2],
+                    Conv_bnn(   in_size if layer[1] else layer[2],
+                                layer[3],
                                 dist_params['init_rho_post'],
                                 dist_params['init_mu_post'],
                                 dist_params['sigma_prior'],
@@ -67,7 +66,7 @@ class VGG(BNN):
                                 stride = self.model_params['stride'],
                                 padding = self.model_params['padding'],
                                 dilation = self.model_params['dilation'],
-                                kernel_size = layer[3],
+                                kernel_size = layer[4],
                                 init_type='normal',
                                 regime=regime))
                 seq.append(nn.ReLU())
@@ -77,8 +76,8 @@ class VGG(BNN):
 
             elif layer[0] == 'L': #Linear
                 seq.append(
-                    Linear_bnn(512 * (hin - 5) ** 2 if layer[1] else layer[1],
-                    layer[2],
+                    Linear_bnn(512 * (hin - 5) ** 2 if layer[1] else layer[2],
+                    layer[3],
                     dist_params['init_rho_post'],
                     dist_params['init_mu_post'],
                     dist_params['sigma_prior'],
@@ -87,7 +86,7 @@ class VGG(BNN):
                     regime=regime,
                     bias = False)
                     )
-                if layer[3]:
+                if layer[4]:
                     seq.append(nn.ReLU())
 
             elif layer[0] == 'F': # flatten
