@@ -74,7 +74,7 @@ def get_model(model_name, dist_params, train_params, model_params):
     elif model_name == 'Conv_Model_regime_3':
         return Conv_Model_regime_3(dist_params, train_params, model_params)
     else:
-        raise ValueError('To implement')
+        raise ValueError(f'To implement: {model_name}')
 
 def get_exp_name(train_params, model_params):
     N_last_layer = model_params['N_last_layer']
