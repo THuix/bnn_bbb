@@ -4,7 +4,7 @@
 #SBATCH --gres=gpu:1
 #SBATCH --mem=32G
 #SBATCH --partition=gpu
-#SBATCH --cpus-per-task=10  
+#SBATCH --cpus-per-task=15  
 #SBATCH --hint=nomultithread     
 #SBATCH --time=00:05:00             # temps exécution maximum demande (HH:MM:SS)
 #SBATCH --output=output_train_vgg_11_cifar10.txt   # nom du fichier de sortie
