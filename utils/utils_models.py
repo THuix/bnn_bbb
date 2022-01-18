@@ -46,8 +46,6 @@ class BNN(pl.LightningModule):
         for module in self.modules():
             if hasattr(module, 'appro_kl'):
                 kl += module.appro_kl
-                module.appro_kl = 0
-                raise ValueError(kl, module.appro_kl)
         check_is_tensor(kl, 'KL')
         check(kl)
         return kl
