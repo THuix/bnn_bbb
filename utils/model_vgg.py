@@ -38,7 +38,7 @@ class VGG(BNN):
         self.train_params = self.check_params(train_params, ['lr', 'nb_samples', 'nb_batches', 'criterion', 'alpha', 'p'])
         self.model_params = self.check_params(model_params, ['VGG_type', 'in_size', 'out_size', 'hin'])
 
-        super(VGG, self).__init__(dist_params, train_params, model_params, regime, model_params['in_size'])
+        super(VGG, self).__init__(dist_params, train_params, model_params, regime)
         
         self.save_hyperparameters()
         self.seq = nn.Sequential(*self.create_seq(model_params['VGG_type'], dist_params, regime, model_params['in_size'], model_params['hin']))
