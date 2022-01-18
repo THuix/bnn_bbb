@@ -16,10 +16,8 @@ class Conv_BNN(BNN):
 
         super(Conv_BNN, self).__init__(dist_params, train_params, model_params, regime)
 
-        raise ValueError(model_params['hin'], train_params['p'], model_params['dilation'], model_params['kernel_size'], model_params['stride'])
-        
         hout = self.get_hout(model_params['hin'],
-                             train_params['p'], 
+                             train_params['padding'], 
                              model_params['dilation'],
                              model_params['kernel_size'],
                              model_params['stride'])
