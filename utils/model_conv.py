@@ -16,14 +16,13 @@ class Conv_BNN(BNN):
 
         super(Conv_BNN, self).__init__(dist_params, train_params, model_params, regime)
 
-
+        raise ValueError(model_params['hin'], train_params['p'], model_params['dilation'], model_params['kernel_size'], model_params['stride'])
+        
         hout = self.get_hout(model_params['hin'],
                              train_params['p'], 
                              model_params['dilation'],
                              model_params['kernel_size'],
                              model_params['stride'])
-
-        raise ValueError(self.model_params['N_last_layer'], hout, self.model_params['N_last_layer'] * hout**2)
 
         self.seq = nn.Sequential(
             Conv_bnn(self.model_params['in_size'],
