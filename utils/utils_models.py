@@ -18,6 +18,7 @@ class BNN(pl.LightningModule):
     def __init__(self, dist_params, train_params, model_params, regime):
         super(BNN, self).__init__()
         self.save_hyperparameters()
+        raise ValueError(list(self.parameters()))
         self.model_params['w'] = np.sum([m.flatten().detach().cpu().numpy().shape for m in self.parameters()])
 
         self.accuracy = torchmetrics.Accuracy()
