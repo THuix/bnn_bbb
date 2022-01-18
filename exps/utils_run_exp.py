@@ -77,10 +77,10 @@ def get_model(model_name, dist_params, train_params, model_params):
         model_params['in_size'] = model_params['in_size'] * model_params['hin']**2
         return Linear_regime_3(dist_params, train_params, model_params)
 
-    elif model_name == 'Conv_Model_regime_1':
+    elif model_name == 'Conv_regime_1':
         return Conv_regime_1(dist_params, train_params, model_params)
 
-    elif model_name == 'Conv_Model_regime_3':
+    elif model_name == 'Conv_regime_3':
         return Conv_regime_3(dist_params, train_params, model_params)
 
     elif model_name == 'VGG_regime_1':
@@ -88,7 +88,7 @@ def get_model(model_name, dist_params, train_params, model_params):
 
     elif model_name == 'VGG_regime_3':
         return VGG_regime_3(dist_params, train_params, model_params)
-        
+
     else:
         raise ValueError(f'To implement: {model_name}')
 
