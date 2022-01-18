@@ -61,13 +61,13 @@ def load_data(batch_size, dataset_name, num_works, train_params, model_params):
 
 def get_model(model_name, dist_params, train_params, model_params):
     if model_name == 'Linear_regime_1':
-        model_params['in_size'] = model_params['in_size'] * model_params['hin']
+        model_params['in_size'] = model_params['in_size'] * model_params['hin']**2
         return Linear_regime_1(dist_params, train_params, model_params)
     elif model_name == 'Linear_regime_2':
-        model_params['in_size'] = model_params['in_size'] * model_params['hin']
+        model_params['in_size'] = model_params['in_size'] * model_params['hin']**2
         return Linear_regime_1(dist_params, train_params, model_params)
     elif model_name == 'Linear_regime_3':
-        model_params['in_size'] = model_params['in_size'] * model_params['hin']
+        model_params['in_size'] = model_params['in_size'] * model_params['hin']**2
         return Linear_regime_1(dist_params, train_params, model_params)
     elif model_name == 'Conv_Model_regime_1':
         return Conv_Model_regime_1(dist_params, train_params, model_params)
