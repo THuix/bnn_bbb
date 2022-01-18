@@ -2,6 +2,7 @@ from utils_run_exp import main
 import argparse
 import numpy as np
 from torch import nn
+import wandb
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--dataset')
@@ -15,6 +16,7 @@ num_works = 8
 batch_size = 128
 
 if __name__ == '__main__':
+    wandb.finish()
     args = parser.parse_args()
     print(args.regime)
     dist_params = {'init_mu_post': 0.,
