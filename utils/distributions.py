@@ -10,7 +10,6 @@ def norm_log_prob(w, m, s):
         else:
             if s == 0.:
                 s = eps
-        raise ValueError(m.size(), s.size())
         log_prob = torch.distributions.normal.Normal(m, s).log_prob(w)
         check(log_prob, items=(w, m, s))
         return log_prob.sum()
