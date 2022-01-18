@@ -15,8 +15,6 @@ class Conv_BNN(BNN):
         self.model_params = self.check_params(model_params, ['N_last_layer', 'in_size', 'out_size', 'hin', 'padding', 'stride', 'dilation', 'kernel_size'])
 
         super(Conv_BNN, self).__init__(dist_params, train_params, model_params, regime)
-        
-        self.save_hyperparameters()
 
         self.seq = nn.Sequential(
             Conv_bnn(self.model_params['in_size'],
@@ -44,6 +42,8 @@ class Conv_BNN(BNN):
                        bias = False))
 
         self.model_params['w'] = np.sum([m.flatten().detach().cpu().numpy().shape for m in self.parameters()])
+        if regime == 1:
+            self.train_params['alpha'] = self.model_params['w'] / self.train_params['p']
         self.regime = regime
         self.save_hist = False
         self.do_flatten = False

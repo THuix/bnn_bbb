@@ -7,7 +7,6 @@ import wandb
 parser = argparse.ArgumentParser()
 parser.add_argument('--dataset')
 parser.add_argument('--model_name')
-parser.add_argument('--regime')
 parser.add_argument('--range_N', default=[], nargs='+')
 parser.add_argument('--range_alpha', default=[], nargs='+')
 parser.add_argument('--nb_epochs', type=int)  
@@ -18,9 +17,8 @@ batch_size = 128
 if __name__ == '__main__':
     wandb.finish()
     args = parser.parse_args()
-    print(args.regime)
     dist_params = {'init_mu_post': 0.,
-                    'init_rho_post': 0. if args.regime == '2' else np.log(np.exp(0.1)-1),
+                    'init_rho_post': np.log(np.exp(0.1)-1),
                     'sigma_prior': 0.1,
                     'mu_prior': 0.}
 
