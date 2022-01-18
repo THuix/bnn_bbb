@@ -93,10 +93,9 @@ def get_model(model_name, dist_params, train_params, model_params):
         raise ValueError(f'To implement: {model_name}')
 
 def get_exp_name(train_params, model_params):
-    N_last_layer = model_params['N_last_layer']
     w = model_params['w']
     alpha = train_params['alpha']
-    return f'N_{N_last_layer}_w_{w}_alpha_{alpha}'
+    return f'w_{w}_alpha_{alpha}'
 
 def get_trainer(nb_epochs, wandb_logger, lr_monitor, exp_name):
     if torch.cuda.is_available():
