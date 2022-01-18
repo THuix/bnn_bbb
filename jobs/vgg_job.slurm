@@ -2,7 +2,7 @@
 #SBATCH --job-name=train_vgg_11_cifar10 # nom du job
 #SBATCH --nodes=1	# number of nodes
 #SBATCH --gres=gpu:2
-#SBATCH --mem=32G
+#SBATCH --mem=64G
 #SBATCH --partition=gpu
 #SBATCH --cpus-per-task=10  
 #SBATCH --hint=nomultithread     
