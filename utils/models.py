@@ -1,5 +1,6 @@
 from model_linear import Linear_BNN
-from model_conv import Conv_BNN, VGG
+from model_conv import Conv_BNN
+from model_vgg import VGG
 import numpy as np
 
 # Linear BNN - 1 hidden layer
