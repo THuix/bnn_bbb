@@ -42,6 +42,7 @@ class Linear_BNN(BNN):
         self.save_hist = True
         self.do_flatten = True
         self.T = self.get_temperature(regime)
+        self.save_hyperparameters()  
 
 class NN(pl.LightningModule):
     def __init__(self, in_size, out_size, N, criterion, lr):

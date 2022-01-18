@@ -48,4 +48,5 @@ class Conv_BNN(BNN):
         self.save_hist = False
         self.do_flatten = False
         self.T = self.get_temperature(regime)
+        self.save_hyperparameters()  
     
