@@ -69,7 +69,7 @@ class BNN(pl.LightningModule):
         x, y = batch
         if self.do_flatten:
             x = x.reshape(x.size()[0], -1)
-
+        raise ValueError(x.size())
         obj_loss = torch.zeros(1, requires_grad=True).type_as(x)
         nll = torch.zeros(1).type_as(x)
         kl = torch.zeros(1).type_as(x)
