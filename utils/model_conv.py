@@ -23,6 +23,8 @@ class Conv_BNN(BNN):
                              model_params['kernel_size'],
                              model_params['stride'])
 
+        raise ValueError(self.model_params['N_last_layer'] * hout**2)
+
         self.seq = nn.Sequential(
             Conv_bnn(self.model_params['in_size'],
                      self.model_params['N_last_layer'],
