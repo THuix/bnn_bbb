@@ -33,7 +33,9 @@ if __name__ == '__main__':
                              'nb_epochs': args.nb_epochs,
                             'nb_samples': 3,
                             'criterion': nn.MSELoss(reduction='sum') if args.dataset == 'BOSTON' else nn.CrossEntropyLoss(reduction='sum'),
-                            'alpha': alpha}
+                            'alpha': alpha,
+                            'dataset': args.dataset,
+                            'model': args.model_name}
 
             model_params = {'padding' : 0,
                             'dilation': 1,
@@ -41,9 +43,7 @@ if __name__ == '__main__':
                             'kernel_size': 3,
                             'N_last_layer': int(N_last_layer)}
 
-            nb_epochs = args.nb_epochs
-            model_name = args.model_name
-            dataset_name = args.dataset
+ 
 
             main(args.project_name,
                  args.model_name,
