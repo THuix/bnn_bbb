@@ -40,6 +40,7 @@ class VGG(BNN):
 
         super(VGG, self).__init__(dist_params, train_params, model_params, regime)
         
+        self.model_params['N_last_layer'] = 512 * (model_params['hin'] - 5) ** 2
         self.seq = nn.Sequential(*self.create_seq(model_params['VGG_type'], dist_params, regime, model_params['in_size'], model_params['hin']))
         self.model_params['w'] = np.sum([m.flatten().detach().cpu().numpy().shape for m in self.parameters()])
         self.regime = regime
