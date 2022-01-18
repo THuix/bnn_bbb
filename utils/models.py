@@ -15,7 +15,7 @@ class Linear_regime_2(Linear_BNN):
 
 class Linear_regime_3(Linear_BNN):
     def __init__(self, dist_params, train_params, model_params):
-        super(Linear_regime_3, self).__init__(dist_params, train_params, model_params)
+        super(Linear_regime_3, self).__init__(3, dist_params, train_params, model_params)
 
 
 # Conv BNN - 1 hidden layer
