@@ -56,7 +56,7 @@ if __name__ == '__main__':
                             'N_last_layer': int(N_last_layer)}
 
             if args.vgg_type != 'None':
-                model_params['vgg_type'] = int(args.vgg_type)
+                model_params['VGG_type'] = int(args.vgg_type)
 
  
 
