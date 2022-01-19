@@ -104,7 +104,24 @@ class VGG(BNN):
         return seq
 
 
-def create_seq_classic(self, vgg_type, in_size):
+
+class VGG_classic(NN):
+    def __init__(self, train_params, model_params):
+        self.train_params = train_params
+        self.model_params = model_params
+        super(VGG_classic, self).__init__(512,
+                                          self.train_params['criterion'],
+                                          self.train_params['lr'])
+
+
+        self.seq = nn.Sequential(*self.create_seq(model_params['VGG_type'], model_params['in_size'], model_params['hin']))
+        
+        self.model_params['w'] = np.sum([m.flatten().detach().cpu().numpy().shape for m in self.parameters()])
+        self.save_hist = False
+        self.do_flatten = False
+        self.save_hyperparameters()  
+
+    def create_seq(self, vgg_type, in_size):
 
         layers = all_layers[vgg_type]
         seq = []
@@ -137,18 +154,3 @@ def create_seq_classic(self, vgg_type, in_size):
         return seq
 
 
-class VGG_classic(NN):
-    def __init__(self, train_params, model_params):
-        self.train_params = train_params
-        self.model_params = model_params
-        super(VGG_classic, self).__init__(512,
-                                          self.train_params['criterion'],
-                                          self.train_params['lr'])
-
-
-        self.seq = nn.Sequential(*self.create_seq(model_params['VGG_type'], model_params['in_size'], model_params['hin']))
-        
-        self.model_params['w'] = np.sum([m.flatten().detach().cpu().numpy().shape for m in self.parameters()])
-        self.save_hist = False
-        self.do_flatten = False
-        self.save_hyperparameters()  
