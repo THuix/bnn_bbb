@@ -114,7 +114,7 @@ class VGG_classic(NN):
                                           self.train_params['lr'])
 
 
-        self.seq = nn.Sequential(*self.create_seq(model_params['VGG_type'], model_params['in_size'], model_params['hin']))
+        self.seq = nn.Sequential(*self.create_seq(model_params['VGG_type'], model_params['in_size']))
         
         self.model_params['w'] = np.sum([m.flatten().detach().cpu().numpy().shape for m in self.parameters()])
         self.save_hist = False
