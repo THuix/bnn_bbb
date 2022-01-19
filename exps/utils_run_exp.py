@@ -39,6 +39,7 @@ def load_cifar(batch_size, num_works):
     return trainset, testset
 
 def limit_size(dataset, size):
+    print(dataset.dataset.__len__(), len(list(range(0, dataset.dataset.__len__()))), size)
     indexes = np.random.choice(range(0, dataset.dataset.__len__()), size=size, replace=False)
     dataset.dataset.targets = dataset.dataset.targets[indexes]
     dataset.dataset.data = dataset.dataset.data[indexes] 
