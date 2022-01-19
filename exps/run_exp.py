@@ -11,7 +11,7 @@ parser.add_argument('--range_N', default=[], nargs='+')
 parser.add_argument('--range_alpha', default=[], nargs='+')
 parser.add_argument('--nb_epochs', type=int)  
 parser.add_argument('--project_name')
-parser.add_argument('--p_scale_with_N', type=bool)
+parser.add_argument('--p_scales_with_N', type=bool)
 
 num_works = 8
 batch_size = 128
