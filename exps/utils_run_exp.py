@@ -24,9 +24,9 @@ def load_boston(batch_size, num_works):
     return trainloader, trainloader
 
 def load_mnist(batch_size, num_works):
-    dataset = MNIST(os.getcwd(), download=True, transform=transforms.ToTensor(), train=True)
+    dataset = MNIST('../', download=True, transform=transforms.ToTensor(), train=True)
     trainset = DataLoader(dataset, batch_size=batch_size, num_workers=num_works)
-    dataset = MNIST(os.getcwd(), download=True, transform=transforms.ToTensor(), train=False)
+    dataset = MNIST('../', download=True, transform=transforms.ToTensor(), train=False)
     testset = DataLoader(dataset, batch_size=batch_size, num_workers=num_works)
     return trainset, testset
 
