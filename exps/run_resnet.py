@@ -18,7 +18,9 @@ def launch_train(args, alpha, model_name):
                         'nb_epochs': args.nb_epochs,
                         'nb_samples': 3,
                         'criterion': nn.CrossEntropyLoss(reduction='sum'),
-                        'alpha': alpha}
+                        'alpha': alpha, 
+                        'dataset': args.dataset,
+                        'model': model_name}
 
     model_params = {}
 
