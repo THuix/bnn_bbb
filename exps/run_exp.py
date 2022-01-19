@@ -40,7 +40,7 @@ if __name__ == '__main__':
                             'dataset': args.dataset,
                             'model': args.model_name}
 
-            if args.p_scale_with_N:
+            if args.p_scales_with_N:
                 train_params['limit_p'] = 6000 * N_last_layer
             else:
                 train_params['limit_p'] = None
