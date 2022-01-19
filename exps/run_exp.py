@@ -55,7 +55,7 @@ if __name__ == '__main__':
                             'kernel_size': 3,
                             'N_last_layer': int(N_last_layer)}
 
-            if args.vgg_type != None:
+            if args.vgg_type != 'None':
                 model_params['vgg_type'] = int(args.vgg_type)
 
  
