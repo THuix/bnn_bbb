@@ -7,6 +7,7 @@ import torch.nn.functional as F
 
 class Resnet_bloc(nn.Module):
     def __init__(self, in_channels, out_channels, ks, stride, conv_in_identity, dist_params, model_params, regime):
+        super(Resnet_bloc, self).__init__()
         self.seq = nn.Sequential(
             Conv_bnn(in_channels,
                      out_channels,
