@@ -29,7 +29,7 @@ if __name__ == '__main__':
             if alpha != 'None':
                 alpha = float(alpha)
 
-            train_params = {'lr': 1e-2,
+            train_params = {'lr': 1e-1,
                              'nb_epochs': args.nb_epochs,
                             'nb_samples': 3,
                             'criterion': nn.MSELoss(reduction='sum') if args.dataset == 'BOSTON' else nn.CrossEntropyLoss(reduction='sum'),
