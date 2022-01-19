@@ -41,7 +41,7 @@ if __name__ == '__main__':
                             'alpha': alpha,
                             'dataset': args.dataset,
                             'model': args.model_name}
-
+            raise ValueError(args.p_scales_with_N)
             if args.p_scales_with_N:
                 train_params['limit_p'] = int(0.5 * int(N_last_layer))
             else:
