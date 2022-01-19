@@ -9,6 +9,7 @@ import wandb
 from models import Linear_regime_1, Linear_regime_2, Linear_regime_3
 from models import Conv_regime_1, Conv_regime_3
 from models import VGG_regime_1, VGG_regime_3
+from models import Resnet_regime_1, Resnet_regime_3
 from torchvision import transforms
 from torchvision.datasets import MNIST, CIFAR10
 from torch.utils.data import DataLoader
@@ -88,6 +89,10 @@ def get_model(model_name, dist_params, train_params, model_params):
 
     elif model_name == 'VGG_regime_3':
         return VGG_regime_3(dist_params, train_params, model_params)
+    elif model_name == 'Resnet_regime_3':
+        return Resnet_regime_3(dist_params, train_params, model_params)
+    elif model_name == 'Resnet_regime_3':
+        return Resnet_regime_3(dist_params, train_params, model_params)
 
     else:
         raise ValueError(f'To implement: {model_name}')
