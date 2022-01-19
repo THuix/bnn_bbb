@@ -14,4 +14,4 @@ module purge
 module load anaconda3/2020.02/gcc-9.2.0
 source activate myenv
 export PL_TORCH_DISTRIBUTED_BACKEND=gloo
-srun python ../../exps/run_exp.py --dataset MNIST --model_name Linear_regime_1 --range_N 500 --range_alpha None --nb_epochs 50 --project_name train_r1_m
+srun python ../../exps/run_exp.py --dataset MNIST --model_name Linear_regime_1 --range_N 150 --range_alpha None --nb_epochs 50 --project_name train_r1_m
