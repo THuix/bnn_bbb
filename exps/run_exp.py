@@ -41,7 +41,7 @@ if __name__ == '__main__':
                             'model': args.model_name}
 
             if args.p_scales_with_N:
-                train_params['limit_p'] = 60 * int(N_last_layer)
+                train_params['limit_p'] = 0.506 * int(N_last_layer)
             else:
                 train_params['limit_p'] = None
 
