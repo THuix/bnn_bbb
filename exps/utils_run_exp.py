@@ -89,8 +89,8 @@ def get_model(model_name, dist_params, train_params, model_params):
 
     elif model_name == 'VGG_regime_3':
         return VGG_regime_3(dist_params, train_params, model_params)
-    elif model_name == 'Resnet_regime_3':
-        return Resnet_regime_3(dist_params, train_params, model_params)
+    elif model_name == 'Resnet_regime_1':
+        return Resnet_regime_1(dist_params, train_params, model_params)
     elif model_name == 'Resnet_regime_3':
         return Resnet_regime_3(dist_params, train_params, model_params)
 
