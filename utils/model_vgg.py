@@ -133,7 +133,8 @@ class VGG_classic(NN):
                               stride = self.model_params['stride'],
                               padding = self.model_params['padding'],
                               dilation = self.model_params['dilation'],
-                              kernel_size = layer[4]))
+                              kernel_size = layer[4]),
+                              bias=False)
                 seq.append(nn.ReLU(inplace=True))
 
             elif layer[0] == 'M': #maxpooling
@@ -142,7 +143,8 @@ class VGG_classic(NN):
             elif layer[0] == 'L': #Linear
                 seq.append(
                     nn.Linear(512 if layer[1] else layer[2],
-                    layer[3])
+                    layer[3],
+                    bias=False)
                     )
                 if layer[4]:
                     seq.append(nn.ReLU(inplace=True))
