@@ -43,10 +43,8 @@ if __name__ == '__main__':
                             'model': args.model_name}
 
             if args.p_scales_with_N:
-                raise ValueError('oui')
                 train_params['limit_p'] = int(0.5 * int(N_last_layer))
             else:
-                raise ValueError('non')
                 train_params['limit_p'] = None
 
             
