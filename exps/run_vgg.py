@@ -15,7 +15,7 @@ num_works = 8
 batch_size = 128
 
 def launch_train(args, alpha, model_name):
-    train_params = {'lr': 1e-1,
+    train_params = {'lr': 1e-2,
                         'nb_epochs': args.nb_epochs,
                         'nb_samples': 3,
                         'criterion': nn.CrossEntropyLoss(reduction='sum'),
