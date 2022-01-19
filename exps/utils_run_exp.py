@@ -31,10 +31,10 @@ def load_mnist(batch_size, num_works):
     return trainset, testset
 
 def load_cifar(batch_size, num_works):
-    trainset = CIFAR10(os.getcwd(), download=False, transform=transforms.ToTensor(), train=True)
+    trainset = CIFAR10('../', download=False, transform=transforms.ToTensor(), train=True)
     trainset = DataLoader(trainset, batch_size=batch_size, shuffle=True, num_workers=8)
     
-    testset = CIFAR10(os.getcwd(), download=False, transform=transforms.ToTensor(), train=False)
+    testset = CIFAR10('../', download=False, transform=transforms.ToTensor(), train=False)
     testset = DataLoader(testset, batch_size=batch_size, shuffle=False, num_workers=8)
     return trainset, testset
 
