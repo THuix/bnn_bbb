@@ -45,3 +45,5 @@ class Resnet_regime_1(Resnet20):
 class Resnet_regime_3(Resnet20):
     def __init__(self, dist_params, train_params, model_params):
         super(Resnet_regime_3, self).__init__(3, dist_params, train_params, model_params)
+
+

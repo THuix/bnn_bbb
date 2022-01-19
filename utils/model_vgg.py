@@ -6,6 +6,7 @@ import pytorch_lightning as pl
 import torch
 import numpy as np
 from utils_models import BNN
+from model_linear import NN
 from layers import Conv_bnn, Linear_bnn
 
 
@@ -101,3 +102,55 @@ class VGG(BNN):
             else:
                 raise ValueError(f'layer name not find: {layer[0]}')
         return seq
+
+
+def create_seq_classic(self, vgg_type, in_size):
+
+        layers = all_layers[vgg_type]
+        seq = []
+        for layer in layers:
+            if layer[0] == 'C': # conv layer
+                seq.append(
+                    nn.Conv2d(in_size if layer[1] else layer[2],
+                              layer[3],
+                              stride = self.model_params['stride'],
+                              padding = self.model_params['padding'],
+                              dilation = self.model_params['dilation'],
+                              kernel_size = layer[4]))
+                seq.append(nn.ReLU(inplace=True))
+
+            elif layer[0] == 'M': #maxpooling
+                seq.append(nn.MaxPool2d(2, stride=2))
+
+            elif layer[0] == 'L': #Linear
+                seq.append(
+                    nn.Linear(512 if layer[1] else layer[2],
+                    layer[3])
+                    )
+                if layer[4]:
+                    seq.append(nn.ReLU(inplace=True))
+
+            elif layer[0] == 'F': # flatten
+                seq.append(nn.Flatten())
+            else:
+                raise ValueError(f'layer name not find: {layer[0]}')
+        return seq
+
+
+class VGG_classic(NN):
+    def __init__(self, train_params, model_params):
+        
+        self.train_params = self.check_params(train_params, ['lr', 'nb_samples', 'nb_batches', 'criterion', 'alpha', 'p'])
+        self.model_params = self.check_params(model_params, ['VGG_type', 'in_size', 'out_size', 'hin'])
+
+        super(VGG_classic, self).__init__(512,
+                                          self.train_params['criterion'],
+                                          self.train_params['lr'])
+
+
+        self.seq = nn.Sequential(*self.create_seq(model_params['VGG_type'], model_params['in_size'], model_params['hin']))
+        
+        self.model_params['w'] = np.sum([m.flatten().detach().cpu().numpy().shape for m in self.parameters()])
+        self.save_hist = False
+        self.do_flatten = False
+        self.save_hyperparameters()  

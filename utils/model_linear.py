@@ -47,15 +47,9 @@ class Linear_BNN(BNN):
         self.save_hyperparameters()  
 
 class NN(pl.LightningModule):
-    def __init__(self, in_size, out_size, N, criterion, lr):
+    def __init__(self, N, criterion, lr):
         super(NN, self).__init__()
         self.save_hyperparameters()
-          
-        self.seq = nn.Sequential(
-            nn.Linear(in_size, N, bias=False),
-            nn.ReLU(),
-            nn.Linear(N, out_size, bias=False))
-
         self.accuracy = torchmetrics.Accuracy()
         self.criterion = criterion
         self.lr = lr
