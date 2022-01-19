@@ -1,6 +1,7 @@
 from model_linear import Linear_BNN
 from model_conv import Conv_BNN
 from model_vgg import VGG
+from model_resnet import Resnet20
 import numpy as np
 
 # Linear BNN - 1 hidden layer
@@ -36,5 +37,11 @@ class VGG_regime_3(VGG):
     def __init__(self, dist_params, train_params, model_params):
         super(VGG_regime_3, self).__init__(3, dist_params, train_params, model_params)
 
+# Resnet20
+class Resnet_regime_1(Resnet20):
+    def __init__(self, dist_params, train_params, model_params):
+        super(Resnet_regime_1, self).__init__(1, dist_params, train_params, model_params)
 
-
+class Resnet_regime_3(Resnet20):
+    def __init__(self, dist_params, train_params, model_params):
+        super(Resnet_regime_3, self).__init__(3, dist_params, train_params, model_params)
