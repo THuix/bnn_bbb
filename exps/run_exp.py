@@ -13,6 +13,7 @@ parser.add_argument('--nb_epochs', type=int)
 parser.add_argument('--project_name')
 parser.add_argument('--p_scales_with_N', type=bool)
 parser.add_argument('--lr', type=float)
+parser.add_argument('vgg_type', default=None)
 
 num_works = 8
 batch_size = 128
@@ -46,11 +47,16 @@ if __name__ == '__main__':
             else:
                 train_params['limit_p'] = None
 
+            
+
             model_params = {'padding' : 0,
                             'dilation': 1,
                             'stride': 1,
                             'kernel_size': 3,
                             'N_last_layer': int(N_last_layer)}
+
+            if args.vgg_type != None:
+                model_params['vgg_type'] = int(args.vgg_type)
 
  
 
