@@ -15,4 +15,4 @@ module purge
 module load anaconda3/2020.02/gcc-9.2.0
 source activate myenv
 export PL_TORCH_DISTRIBUTED_BACKEND=gloo
-srun python ../exps/run_resnet.py --dataset CIFAR10 --range_alpha 0.000001 --nb_epochs 1 --project_name resnet_exp
+srun python ../exps/run_resnet.py --dataset CIFAR10 --range_alpha 0.000001 --nb_epochs 100 --project_name resnet_exp
