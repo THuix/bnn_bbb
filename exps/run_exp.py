@@ -11,6 +11,7 @@ parser.add_argument('--range_N', default=[], nargs='+')
 parser.add_argument('--range_alpha', default=[], nargs='+')
 parser.add_argument('--nb_epochs', type=int)  
 parser.add_argument('--project_name')
+parser.add_argument('--p_scale_with_N', type=bool)
 
 num_works = 8
 batch_size = 128
@@ -29,6 +30,8 @@ if __name__ == '__main__':
             if alpha != 'None':
                 alpha = float(alpha)
 
+            
+
             train_params = {'lr': 1e-2,
                              'nb_epochs': args.nb_epochs,
                             'nb_samples': 3,
@@ -36,6 +39,11 @@ if __name__ == '__main__':
                             'alpha': alpha,
                             'dataset': args.dataset,
                             'model': args.model_name}
+
+            if args.p_scale_with_N:
+                train_params['limit_p'] = 6000 * N_last_layer
+            else:
+                train_params['limit_p'] = None
 
             model_params = {'padding' : 0,
                             'dilation': 1,

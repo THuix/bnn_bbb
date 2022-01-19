@@ -36,7 +36,13 @@ def load_cifar(batch_size, num_works):
     
     testset = CIFAR10(os.getcwd(), download=False, transform=transforms.ToTensor(), train=False)
     testset = DataLoader(testset, batch_size=batch_size, shuffle=False, num_workers=8)
-    return trainset, testset   
+    return trainset, testset
+
+def limit_size(dataset, size):
+    indexes = np.random.randint(0, dataset.dataset.__len__(), size=size)
+    dataset.dataset.targets = dataset.dataset.targets[indexes]
+    dataset.dataset.data = dataset.dataset.data[indexes] 
+    return dataset  
 
 def load_data(batch_size, dataset_name, num_works, train_params, model_params):
     if dataset_name == 'MNIST':
@@ -59,10 +65,11 @@ def load_data(batch_size, dataset_name, num_works, train_params, model_params):
         train_params['save_acc'] = False
     else:
         raise ValueError('To implement')
+    if train_params['limit_p'] != None:
+        trainset = limit_size(trainset, train_params['limit_p'])
 
     train_params['nb_batches'] = trainset.__len__()
     train_params['p'] = trainset.dataset.__len__()
-    
     return trainset, testset
 
 def get_model(model_name, dist_params, train_params, model_params):
