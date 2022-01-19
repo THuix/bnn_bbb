@@ -49,7 +49,7 @@ if __name__ == '__main__':
 
             
 
-            model_params = {'padding' : 0,
+            model_params = {'padding' : 1,
                             'dilation': 1,
                             'stride': 1,
                             'kernel_size': 3,
