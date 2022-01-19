@@ -35,7 +35,19 @@ class Resnet_bloc(nn.Module):
                      init_type='normal',
                      regime=regime))
         if conv_in_identity:
-            self.seq_identity = nn.Sequential()
+            self.seq_identity = nn.Sequential(
+                Conv_bnn(in_channels,
+                         out_channels,
+                         dist_params['init_rho_post'],
+                         dist_params['init_mu_post'],
+                         dist_params['sigma_prior'],
+                         dist_params['mu_prior'],
+                         stride = 2,
+                         padding = 0,
+                         dilation = 1,
+                         kernel_size = 1,
+                         init_type='normal',
+                         regime=regime))
         else:
             self.seq_identity = nn.Sequential()
 
