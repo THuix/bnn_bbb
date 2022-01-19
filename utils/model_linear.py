@@ -60,7 +60,6 @@ class NN(pl.LightningModule):
 
     def step(self, batch, batch_idx):
         x, y = batch
-        x = x.reshape(x.size()[0], -1)
         pred = self.seq(x) / self.N
 
         loss = self.criterion(pred, y)
