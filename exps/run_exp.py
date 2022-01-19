@@ -12,6 +12,7 @@ parser.add_argument('--range_alpha', default=[], nargs='+')
 parser.add_argument('--nb_epochs', type=int)  
 parser.add_argument('--project_name')
 parser.add_argument('--p_scales_with_N', type=bool)
+parser.add_argument('--lr', type=float)
 
 num_works = 8
 batch_size = 128
@@ -32,7 +33,7 @@ if __name__ == '__main__':
 
             
 
-            train_params = {'lr': 1e-2,
+            train_params = {'lr': args.lr,
                              'nb_epochs': args.nb_epochs,
                             'nb_samples': 1,
                             'criterion': nn.MSELoss(reduction='sum') if args.dataset == 'BOSTON' else nn.CrossEntropyLoss(reduction='sum'),
