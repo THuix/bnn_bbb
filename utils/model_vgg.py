@@ -140,9 +140,6 @@ def create_seq_classic(self, vgg_type, in_size):
 class VGG_classic(NN):
     def __init__(self, train_params, model_params):
         
-        self.train_params = self.check_params(train_params, ['lr', 'nb_samples', 'nb_batches', 'criterion', 'alpha', 'p'])
-        self.model_params = self.check_params(model_params, ['VGG_type', 'in_size', 'out_size', 'hin'])
-
         super(VGG_classic, self).__init__(512,
                                           self.train_params['criterion'],
                                           self.train_params['lr'])
