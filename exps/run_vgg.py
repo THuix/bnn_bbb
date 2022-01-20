@@ -6,55 +6,84 @@ import wandb
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--dataset')
+parser.add_argument('--model_name')
+parser.add_argument('--range_N', default=[], nargs='+')
 parser.add_argument('--range_alpha', default=[], nargs='+')
 parser.add_argument('--nb_epochs', type=int)  
-parser.add_argument('--vgg_type', type=int)
 parser.add_argument('--project_name')
+parser.add_argument('--p_scales_with_N', type=bool)
+parser.add_argument('--lr', type=float)
+parser.add_argument('vgg_type', default=None)
 
-num_works = 8
+num_works = 4
 batch_size = 128
 
-def launch_train(args, alpha, model_name):
-    train_params = {'lr': 1e-2,
-                        'nb_epochs': args.nb_epochs,
-                        'nb_samples': 3,
-                        'criterion': nn.CrossEntropyLoss(reduction='sum'),
-                        'alpha': alpha,
-                        'dataset': args.dataset,
-                        'model': model_name}
+def train_nn():
+
+    dist_params = {}
+
+    train_params = {'lr': 0.01,
+                    'nb_epochs': args.nb_epochs,
+                    'criterion': nn.CrossEntropyLoss(reduction='mean'),
+                    'dataset': args.dataset,
+                    'model': 'VGG_classic'}
 
     model_params = {'padding' : 1,
                     'dilation': 1,
                     'stride': 1,
                     'kernel_size': 3,
-                    'VGG_type': args.vgg_type,
-                    }
+                    'N_last_layer': int(N_last_layer)}
 
-    dataset_name = args.dataset
-
-    main(args.project_name,
-        model_name,
-        args.dataset,
-        num_works,
-        batch_size,
-        dist_params,
-        train_params,
-        model_params)
-
+    return main(args.project_name,
+                args.model_name,
+                args.dataset,
+                num_works,
+                batch_size,
+                dist_params,
+                train_params,
+                model_params)
 
 if __name__ == '__main__':
     wandb.finish()
     args = parser.parse_args()
+
     dist_params = {'init_mu_post': 0.,
                     'init_rho_post': np.log(np.exp(0.1)-1),
                     'sigma_prior': 0.1,
                     'mu_prior': 0.}
 
-    launch_train(args, None, 'VGG_regime_1')
+    model_nn = train_nn()
+    
 
     for alpha in args.range_alpha:
-        alpha = float(alpha)
-        launch_train(args, alpha, 'VGG_regime_3')
 
-        
+            if alpha != 'None':
+                alpha = float(alpha)
+
+            train_params = {'lr': args.lr,
+                             'nb_epochs': args.nb_epochs,
+                            'nb_samples': 1,
+                            'criterion': nn.CrossEntropyLoss(reduction='sum'),
+                            'alpha': alpha,
+                            'dataset': args.dataset,
+                            'model': args.model_name}
+
+            train_params['limit_p'] = None
+
+            model_params = {'padding' : 1,
+                            'dilation': 1,
+                            'stride': 1,
+                            'kernel_size': 3,
+                            'N_last_layer': int(N_last_layer)}
+
+            model_params['VGG_type'] = int(args.vgg_type)
+
+            main(args.project_name,
+                 args.model_name,
+                 args.dataset,
+                 num_works,
+                 batch_size,
+                 dist_params,
+                 train_params,
+                 model_params)
  
