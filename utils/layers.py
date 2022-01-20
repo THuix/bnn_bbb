@@ -176,7 +176,7 @@ class Conv_bnn(nn.Module):
         if init_type == 'fixed':
             return nn.Parameter(torch.ones(size) * init_value)
         elif init_type == 'normal':
-            return nn.Parameter(torch.normal(init_value, 0.01, size=size))
+            return nn.Parameter(torch.normal(init_value, 1., size=size))
         else:
             raise ValueError('To implement')
 
