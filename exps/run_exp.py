@@ -22,7 +22,7 @@ if __name__ == '__main__':
     wandb.finish()
     args = parser.parse_args()
     dist_params = {'init_mu_post': 0.,
-                    'init_rho_post': np.log(np.exp(-5)-1),
+                    'init_rho_post': np.log(np.exp(0.001)-1),
                     'sigma_prior': 0.1,
                     'mu_prior': 0.}
 
