@@ -134,7 +134,7 @@ class VGG_classic(NN):
                               padding = self.model_params['padding'],
                               dilation = self.model_params['dilation'],
                               kernel_size = layer[4],
-                              bias=False))
+                              bias=True))
                 seq.append(nn.ReLU(inplace=True))
 
             elif layer[0] == 'M': #maxpooling
@@ -144,7 +144,7 @@ class VGG_classic(NN):
                 seq.append(
                     nn.Linear(512 if layer[1] else layer[2],
                     layer[3],
-                    bias=False)
+                    bias=True)
                     )
                 if layer[4]:
                     seq.append(nn.ReLU(inplace=True))
