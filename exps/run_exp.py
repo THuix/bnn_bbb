@@ -22,8 +22,8 @@ if __name__ == '__main__':
     wandb.finish()
     args = parser.parse_args()
     dist_params = {'init_mu_post': 0.,
-                    'init_rho_post': np.log(np.exp(0.001)-1),
-                    'sigma_prior': 0.1,
+                    'init_rho_post': np.log(np.exp(0.0001)-1),
+                    'sigma_prior': 1/5,
                     'mu_prior': 0.}
 
     for N_last_layer in args.range_N:
@@ -36,7 +36,7 @@ if __name__ == '__main__':
 
             train_params = {'lr': args.lr,
                              'nb_epochs': args.nb_epochs,
-                            'nb_samples': 1,
+                            'nb_samples': 10,
                             'criterion': nn.MSELoss(reduction='sum') if args.dataset == 'BOSTON' else nn.CrossEntropyLoss(reduction='sum'),
                             'alpha': alpha,
                             'dataset': args.dataset,
