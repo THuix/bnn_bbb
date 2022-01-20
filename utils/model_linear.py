@@ -51,6 +51,7 @@ class NN(pl.LightningModule):
         super(NN, self).__init__()
         self.save_hyperparameters()
         self.accuracy = torchmetrics.Accuracy()
+        self.ECE = torchmetrics.CalibrationError(n_bins=15, norm='l1')
         self.criterion = criterion
         self.lr = lr
         self.N = N
@@ -64,16 +65,19 @@ class NN(pl.LightningModule):
 
         loss = self.criterion(pred, y)
         self.accuracy.update(pred, y)
+        self.ECE.update(pred, y)
+        
         logs = {
             'acc': self.accuracy.compute(),
             'nll': loss.item(),
+            'ece': self.ECE.compute(),
         }
         
         return loss, logs       
     
     def training_step(self, batch, batch_idx):
         loss, logs = self.step(batch, batch_idx)
-        self.log_dict({f"train_{k}": v for k, v in logs.items()}, on_step=False, on_epoch=True, sync_dist=True)
+        self.log_dict({f"train_{k}": v for k, v in logs.items()}, sync_dist=True)
         return loss
 
     def validation_step(self, batch, batch_idx):
@@ -87,7 +91,7 @@ class NN(pl.LightningModule):
         return loss
 
     def configure_optimizers(self):
-        optimizer = torch.optim.Adagrad(self.parameters(), lr=self.lr)
+        optimizer = torch.optim.Adam(self.parameters(), lr=self.lr)
         return optimizer
 
 
