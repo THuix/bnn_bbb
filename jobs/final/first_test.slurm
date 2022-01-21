@@ -2,7 +2,7 @@
 #SBATCH --job-name=test # nom du job
 #SBATCH --nodes=1	# number of nodes
 #SBATCH --gres=gpu:1
-#SBATCH --mem=4G
+#SBATCH --mem=16G
 #SBATCH --partition=gpu
 #SBATCH --cpus-per-task=10       
 #SBATCH --time=00:05:00             # temps exécution maximum demande (HH:MM:SS)
