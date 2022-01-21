@@ -94,8 +94,6 @@ if __name__ == '__main__':
                             'dataset': args.dataset,
                             'model': args.model_name}
 
-            train_params['limit_p'] = None
-
             model_params = {'padding' : 1,
                             'dilation': 1,
                             'stride': 1,
