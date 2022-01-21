@@ -1,7 +1,11 @@
-from utils_run_exp import main
+from utils_run_exp import main, load_data, get_model, get_trainer
 import argparse
 import numpy as np
 from torch import nn
+import wandb
+from pytorch_lightning.loggers.wandb import WandbLogger
+from pytorch_lightning.callbacks import LearningRateMonitor
+import pytorch_lightning as pl
 import wandb
 
 parser = argparse.ArgumentParser()
@@ -18,7 +22,28 @@ parser.add_argument('vgg_type', default=None)
 num_works = 4
 batch_size = 128
 
-def train_nn():
+def init_model_with_sgd(model, nn_model):
+    for module in model.modules():
+        print(module)
+    raise ValueError('oui')
+    return kl
+
+
+def main_for_vgg(project_name, model_name, dataset_name, num_works, batch_size, dist_params, train_params, model_params, nn_model):
+    trainset, testset = load_data(batch_size, dataset_name, num_works, train_params, model_params)
+    model = get_model(model_name, dist_params, train_params, model_params)
+    model = init_model_with_sgd(model, nn_model)
+    exp_name = 'init_sgd'
+    wandb_logger = WandbLogger(name=exp_name,project=project_name)
+    lr_monitor = LearningRateMonitor(logging_interval='epoch')
+    trainer = get_trainer(train_params['nb_epochs'], wandb_logger, lr_monitor, exp_name)
+    trainer.fit(model, trainset, testset)
+    result = trainer.test(model, testset)
+    wandb.finish()
+    return model
+
+
+def train_nn(args):
 
     dist_params = {}
 
@@ -32,6 +57,8 @@ def train_nn():
                     'dilation': 1,
                     'stride': 1,
                     'kernel_size': 3}
+
+    model_params['VGG_type'] = int(args.vgg_type)
 
     return main(args.project_name,
                 args.model_name,
@@ -51,7 +78,7 @@ if __name__ == '__main__':
                     'sigma_prior': 0.1,
                     'mu_prior': 0.}
 
-    model_nn = train_nn()
+    model_nn = train_nn(args)
     
 
     for alpha in args.range_alpha:
@@ -76,12 +103,13 @@ if __name__ == '__main__':
 
             model_params['VGG_type'] = int(args.vgg_type)
 
-            main(args.project_name,
+            main_for_vgg(args.project_name,
                  args.model_name,
                  args.dataset,
                  num_works,
                  batch_size,
                  dist_params,
                  train_params,
-                 model_params)
+                 model_params,
+                 model_nn)
  

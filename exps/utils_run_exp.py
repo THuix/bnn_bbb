@@ -129,4 +129,8 @@ def main(project_name, model_name, dataset_name, num_works, batch_size, dist_par
     trainer.fit(model, trainset, testset)
     result = trainer.test(model, testset)
     wandb.finish()
+    return model
+
+
+    
 
