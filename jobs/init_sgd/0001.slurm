@@ -5,7 +5,7 @@
 #SBATCH --mem=8G
 #SBATCH --partition=gpu
 #SBATCH --cpus-per-task=10       
-#SBATCH --time=1:00:00             # temps exécution maximum demande (HH:MM:SS)
+#SBATCH --time=5:00:00             # temps exécution maximum demande (HH:MM:SS)
 #SBATCH --output=output_vgg_11.txt   # nom du fichier de sortie
 #SBATCH --error=error_vgg_11.txt     # nom du fichier d'erreur (ici commun avec la sortie)
 # nettoyage des modules charges en interactif et hérités par défaut
