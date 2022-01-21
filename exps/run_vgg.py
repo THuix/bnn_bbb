@@ -47,7 +47,7 @@ def train_nn(args):
 
     dist_params = {}
 
-    train_params = {'lr': 0.01,
+    train_params = {'lr': 0.001,
                     'nb_epochs': args.nb_epochs,
                     'criterion': nn.CrossEntropyLoss(reduction='sum'),
                     'dataset': args.dataset,
