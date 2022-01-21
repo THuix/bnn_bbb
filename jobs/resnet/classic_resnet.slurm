@@ -5,7 +5,7 @@
 #SBATCH --mem=8G
 #SBATCH --partition=gpu
 #SBATCH --cpus-per-task=10       
-#SBATCH --time=00:05:00             # temps exécution maximum demande (HH:MM:SS)
+#SBATCH --time=00:30:00             # temps exécution maximum demande (HH:MM:SS)
 #SBATCH --output=output_resnet_classic.txt   # nom du fichier de sortie
 #SBATCH --error=error_resnet_classic.txt     # nom du fichier d'erreur (ici commun avec la sortie)
 # nettoyage des modules charges en interactif et hérités par défaut
