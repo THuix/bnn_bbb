@@ -51,7 +51,8 @@ def train_nn(args):
                     'nb_epochs': args.nb_epochs,
                     'criterion': nn.CrossEntropyLoss(reduction='mean'),
                     'dataset': args.dataset,
-                    'model': 'VGG_classic'}
+                    'model': 'VGG_classic',
+                    'alpha': None}
 
     train_params['limit_p'] = None
 
