@@ -11,6 +11,7 @@ from models import Conv_regime_1, Conv_regime_3
 from models import VGG_regime_1, VGG_regime_3
 from models import Resnet_regime_1, Resnet_regime_3
 from model_vgg import VGG_classic
+from model_resnet import Resnet20_classic
 from torchvision import transforms
 from torchvision.datasets import MNIST, CIFAR10
 from torch.utils.data import DataLoader
@@ -103,7 +104,8 @@ def get_model(model_name, dist_params, train_params, model_params):
         return Resnet_regime_3(dist_params, train_params, model_params)
     elif model_name == 'VGG_classic':
         return VGG_classic(train_params, model_params)
-        
+    elif model_name == 'Resnet20_classic':
+        return Resnet20_classic(train_params, model_params)
     else:
         raise ValueError(f'To implement: {model_name}')
 
@@ -132,5 +134,5 @@ def main(project_name, model_name, dataset_name, num_works, batch_size, dist_par
     return model
 
 
-    
+
 
