@@ -23,9 +23,8 @@ num_works = 4
 batch_size = 128
 
 def init_model_with_sgd(model, nn_model):
-    print(type(model), type(nn_model))
     nn_modules = list(nn_model.modules())
-    raise ValueError(list(nn_model.modules()), list(model.modules()))
+    raise ValueError(list(nn_model.seq), list(model.seq))
     for idx, module in enumerate(model.modules()):
         if hasattr(module, 'weight_mu'):
             print(module, nn_modules[idx])
