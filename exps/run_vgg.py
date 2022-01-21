@@ -19,7 +19,7 @@ parser.add_argument('--p_scales_with_N', type=bool)
 parser.add_argument('--lr', type=float)
 parser.add_argument('vgg_type', default=None)
 
-num_works = 4
+num_works = 0
 batch_size = 128
 
 def init_model_with_sgd(model, nn_model):
@@ -27,9 +27,7 @@ def init_model_with_sgd(model, nn_model):
     for idx, module in enumerate(model.seq):
         if hasattr(module, 'weight_mu'):
             model.weight_mu = nn_modules[idx].weight.data
-    raise ValueError(list(model.parameters()))
-    return kl
-
+    return model
 
 def main_for_vgg(project_name, model_name, dataset_name, num_works, batch_size, dist_params, train_params, model_params, nn_model):
     trainset, testset = load_data(batch_size, dataset_name, num_works, train_params, model_params)

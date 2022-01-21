@@ -14,4 +14,4 @@ module purge
 module load anaconda3/2020.02/gcc-9.2.0
 source activate myenv
 export PL_TORCH_DISTRIBUTED_BACKEND=gloo
-srun python ../../exps/run_vgg.py --dataset CIFAR10 --model_name VGG_regime_3 --range_N 100 --range_alpha 0.0001 --nb_epochs 1 --project_name vgg_init_sgd --lr=0.001 11
+srun python ../../exps/run_vgg.py --dataset CIFAR10 --model_name VGG_regime_3 --range_N 100 --range_alpha 0.0001 --nb_epochs 50 --project_name vgg_init_sgd --lr=0.001 11
