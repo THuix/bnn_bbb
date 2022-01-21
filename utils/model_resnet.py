@@ -125,7 +125,7 @@ class Resnet20(BNN):
 
 class Resnet_bloc_classic(nn.Module):
     def __init__(self, in_channels, out_channels, ks, stride, conv_in_identity):
-        super(Resnet_bloc, self).__init__()
+        super(Resnet_bloc_classic, self).__init__()
         self.seq = nn.Sequential(
             nn.Conv2d(in_channels, out_channels, ks, stride=stride, padding=1),
             nn.ReLU(),
