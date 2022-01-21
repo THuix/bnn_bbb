@@ -31,8 +31,7 @@ def train_nn():
     model_params = {'padding' : 1,
                     'dilation': 1,
                     'stride': 1,
-                    'kernel_size': 3,
-                    'N_last_layer': int(N_last_layer)}
+                    'kernel_size': 3}
 
     return main(args.project_name,
                 args.model_name,
@@ -73,8 +72,7 @@ if __name__ == '__main__':
             model_params = {'padding' : 1,
                             'dilation': 1,
                             'stride': 1,
-                            'kernel_size': 3,
-                            'N_last_layer': int(N_last_layer)}
+                            'kernel_size': 3}
 
             model_params['VGG_type'] = int(args.vgg_type)
 
