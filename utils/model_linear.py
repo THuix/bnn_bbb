@@ -67,7 +67,7 @@ class NN(pl.LightningModule):
         w = []
         for module in self.seq:
             if hasattr(module, 'weight'):
-                w.append(module.weight_mu.detach().cpu().flatten().tolist())
+                w.append(module.weight.detach().cpu().flatten().tolist())
         return np.concatenate(w)
 
     def step(self, batch, batch_idx):
