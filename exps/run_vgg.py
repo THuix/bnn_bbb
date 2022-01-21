@@ -49,7 +49,7 @@ def train_nn(args):
 
     train_params = {'lr': 0.01,
                     'nb_epochs': args.nb_epochs,
-                    'criterion': nn.CrossEntropyLoss(reduction='mean'),
+                    'criterion': nn.CrossEntropyLoss(reduction='sum'),
                     'dataset': args.dataset,
                     'model': 'VGG_classic',
                     'alpha': None}
