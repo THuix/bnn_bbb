@@ -63,7 +63,7 @@ def train_nn(args):
     model_params['VGG_type'] = int(args.vgg_type)
 
     return main(args.project_name,
-                args.model_name,
+                train_params['model'],
                 args.dataset,
                 num_works,
                 batch_size,
@@ -75,15 +75,15 @@ if __name__ == '__main__':
     wandb.finish()
     args = parser.parse_args()
 
-    dist_params = {'init_mu_post': 0.,
-                    'init_rho_post': np.log(np.exp(0.1)-1),
-                    'sigma_prior': 0.1,
-                    'mu_prior': 0.}
-
     model_nn = train_nn(args)
     
 
     for alpha in args.range_alpha:
+
+            dist_params = {'init_mu_post': 0.,
+                           'init_rho_post': np.log(np.exp(0.1)-1),
+                           'sigma_prior': 0.1,
+                           'mu_prior': 0.}
 
             if alpha != 'None':
                 alpha = float(alpha)
