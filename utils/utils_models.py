@@ -35,6 +35,14 @@ class BNN(pl.LightningModule):
                 raise ValueError(f"{p} is missing in {params}")
         return params
 
+    def extract_flattened_weights(self):
+        mu, std = [], []
+        for module in self.seq:
+            if hasattr(module, 'weight_mu'):
+                mu.append(module.weight_mu.detach().cpu().flatten().tolist())
+                std.append(module.rho_to_std(module.weight_rho).detach().cpu().flatten().tolist())
+        return np.concatenate(mu), np.concatenate(std)
+
     def forward(self, x):
         x = x.reshape(x.size()[0], -1)
         predictions = torch.tensor([self.seq(x) for _ in range(self.train_params['nb_samples'])])
@@ -84,12 +92,22 @@ class BNN(pl.LightningModule):
         obj_loss = self.re_balance_loss(obj_loss)
         nll = self.re_balance_loss(nll)
         kl = self.re_balance_loss(kl)
+
+        mu, std = self.extract_flattened_weights()
         
         logs = {
             "obj": obj_loss,
             "kl": kl,
             "nll": nll,
             "ratio_nll_kl": nll / kl,
+            'max_mu': np.max(mu),
+            'min_mu': np.min(mu),
+            'max_std': np.max(std),
+            'min_std': np.min(std),
+            'mean_mu': np.mean(mu),
+            'mean_std': np.mean(std),
+            'median_mu': np.median(mu),
+            'median_std': np.median(std)
         }
 
         if self.train_params['save_acc']:
@@ -128,15 +146,9 @@ class BNN(pl.LightningModule):
         return loss
 
     def test_epoch_end(self, output):
-        if self.save_hist:
-            mu_1 = self.seq[0].weight_mu.flatten().detach().cpu().numpy()
-            mu_2 = self.seq[2].weight_mu.flatten().detach().cpu().numpy()
-            std_1 = self.seq[0].rho_to_std(self.seq[0].weight_rho.flatten()).detach().cpu().numpy()
-            std_2 = self.seq[2].rho_to_std(self.seq[2].weight_rho.flatten()).detach().cpu().numpy()
-            self.plot_hist(mu_1, 'Layer 1: mean', "mu_1")
-            self.plot_hist(mu_2, 'Layer 2: mean', "mu_2")
-            self.plot_hist(std_1, 'Layer 1: std', "std_1")
-            self.plot_hist(std_2, 'Layer 2: std', "std_2")
+        mu, std = self.extract_flattened_weights()
+        self.plot_hist(mu, 'Mean', "mu")
+        self.plot_hist(std, 'Std', "std")
 
     def configure_optimizers(self):
         optimizer = torch.optim.Adam(self.parameters(), lr=self.train_params['lr'])
