@@ -15,7 +15,7 @@ parser.add_argument('--p_scales_with_N', type=bool)
 parser.add_argument('--lr', type=float)
 parser.add_argument('vgg_type', default=None)
 
-num_works = 0
+num_works = 4
 batch_size = 128
 
 if __name__ == '__main__':
