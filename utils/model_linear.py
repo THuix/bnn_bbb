@@ -78,19 +78,16 @@ class NN(pl.LightningModule):
         self.accuracy.update(pred, y)
         self.ECE.update(pred, y)
 
-        w = self.extract_flattened_weights()
-
         logs = {
             'acc': self.accuracy.compute(),
             'nll': loss.item(),
-            'ece': self.ECE.compute(),
-            'mean_w': np.mean(w),
-            'max_w': np.max(w),
-            'min_w': np.min(w),
-            'median_w': np.median(w)
-        }
+            'ece': self.ECE.compute()}
         
         return loss, logs       
+
+    def training_epoch_end(self, output):
+        w = self.extract_flattened_weights()
+        self.log_dict({'mean_w': np.mean(w), 'max_w': np.max(w), 'min_w': np.min(w), 'median_w': np.median(w)}, sync_dict=True)
     
     def training_step(self, batch, batch_idx):
         loss, logs = self.step(batch, batch_idx)
