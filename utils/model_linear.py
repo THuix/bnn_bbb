@@ -87,7 +87,7 @@ class NN(pl.LightningModule):
 
     def training_epoch_end(self, output):
         w = self.extract_flattened_weights()
-        self.log_dict({'mean_w': np.mean(w), 'max_w': np.max(w), 'min_w': np.min(w), 'median_w': np.median(w)}, sync_dict=True)
+        self.log_dict({'mean_w': np.mean(w), 'max_w': np.max(w), 'min_w': np.min(w), 'median_w': np.median(w)})
     
     def training_step(self, batch, batch_idx):
         loss, logs = self.step(batch, batch_idx)
