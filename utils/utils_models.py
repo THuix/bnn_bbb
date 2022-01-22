@@ -93,22 +93,13 @@ class BNN(pl.LightningModule):
         nll = self.re_balance_loss(nll)
         kl = self.re_balance_loss(kl)
 
-        mu, std = self.extract_flattened_weights()
+        
         
         logs = {
             "obj": obj_loss,
             "kl": kl,
             "nll": nll,
-            "ratio_nll_kl": nll / kl,
-            'max_mu': np.max(mu),
-            'min_mu': np.min(mu),
-            'max_std': np.max(std),
-            'min_std': np.min(std),
-            'mean_mu': np.mean(mu),
-            'mean_std': np.mean(std),
-            'median_mu': np.median(mu),
-            'median_std': np.median(std)
-        }
+            "ratio_nll_kl": nll / kl}
 
         if self.train_params['save_acc']:
             self.accuracy.update(pred, y)
@@ -118,6 +109,19 @@ class BNN(pl.LightningModule):
 
         
         return obj_loss, logs   
+
+    def training_epoch_end(self, output):
+        mu, std = self.extract_flattened_weights()
+        self.log_dict({
+            'max_mu': np.max(mu),
+            'min_mu': np.min(mu),
+            'max_std': np.max(std),
+            'min_std': np.min(std),
+            'mean_mu': np.mean(mu),
+            'mean_std': np.mean(std),
+            'median_mu': np.median(mu),
+            'median_std': np.median(std)
+        }, sync_dist=True)
     
     def training_step(self, batch, batch_idx):
         loss, logs = self.step(batch, batch_idx)
