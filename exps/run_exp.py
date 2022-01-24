@@ -13,7 +13,9 @@ parser.add_argument('--nb_epochs', type=int)
 parser.add_argument('--project_name')
 parser.add_argument('--p_scales_with_N', type=bool)
 parser.add_argument('--lr', type=float)
+parser.add_argument('--range_nb_samples', type=int)
 parser.add_argument('vgg_type', default=None)
+
 
 num_works = 4
 batch_size = 128
@@ -29,43 +31,45 @@ if __name__ == '__main__':
     for N_last_layer in args.range_N:
         for alpha in args.range_alpha:
 
-            if alpha != 'None':
-                alpha = float(alpha)
+            for _ in range(args.range_nb_samples):
+
+                if alpha != 'None':
+                    alpha = float(alpha)
 
             
 
-            train_params = {'lr': args.lr,
-                             'nb_epochs': args.nb_epochs,
-                            'nb_samples': 1,
-                            'criterion': nn.MSELoss(reduction='sum') if args.dataset == 'BOSTON' else nn.CrossEntropyLoss(reduction='sum'),
-                            'alpha': alpha,
-                            'dataset': args.dataset,
-                            'model': args.model_name}
+                train_params = {'lr': args.lr,
+                                'nb_epochs': args.nb_epochs,
+                                'nb_samples': 1,
+                                'criterion': nn.MSELoss(reduction='sum') if args.dataset == 'BOSTON' else nn.CrossEntropyLoss(reduction='sum'),
+                                'alpha': alpha,
+                                'dataset': args.dataset,
+                                'model': args.model_name}
 
-            if args.p_scales_with_N:
-                train_params['limit_p'] = int(0.5 * int(N_last_layer))
-            else:
-                train_params['limit_p'] = None
+                if args.p_scales_with_N:
+                    train_params['limit_p'] = int(0.5 * int(N_last_layer))
+                else:
+                    train_params['limit_p'] = None
 
-            
+                
 
-            model_params = {'padding' : 1,
-                            'dilation': 1,
-                            'stride': 1,
-                            'kernel_size': 3,
+                model_params = {'padding' : 1,
+                                'dilation': 1,
+                                'stride': 1,
+                                'kernel_size': 3,
                             'N_last_layer': int(N_last_layer)}
 
-            if args.vgg_type != 'None':
-                model_params['VGG_type'] = int(args.vgg_type)
+                if args.vgg_type != 'None':
+                    model_params['VGG_type'] = int(args.vgg_type)
 
- 
+    
 
-            main(args.project_name,
-                 args.model_name,
-                 args.dataset,
-                 num_works,
-                 batch_size,
-                 dist_params,
-                 train_params,
-                 model_params)
+                main(args.project_name,
+                    args.model_name,
+                    args.dataset,
+                    num_works,
+                    batch_size,
+                    dist_params,
+                    train_params,
+                    model_params)
  

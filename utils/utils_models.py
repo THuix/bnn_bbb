@@ -158,9 +158,11 @@ class BNN(pl.LightningModule):
     def test_epoch_end(self, output):
         mu, std = self.extract_flattened_weights()
         ratio = std / mu
+        samples = torch.normal(mu, std)
         self.plot_hist(mu, 'Mean', "mu")
         self.plot_hist(std, 'Std', "std")
-        self.plothist(ratio, 'ratio std / mu', 'ratio_weights')
+        self.plot_hist(ratio, 'ratio std / mu', 'ratio_weights')
+        self.plot_hist(samples, 'weights', 'weights')
 
     def configure_optimizers(self):
         optimizer = torch.optim.Adam(self.parameters(), lr=self.train_params['lr'])

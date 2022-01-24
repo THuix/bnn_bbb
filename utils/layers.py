@@ -136,7 +136,8 @@ class Conv_bnn(nn.Module):
                  dilation = 1,
                  kernel_size = 3,
                  init_type='fixed',
-                 regime=0):
+                 regime=0,
+                 bias = False):
         """
         [args]:
             - in_size(integer): input size of the layer
@@ -163,6 +164,11 @@ class Conv_bnn(nn.Module):
         self.weight_mu = self.init_parameter(init_mu_post, init_type, (out_size, in_size, kernel_size, kernel_size))
         self.weight_rho = self.init_parameter(init_rho_post, init_type, (out_size, in_size, kernel_size, kernel_size))
 
+        
+        if bias:
+            self.bias_mu = self.init_parameter(init_mu_post, init_type, (out_size,))
+            self.bias_rho = self.init_parameter(init_mu_post, init_type, (out_size,))
+            
     def init_parameter(self, init_value, init_type, size):
         """
         [args]
@@ -224,7 +230,18 @@ class Conv_bnn(nn.Module):
         log_prior = norm_log_prob(w, self.mu_prior, self.sigma_prior)
         self.appro_kl = log_var_post - log_prior
         check(self.appro_kl)
-        out = F.conv2d(x, w, bias=None, stride=self.stride, padding=self.padding, dilation=self.dilation)
+
+        if self.bias:
+            b = self.sample(self.bias_mu, self.bias_rho)
+            log_var_post = norm_log_prob(b, self.bias_mu, self.rho_to_std(self.bias_rho))
+            check(log_var_post)
+            log_prior = norm_log_prob(b, self.mu_prior, self.sigma_prior)
+            check(log_prior)
+            self.appro_kl += log_var_post - log_prior
+            check(self.appro_kl)
+            out = F.conv2d(x, w, bias=b, stride=self.stride, padding=self.padding, dilation=self.dilation)
+        else:
+            out = F.conv2d(x, w, bias=None, stride=self.stride, padding=self.padding, dilation=self.dilation)
         check(out)
         return out
 
