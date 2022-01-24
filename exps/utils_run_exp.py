@@ -16,6 +16,7 @@ from torchvision import transforms
 from torchvision.datasets import MNIST, CIFAR10
 from torch.utils.data import DataLoader
 from data import BostonDataset
+import pickle as pkl
 import os
 import torch
 import numpy as np
@@ -121,6 +122,9 @@ def get_trainer(nb_epochs, wandb_logger, lr_monitor, exp_name):
         trainer = pl.Trainer(max_epochs=nb_epochs, logger= wandb_logger)
     return trainer
 
+def save_weights(mu, std, exp_name):
+    pkl.dump({'mu': mu, 'std': std}, open(exp_name, 'wb'))
+
 def main(project_name, model_name, dataset_name, num_works, batch_size, dist_params, train_params, model_params):
     trainset, testset = load_data(batch_size, dataset_name, num_works, train_params, model_params)
     model = get_model(model_name, dist_params, train_params, model_params)
@@ -131,6 +135,7 @@ def main(project_name, model_name, dataset_name, num_works, batch_size, dist_par
     trainer.fit(model, trainset, testset)
     result = trainer.test(model, testset)
     wandb.finish()
+    save_weights(model.mu, model.std, exp_name)
     return model
 
 
