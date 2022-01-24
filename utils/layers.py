@@ -160,6 +160,7 @@ class Conv_bnn(nn.Module):
         self.padding = padding
         self.dilation = dilation
         self.kerne_lsize = kernel_size
+        self.bias = bias
 
         self.weight_mu = self.init_parameter(init_mu_post, init_type, (out_size, in_size, kernel_size, kernel_size))
         self.weight_rho = self.init_parameter(init_rho_post, init_type, (out_size, in_size, kernel_size, kernel_size))
