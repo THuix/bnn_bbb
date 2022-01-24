@@ -123,7 +123,7 @@ def get_trainer(nb_epochs, wandb_logger, lr_monitor, exp_name):
     return trainer
 
 def save_weights(mu, std, exp_name):
-    pkl.dump({'mu': mu, 'std': std}, open(exp_name, 'wb'))
+    pkl.dump({'mu': mu, 'std': std}, open( f'{exp_name}.pkl', 'wb'))
 
 def main(project_name, model_name, dataset_name, num_works, batch_size, dist_params, train_params, model_params):
     trainset, testset = load_data(batch_size, dataset_name, num_works, train_params, model_params)
