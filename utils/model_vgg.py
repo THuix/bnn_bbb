@@ -76,7 +76,8 @@ class VGG(BNN):
                                 dilation = self.model_params['dilation'],
                                 kernel_size = layer[4],
                                 init_type='normal',
-                                regime=regime))
+                                regime=regime,
+                                bias=True))
                 seq.append(nn.ReLU(inplace=True))
 
             elif layer[0] == 'M': #maxpooling
@@ -92,7 +93,7 @@ class VGG(BNN):
                     dist_params['mu_prior'],
                     init_type='normal',
                     regime=regime,
-                    bias = False)
+                    bias = True)
                     )
                 if layer[4]:
                     seq.append(nn.ReLU(inplace=True))
