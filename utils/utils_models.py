@@ -158,7 +158,8 @@ class BNN(pl.LightningModule):
     def test_epoch_end(self, output):
         mu, std = self.extract_flattened_weights()
         ratio = std / mu
-        samples = torch.normal(torch.tensor(mu), torch.tensor(std)).numpy()
+        samples = np.random.normal(mu, std)
+        print(ratio.shape, samples.shape)
         self.plot_hist(mu, 'Mean', "mu")
         self.plot_hist(std, 'Std', "std")
         self.plot_hist(ratio, 'ratio std / mu', 'ratio_weights')
