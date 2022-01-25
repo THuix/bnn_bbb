@@ -92,8 +92,6 @@ class BNN(pl.LightningModule):
         obj_loss = self.re_balance_loss(obj_loss)
         nll = self.re_balance_loss(nll)
         kl = self.re_balance_loss(kl)
-
-        
         
         logs = {
             "obj": obj_loss,

@@ -59,7 +59,7 @@ if __name__ == '__main__':
                                 'dilation': 1,
                                 'stride': 1,
                                 'kernel_size': 3,
-                            'N_last_layer': int(N_last_layer)}
+                            '   N_last_layer': int(N_last_layer)}
 
                 if args.vgg_type != 'None':
                     model_params['VGG_type'] = int(args.vgg_type)
