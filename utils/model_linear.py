@@ -135,7 +135,7 @@ class Linear_classic(NN):
     def __init__(self,  train_params, model_params):
         self.train_params = train_params
         self.model_params = model_params
-        super(Linear_classic, self).__init__(self.train_params['N_last_layer'],
+        super(Linear_classic, self).__init__(self.model_params['N_last_layer'],
                                           self.train_params['criterion'],
                                           self.train_params['lr'])
 
@@ -147,5 +147,5 @@ class Linear_classic(NN):
         
         self.model_params['w'] = np.sum([m.flatten().detach().cpu().numpy().shape for m in self.parameters()])
         self.save_hist = False
-        self.do_flatten = False
+        self.do_flatten = True
         self.save_hyperparameters() 

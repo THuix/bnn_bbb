@@ -98,6 +98,7 @@ def get_model(model_name, dist_params, train_params, model_params):
     elif model_name == 'VGG_regime_1':
         return VGG_regime_1(dist_params, train_params, model_params)
     elif model_name == 'Linear_classic':
+        model_params['in_size'] = model_params['in_size'] * model_params['hin']**2
         return Linear_classic(train_params, model_params)
     elif model_name == 'VGG_regime_3':
         return VGG_regime_3(dist_params, train_params, model_params)
