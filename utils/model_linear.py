@@ -135,7 +135,7 @@ class Linear_classic(NN):
     def __init__(self,  train_params, model_params):
         self.train_params = train_params
         self.model_params = model_params
-        super(Linear_classic, self).__init__(512,
+        super(Linear_classic, self).__init__(self.train_params['N_last_layers'],
                                           self.train_params['criterion'],
                                           self.train_params['lr'])
 
