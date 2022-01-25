@@ -22,7 +22,7 @@ class Resnet_bloc(nn.Module):
                      kernel_size = ks,
                      init_type='fixed',
                      regime=regime,
-                     bias=True),
+                     bias=False),
             nn.ReLU(),
             Conv_bnn(out_channels,
                      out_channels,
@@ -36,7 +36,7 @@ class Resnet_bloc(nn.Module):
                      kernel_size = ks,
                      init_type='fixed',
                      regime=regime,
-                     bias = True))
+                     bias = False))
         if conv_in_identity:
             self.seq_identity = nn.Sequential(
                 Conv_bnn(in_channels,
@@ -51,7 +51,7 @@ class Resnet_bloc(nn.Module):
                          kernel_size = 1,
                          init_type='fixed',
                          regime=regime,
-                         bias=True))
+                         bias=False))
         else:
             self.seq_identity = nn.Sequential()
 
@@ -76,7 +76,7 @@ def create_resnet_seq(dist_params, model_params, regime):
                 kernel_size = 3,
                 init_type='fixed',
                 regime=regime,
-                bias = True),
+                bias = False),
         nn.ReLU(),
         Resnet_bloc(16, 16, 3, 1, False, dist_params, model_params, regime),
         Resnet_bloc(16, 16, 3, 1, False, dist_params, model_params, regime),
@@ -97,7 +97,7 @@ def create_resnet_seq(dist_params, model_params, regime):
                 dist_params['mu_prior'],
                 init_type='normal',
                 regime=regime,
-                bias = True))
+                bias = False))
                        
 
 class Resnet20(BNN):
