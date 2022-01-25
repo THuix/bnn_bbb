@@ -95,7 +95,7 @@ def create_resnet_seq(dist_params, model_params, regime):
                 dist_params['init_mu_post'],
                 dist_params['sigma_prior'],
                 dist_params['mu_prior'],
-                init_type='normal',
+                init_type='fixed',
                 regime=regime,
                 bias = False))
                        
