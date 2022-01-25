@@ -41,7 +41,6 @@ class Linear_BNN(BNN):
                        regime=regime,
                        bias = False))
 
-        raise ValueError([m.flatten().detach().cpu().numpy().shape for m in self.parameters()])
         self.model_params['w'] = np.sum([m.flatten().detach().cpu().numpy().shape for m in self.parameters()])
         if regime == 1:
             self.train_params['alpha'] = self.model_params['w'] / self.train_params['p']
