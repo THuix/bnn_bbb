@@ -124,8 +124,8 @@ class NN(pl.LightningModule):
         wandb.log({name: wandb.Image(X)})
 
     def test_epoch_end(self, output):
-        w = self.extract_flattened_weights()
-        self.plot_hist(w, 'Mean', "mu")
+        self.w = self.extract_flattened_weights()
+        self.plot_hist(self.w, 'Mean', "mu")
 
     def configure_optimizers(self):
         optimizer = torch.optim.Adam(self.parameters(), lr=self.lr, weight_decay=self.train_params['alpha'])

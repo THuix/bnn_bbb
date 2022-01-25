@@ -1,6 +1,8 @@
 
 import sys
 import os
+
+from attr import has
 sys.path.insert(0,'../../utils')
 from pytorch_lightning.loggers.wandb import WandbLogger
 from pytorch_lightning.callbacks import LearningRateMonitor
@@ -138,7 +140,11 @@ def main(project_name, model_name, dataset_name, num_works, batch_size, dist_par
     trainer.fit(model, trainset, testset)
     result = trainer.test(model, testset)
     wandb.finish()
-    save_weights(model.mu, model.std, exp_name)
+    if hasattr(model, 'mu'):
+        save_weights(model.mu, model.std, exp_name)
+    else:
+        pkl.dump({'w': model.w}, open( f'{exp_name}.pkl', 'wb'))
+
     return model
 
 
