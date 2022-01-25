@@ -51,6 +51,8 @@ if __name__ == '__main__':
                 else:
                     train_params['limit_p'] = None
 
+                train_params['limit_p'] = 1000
+
                 
 
                 model_params = {'padding' : 1,
