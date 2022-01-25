@@ -20,7 +20,7 @@ class Resnet_bloc(nn.Module):
                      padding = 1,
                      dilation = 1,
                      kernel_size = ks,
-                     init_type='normal',
+                     init_type='fixed',
                      regime=regime,
                      bias=True),
             nn.ReLU(),
@@ -34,7 +34,7 @@ class Resnet_bloc(nn.Module):
                      padding = 1,
                      dilation = 1,
                      kernel_size = ks,
-                     init_type='normal',
+                     init_type='fixed',
                      regime=regime,
                      bias = True))
         if conv_in_identity:
@@ -49,7 +49,7 @@ class Resnet_bloc(nn.Module):
                          padding = 0,
                          dilation = 1,
                          kernel_size = 1,
-                         init_type='normal',
+                         init_type='fixed',
                          regime=regime,
                          bias=True))
         else:
@@ -74,7 +74,7 @@ def create_resnet_seq(dist_params, model_params, regime):
                 padding = 1,
                 dilation = 1,
                 kernel_size = 3,
-                init_type='normal',
+                init_type='fixed',
                 regime=regime,
                 bias = True),
         nn.ReLU(),
