@@ -131,3 +131,21 @@ class NN(pl.LightningModule):
         return [optimizer], [scheduler]
 
 
+class Linear_classic(NN):
+    def __init__(self,  train_params, model_params):
+        self.train_params = train_params
+        self.model_params = model_params
+        super(Linear_classic, self).__init__(512,
+                                          self.train_params['criterion'],
+                                          self.train_params['lr'])
+
+        self.seq = nn.Sequential(
+            nn.Linear(model_params['in_size'], model_params['N_last_layer'], bias=False),
+            nn.ReLU(),
+            nn.Linear(model_params['N_last_layer'], model_params['out_size'], bias=False)
+        )
+        
+        self.model_params['w'] = np.sum([m.flatten().detach().cpu().numpy().shape for m in self.parameters()])
+        self.save_hist = False
+        self.do_flatten = False
+        self.save_hyperparameters() 

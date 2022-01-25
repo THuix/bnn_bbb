@@ -10,6 +10,7 @@ from models import Linear_regime_1, Linear_regime_2, Linear_regime_3
 from models import Conv_regime_1, Conv_regime_3
 from models import VGG_regime_1, VGG_regime_3
 from models import Resnet_regime_1, Resnet_regime_3
+from model_linear import Linear_classic
 from model_vgg import VGG_classic
 from model_resnet import Resnet20_classic
 from torchvision import transforms
@@ -96,7 +97,8 @@ def get_model(model_name, dist_params, train_params, model_params):
 
     elif model_name == 'VGG_regime_1':
         return VGG_regime_1(dist_params, train_params, model_params)
-
+    elif model_name == 'Linear_classic':
+        return Linear_classic(train_params, model_params)
     elif model_name == 'VGG_regime_3':
         return VGG_regime_3(dist_params, train_params, model_params)
     elif model_name == 'Resnet_regime_1':
