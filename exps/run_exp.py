@@ -40,7 +40,7 @@ if __name__ == '__main__':
 
                 train_params = {'lr': args.lr,
                                 'nb_epochs': args.nb_epochs,
-                                'nb_samples': 500,
+                                'nb_samples': 1,
                                 'criterion': nn.MSELoss(reduction='sum') if args.dataset == 'BOSTON' else nn.CrossEntropyLoss(reduction='sum'),
                                 'alpha': alpha,
                                 'dataset': args.dataset,
