@@ -128,15 +128,17 @@ class BNN(pl.LightningModule):
     def training_step(self, batch, batch_idx):
         loss, logs = self.step(batch, batch_idx)
         self.log_dict({f"train_{k}": v for k, v in logs.items()}, sync_dist=True)
-        self.accuracy.reset()
-        self.ECE.reset()
+        if self.train_params['save_acc']:
+            self.accuracy.reset()
+            self.ECE.reset()
         return loss
 
     def validation_step(self, batch, batch_idx):
         loss, logs = self.step(batch, batch_idx)
         self.log_dict({f"val_{k}": v for k, v in logs.items()}, sync_dist=True)
-        self.accuracy.reset()
-        self.ECE.reset()
+        if self.train_params['save_acc']:
+            self.accuracy.reset()
+            self.ECE.reset()
         return loss
 
     def plot_hist(self, values, title, name):
@@ -153,8 +155,9 @@ class BNN(pl.LightningModule):
     def test_step(self, batch, batch_idx):
         loss, logs = self.step(batch, batch_idx)
         self.log_dict({f"test_{k}": v for k, v in logs.items()}, sync_dist=True)
-        self.accuracy.reset()
-        self.ECE.reset()
+        if self.train_params['save_acc']:
+            self.accuracy.reset()
+            self.ECE.reset()
         return loss
 
     def test_epoch_end(self, output):
