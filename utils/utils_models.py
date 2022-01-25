@@ -167,7 +167,7 @@ class BNN(pl.LightningModule):
     def configure_optimizers(self):
         optimizer = torch.optim.Adam(self.parameters(), lr=self.train_params['lr'])
         #optimizer = torch.optim.Adagrad(self.parameters(), lr=self.train_params['lr'])
-        scheduler = torch.optim.lr_scheduler.StepLR(optimizer, 10 , gamma=0.1, verbose=True)
+        scheduler = torch.optim.lr_scheduler.StepLR(optimizer, 100 , gamma=0.1, verbose=True)
         return [optimizer], [scheduler]
 
 
