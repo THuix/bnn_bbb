@@ -88,7 +88,10 @@ class BNN(pl.LightningModule):
             nll = nll + n / self.train_params['nb_samples']
             kl = kl + k / self.train_params['nb_samples']
             pred = pred + p / self.train_params['nb_samples']
+
         
+        nll_averaged = self.train_params['criterion'](pred, y) / self.T
+        nll_averaged = self.re_balance_loss(nll_averaged)
         obj_loss = self.re_balance_loss(obj_loss)
         nll = self.re_balance_loss(nll)
         kl = self.re_balance_loss(kl)
@@ -97,7 +100,8 @@ class BNN(pl.LightningModule):
             "obj": obj_loss,
             "kl": kl,
             "nll": nll,
-            "ratio_nll_kl": nll / kl}
+            "ratio_nll_kl": nll / kl,
+            "dist_f": (nll_averaged - nll).abs()}
 
         if self.train_params['save_acc']:
             self.accuracy.update(pred, y)
