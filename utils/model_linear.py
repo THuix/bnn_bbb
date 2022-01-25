@@ -27,7 +27,7 @@ class Linear_BNN(BNN):
                        self.dist_params['init_mu_post'],
                        self.dist_params['sigma_prior'],
                        self.dist_params['mu_prior'],
-                       init_type='normal',
+                       init_type='fixed',
                        regime=regime,
                        bias = False),
             nn.ReLU(),
@@ -37,7 +37,7 @@ class Linear_BNN(BNN):
                        self.dist_params['init_mu_post'],
                        self.dist_params['sigma_prior'],
                        self.dist_params['mu_prior'],
-                       init_type='normal',
+                       init_type='fixed',
                        regime=regime,
                        bias = False))
 
