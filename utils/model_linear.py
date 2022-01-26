@@ -61,7 +61,10 @@ class NN(pl.LightningModule):
         self.N = N
 
     def forward(self, x):
-        pass
+        if self.do_flatten:
+            x = x.reshape(x.size()[0], -1)
+        pred = self.seq(x) / self.N
+        return pred
 
     def extract_flattened_weights(self):
         w = []

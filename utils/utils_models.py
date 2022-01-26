@@ -44,11 +44,11 @@ class BNN(pl.LightningModule):
         return np.concatenate(mu), np.concatenate(std)
 
     def forward(self, x):
-        x = x.reshape(x.size()[0], -1)
-        predictions = torch.tensor([self.seq(x) for _ in range(self.train_params['nb_samples'])])
-        raise ValueError(predictions.mean(dim=0).size())
-        return predictions.mean(dim=0) / self.N
-    
+        if self.do_flatten:
+            x = x.reshape(x.size()[0], -1)
+        pred = self.seq(x) / self.model_params['N_last_layer']
+        return pred
+
     def _get_kl(self):
         kl = 0
         for module in self.modules():
