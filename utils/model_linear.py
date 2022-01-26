@@ -131,7 +131,7 @@ class NN(pl.LightningModule):
         self.plot_hist(self.w, 'Mean', "mu")
 
     def configure_optimizers(self):
-        wd = self.train_params['alpha'] * self.train_params['p'] / self.model_params['w']
+        wd = self.train_params['alpha'] / self.model_params['w']
         optimizer = torch.optim.Adam(self.parameters(), lr=self.lr, weight_decay=wd)
         scheduler = torch.optim.lr_scheduler.StepLR(optimizer, 50 , gamma=0.1, verbose=True)
         return [optimizer], [scheduler]
