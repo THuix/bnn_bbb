@@ -23,6 +23,7 @@ import pickle as pkl
 import os
 import torch
 import numpy as np
+from torchvision.transforms import Compose 
 
 def load_boston(batch_size, num_works):
     dataset = BostonDataset()
@@ -37,10 +38,24 @@ def load_mnist(batch_size, num_works):
     return trainset, testset
 
 def load_cifar(batch_size, num_works):
-    trainset = CIFAR10('../', download=False, transform=transforms.ToTensor(), train=True)
+
+    stats = ((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010))
+    train_transform = Compose([
+            transforms.RandomHorizontalFlip(p=0.5),
+            transforms.RandomCrop(32, padding=4),
+            transforms.ToTensor(),
+            transforms.Normalize(*stats,inplace=True)
+        ])
+
+    test_transform = Compose([
+            transforms.ToTensor(),
+            transforms.Normalize(*stats,inplace=True)
+        ])
+
+    trainset = CIFAR10('../', download=False, transform=train_transform, train=True)
     trainset = DataLoader(trainset, batch_size=batch_size, shuffle=True, num_workers=num_works)
     
-    testset = CIFAR10('../', download=False, transform=transforms.ToTensor(), train=False)
+    testset = CIFAR10('../', download=False, transform=test_transform, train=False)
     testset = DataLoader(testset, batch_size=batch_size, shuffle=False, num_workers=num_works)
     return trainset, testset
 
