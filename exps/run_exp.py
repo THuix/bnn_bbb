@@ -24,7 +24,7 @@ if __name__ == '__main__':
     wandb.finish()
     args = parser.parse_args()
     dist_params = {'init_mu_post': 0.,
-                    'init_rho_post': np.log(np.exp(0.000001)-1),
+                    'init_rho_post': np.log(np.exp(0.0001)-1),
                     'sigma_prior': 1/5,
                     'mu_prior': 0.}
 

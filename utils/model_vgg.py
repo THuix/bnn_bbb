@@ -64,6 +64,7 @@ class VGG(BNN):
         seq = []
         for layer in layers:
             if layer[0] == 'C': # conv layer
+                seq.append(nn.Dropout(0.2))
                 seq.append(
                     Conv_bnn(   in_size if layer[1] else layer[2],
                                 layer[3],
@@ -84,6 +85,7 @@ class VGG(BNN):
                 seq.append(nn.MaxPool2d(2, stride=2))
 
             elif layer[0] == 'L': #Linear
+                seq.append(nn.Dropout(0.5))
                 seq.append(
                     Linear_bnn(512 if layer[1] else layer[2],
                     layer[3],
@@ -128,6 +130,7 @@ class VGG_classic(NN):
         seq = []
         for layer in layers:
             if layer[0] == 'C': # conv layer
+                seq.append(nn.Dropout(0.2))
                 seq.append(
                     nn.Conv2d(in_size if layer[1] else layer[2],
                               layer[3],
@@ -142,6 +145,7 @@ class VGG_classic(NN):
                 seq.append(nn.MaxPool2d(2, stride=2))
 
             elif layer[0] == 'L': #Linear
+                seq.append(nn.Dropout(0.5))
                 seq.append(
                     nn.Linear(512 if layer[1] else layer[2],
                     layer[3],
