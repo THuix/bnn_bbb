@@ -78,7 +78,7 @@ class VGG(BNN):
                                 kernel_size = layer[4],
                                 init_type='normal',
                                 regime=regime,
-                                bias=True))
+                                bias=False))
                 seq.append(nn.ReLU(inplace=True))
 
             elif layer[0] == 'M': #maxpooling
@@ -138,7 +138,7 @@ class VGG_classic(NN):
                               padding = self.model_params['padding'],
                               dilation = self.model_params['dilation'],
                               kernel_size = layer[4],
-                              bias=True))
+                              bias=False))
                 seq.append(nn.ReLU(inplace=True))
 
             elif layer[0] == 'M': #maxpooling
