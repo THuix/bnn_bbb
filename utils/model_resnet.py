@@ -133,13 +133,13 @@ class Resnet20(BNN):
         w = 0
         for module in self.modules():
             if hasattr(module, 'weight_mu'):
-                w += module.weight_mu.detach().cpu().flatten().size()
+                w += module.weight_mu.detach().cpu().flatten().size()[0]
             if hasattr(module, 'weight_rho'):
-                w += module.weight_rho.detach().cpu().flatten().size()
+                w += module.weight_rho.detach().cpu().flatten().size()[0]
             if hasattr(module, 'bias_mu'):
-                w += module.bias_mu.detach().cpu().flatten().size()
+                w += module.bias_mu.detach().cpu().flatten().size()[0]
             if hasattr(module, 'bias_rho'):
-                w += module.bias_rho.detach().cpu().flatten().size()
+                w += module.bias_rho.detach().cpu().flatten().size()[0]
             if hasattr(module, 'weight'):
                 pass
         raise ValueError(w)
