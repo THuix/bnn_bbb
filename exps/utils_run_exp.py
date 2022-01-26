@@ -57,6 +57,7 @@ def load_cifar(batch_size, num_works):
     
     testset = CIFAR10('../', download=False, transform=test_transform, train=False)
     testset = DataLoader(testset, batch_size=batch_size, shuffle=False, num_workers=num_works)
+    print('CIFAR LOADER')
     return trainset, testset
 
 def limit_size(dataset, size):
@@ -150,8 +151,10 @@ def main(project_name, model_name, dataset_name, num_works, batch_size, dist_par
     model = get_model(model_name, dist_params, train_params, model_params)
     exp_name = get_exp_name(train_params, model_params)
     wandb_logger = WandbLogger(name=exp_name,project=project_name)
+    print('LOGGER')
     lr_monitor = LearningRateMonitor(logging_interval='epoch')
     trainer = get_trainer(train_params['nb_epochs'], wandb_logger, lr_monitor, exp_name)
+    print('TRAINING')
     trainer.fit(model, trainset, testset)
     result = trainer.test(model, testset)
     wandb.finish()
