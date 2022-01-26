@@ -38,18 +38,16 @@ def load_mnist(batch_size, num_works):
     return trainset, testset
 
 def load_cifar(batch_size, num_works):
-    raise ValueError('ICI')
-    stats = ((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010))
     train_transform = Compose([
             transforms.RandomHorizontalFlip(p=0.5),
             transforms.RandomCrop(32, padding=4),
             transforms.ToTensor(),
-            transforms.Normalize(*stats,inplace=True)
+            transforms.Normalize(((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)))
         ])
 
     test_transform = Compose([
             transforms.ToTensor(),
-            transforms.Normalize(*stats,inplace=True)
+            transforms.Normalize(((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010)))
         ])
 
     trainset = CIFAR10('../', download=False, transform=train_transform, train=True)
