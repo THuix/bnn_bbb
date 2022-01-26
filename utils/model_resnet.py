@@ -142,7 +142,7 @@ class Resnet20(BNN):
                 w += module.bias_rho.detach().cpu().flatten().size()[0]
             if hasattr(module, 'weight'):
                 pass
-        raise ValueError(w)
+        return w
 
 
 
