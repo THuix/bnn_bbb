@@ -38,7 +38,7 @@ def load_mnist(batch_size, num_works):
     return trainset, testset
 
 def load_cifar(batch_size, num_works):
-
+    raise ValueError('ICI')
     stats = ((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010))
     train_transform = Compose([
             transforms.RandomHorizontalFlip(p=0.5),
