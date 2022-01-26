@@ -79,7 +79,7 @@ class NN(pl.LightningModule):
             x = x.reshape(x.size()[0], -1)
         pred = self.seq(x) / self.N
 
-        loss = self.criterion(pred, y)
+        loss = self.criterion(pred, y) * self.train_params['nb_batches']  / self.train_params['p']
         self.accuracy.update(pred, y)
         self.ECE.update(pred, y)
 
@@ -131,7 +131,8 @@ class NN(pl.LightningModule):
         self.plot_hist(self.w, 'Mean', "mu")
 
     def configure_optimizers(self):
-        optimizer = torch.optim.Adam(self.parameters(), lr=self.lr, weight_decay=self.train_params['alpha'])
+        wd = self.train_params['alpha'] * self.train_params['p'] / self.model_params['w']
+        optimizer = torch.optim.Adam(self.parameters(), lr=self.lr, weight_decay=wd)
         scheduler = torch.optim.lr_scheduler.StepLR(optimizer, 50 , gamma=0.1, verbose=True)
         return [optimizer], [scheduler]
 
