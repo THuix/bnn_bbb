@@ -23,6 +23,7 @@ class Resnet_bloc(nn.Module):
                      init_type='normal',
                      regime=regime,
                      bias=False),
+            nn.BatchNorm2d(out_channels),
             nn.ReLU(),
             Conv_bnn(out_channels,
                      out_channels,
@@ -36,7 +37,8 @@ class Resnet_bloc(nn.Module):
                      kernel_size = ks,
                      init_type='fixed',
                      regime=regime,
-                     bias = False))
+                     bias = False),
+                     nn.BatchNorm2d(out_channels))
         if conv_in_identity:
             self.seq_identity = nn.Sequential(
                 Conv_bnn(in_channels,
@@ -51,7 +53,8 @@ class Resnet_bloc(nn.Module):
                          kernel_size = 1,
                          init_type='normal',
                          regime=regime,
-                         bias=False))
+                         bias=False),
+                         nn.BatchNorm2d(out_channels))
         else:
             self.seq_identity = nn.Sequential()
 
@@ -77,6 +80,7 @@ def create_resnet_seq(dist_params, model_params, regime):
                 init_type='normal',
                 regime=regime,
                 bias = False),
+        nn.BatchNorm2d(16),
         nn.ReLU(),
         Resnet_bloc(16, 16, 3, 1, False, dist_params, model_params, regime),
         Resnet_bloc(16, 16, 3, 1, False, dist_params, model_params, regime),
@@ -114,7 +118,7 @@ class Resnet20(BNN):
 
         self.seq = nn.Sequential(*create_resnet_seq(dist_params, model_params, regime))
         
-        self.model_params['w'] = np.sum([m.flatten().detach().cpu().numpy().shape for m in self.parameters()])
+        self.model_params['w'] = self.extract_weights()
         
         if regime == 1:
             self.train_params['alpha'] = self.model_params['w'] / self.train_params['p']
@@ -124,6 +128,14 @@ class Resnet20(BNN):
         self.do_flatten = False
         self.T = self.get_temperature(regime)
         self.save_hyperparameters() 
+
+    def extract_weights(self):
+        for module in self.modules():
+            if hasattr(module, 'weight_mu'):
+                print('BNN', module)
+            if hasattr(module, 'weight'):
+                print('NN', module)
+        raise ''
 
 
 
