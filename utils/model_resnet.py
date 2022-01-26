@@ -130,12 +130,19 @@ class Resnet20(BNN):
         self.save_hyperparameters() 
 
     def extract_weights(self):
+        w = 0
         for module in self.modules():
             if hasattr(module, 'weight_mu'):
-                print('BNN', module)
+                w += module.weight_mu.detach().cpu().flatten().size()
+            if hasattr(module, 'weight_rho'):
+                w += module.weight_rho.detach().cpu().flatten().size()
+            if hasattr(module, 'bias_mu'):
+                w += module.bias_mu.detach().cpu().flatten().size()
+            if hasattr(module, 'bias_rho'):
+                w += module.bias_rho.detach().cpu().flatten().size()
             if hasattr(module, 'weight'):
-                print('NN', module)
-        raise ''
+                pass
+        raise ValueError(w)
 
 
 
