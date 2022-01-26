@@ -105,7 +105,7 @@ class BNN(pl.LightningModule):
 
         if self.train_params['save_acc']:
             self.accuracy.update(pred, y)
-            self.ECE.update(pred, y)
+            self.ECE.update(pred.softmax(dim=1), y)
             logs['acc'] = self.accuracy.compute()
             logs['ece'] = self.ECE.compute()
 
