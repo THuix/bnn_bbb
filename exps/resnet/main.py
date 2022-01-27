@@ -27,14 +27,14 @@ def load_models():
     model_1000 = Resnet_regime_3.load_from_checkpoint("../../exps/resnet/bnn_1000.ckpt").to(device)
     model_0001 = Resnet_regime_3.load_from_checkpoint("../../exps/resnet/bnn_0001.ckpt").to(device)
 
-    nn_1 = Resnet_regime_3.load_from_checkpoint("../../exps/resnet/nn_1.ckpt").to(device)
-    nn_01 = Resnet_regime_3.load_from_checkpoint("../../exps/resnet/nn_01.ckpt").to(device)
-    nn_001 = Resnet_regime_3.load_from_checkpoint("../../exps/resnet/nn_001.ckpt").to(device)
-    nn_10 = Resnet_regime_3.load_from_checkpoint("../../exps/resnet/nn_10.ckpt").to(device)
-    nn_100 = Resnet_regime_3.load_from_checkpoint("../../exps/resnet/nn_100.ckpt").to(device)
+    nn_1 = Resnet20_classic.load_from_checkpoint("../../exps/resnet/nn_1.ckpt").to(device)
+    nn_01 = Resnet20_classic.load_from_checkpoint("../../exps/resnet/nn_01.ckpt").to(device)
+    nn_001 = Resnet20_classic.load_from_checkpoint("../../exps/resnet/nn_001.ckpt").to(device)
+    nn_10 = Resnet20_classic.load_from_checkpoint("../../exps/resnet/nn_10.ckpt").to(device)
+    nn_100 = Resnet20_classic.load_from_checkpoint("../../exps/resnet/nn_100.ckpt").to(device)
     #nn_500 = Resnet_regime_3.load_from_checkpoint("../../exps/resnet/nn_500.ckpt").to(device)
-    nn_1000 = Resnet_regime_3.load_from_checkpoint("../../exps/resnet/nn_1000.ckpt").to(device)
-    nn_0001 = Resnet_regime_3.load_from_checkpoint("../../exps/resnet/nn_0001.ckpt").to(device)
+    nn_1000 = Resnet20_classic.load_from_checkpoint("../../exps/resnet/nn_1000.ckpt").to(device)
+    nn_0001 = Resnet20_classic.load_from_checkpoint("../../exps/resnet/nn_0001.ckpt").to(device)
 
 
     models = [(0.001, model_0001, nn_0001),
