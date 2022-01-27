@@ -66,7 +66,7 @@ criterion = nn.CrossEntropyLoss(reduction='mean')
 def compute(model, dataset, device, nb_samples):
     acc, ece, nll, conf = 0, 0, 0, 0
     batch_size = 200
-    results = torch.empty(len(dataset), batch_size, nb_samples, 10)
+    results = torch.empty(len(dataset), batch_size, nb_samples, 50)
     labels = torch.empty(len(dataset), batch_size)
     for batch_idx, (x, y) in enumerate(dataset):
         x = x.to(device)
