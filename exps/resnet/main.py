@@ -18,12 +18,12 @@ from model_resnet import Resnet20_classic
 
 
 def load_models():
-    model_1 = Resnet_regime_3.load_from_checkpoint("../exp/resnet/bnn_1.ckpt")
-    model_01 = Resnet_regime_3.load_from_checkpoint("../exp/reset/bnn_01.ckpt")
-    model_001 = Resnet_regime_3.load_from_checkpoint("../exp/resnet/bnn_001.ckpt")
+    model_1 = Resnet_regime_3.load_from_checkpoint("../exps/resnet/bnn_1.ckpt")
+    model_01 = Resnet_regime_3.load_from_checkpoint("../exps/reset/bnn_01.ckpt")
+    model_001 = Resnet_regime_3.load_from_checkpoint("../exps/resnet/bnn_001.ckpt")
     #model_10 = Resnet_regime_3.load_from_checkpoint("../../explotation/resnet/bnn_10.ckpt")
-    model_100 = Resnet_regime_3.load_from_checkpoint("../exp/resnet/bnn_100.ckpt")
-    model_500 = Resnet_regime_3.load_from_checkpoint("../exp/resnet/bnn_500.ckpt")
+    model_100 = Resnet_regime_3.load_from_checkpoint("../exps/resnet/bnn_100.ckpt")
+    model_500 = Resnet_regime_3.load_from_checkpoint("../exps/resnet/bnn_500.ckpt")
     #model_1000 = Resnet_regime_3.load_from_checkpoint("../../explotation/output/linear_bnn_1000.ckpt")
     # model_0001 = Resnet_regime_3.load_from_checkpoint("../../explotation/output/linear_bnn_0001.ckpt")
 
