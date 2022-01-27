@@ -86,7 +86,7 @@ def plot(x, y, title, savefile):
     plt.title(title)
     plt.xscale('log')
     plt.savefig(savefile)
-    plt.close
+    plt.close()
 
 def plot_curves(eta_list, ece_list, acc_list, nll_list, p_list):
     plot(eta_list, ece_list, 'ECE', 'ece.pdf')
