@@ -65,82 +65,31 @@ criterion = nn.CrossEntropyLoss(reduction='mean')
 
 def compute(model, dataset, device, nb_samples):
     acc, ece, nll, conf = 0, 0, 0, 0
-    for x, y in dataset:
-        accuracy.reset()
-        ECE.reset()
+    batch_size = 200
+    results = torch.empty(len(dataset), nb_samples, batch_size, 10).to(device)
+    for batch_idx, x, y in enumerate(dataset):
         x = x.to(device)
         y = y.to(device)
-        pred = torch.empty(nb_samples, x.size()[0], 10).to(device)
         for idx in range(nb_samples):
-            pred[idx, :] = model(x).softmax(dim=1)
-            
-        avg_pred = pred.mean(dim=0)
-        pred_prob = avg_pred[range(avg_pred.size()[0]), y]
-        nll += - torch.log(pred_prob).mean().item()
-        
-        accuracy.update(avg_pred, y)
-        acc += accuracy.compute().item()
-        
-        ECE.update(avg_pred, y)
-        ece += ECE.compute().item()
-        
-        conf += pred_prob.mean().item()
-        
-        ECE.reset()
-        accuracy.reset()
-    return acc/len(dataset), ece / len(dataset), nll / len(dataset), conf / len(dataset)
+            results[batch_idx, idx, :, :] = model(x).softmax(dim=1)
+    return results
     
-
-def plot(x, y, y_nn, title, savefile):
-    plt.plot(x, y, '-o', label='BNN')
-    plt.plot(x, y, '-o', label='Baseline SGD')
-    plt.title(title)
-    plt.xscale('log')
-    plt.legend()
-    plt.savefig(savefile)
-    plt.close()
-
-def plot_curves(eta_list, ece_list, ece_list_nn, acc_list, acc_list_nn, nll_list, nll_list_nn, p_list, p_list_nn):
-    plot(eta_list, ece_list, ece_list_nn, 'ECE', 'ece.pdf')
-    plot(eta_list, acc_list, acc_list_nn, 'Accuracy', 'acc.pdf')
-    plot(eta_list, nll_list, nll_list_nn, 'Negative Log likelihood', 'nll.pdf')
-    plot(eta_list, p_list, p_list_nn, 'True probability', 'p.pdf')
-
 if __name__ == '__main__':
     val_loader = load_dataset()
     models, device = load_models()
-    eta_list, acc_list, ece_list, nll_list, p_list = [], [], [], [], []
-    eta_list_nn, acc_list_nn, ece_list_nn, nll_list_nn, p_list_nn = [], [], [], [], []
+    results_list, results_nn_list, eta_list = [], [], []
     for eta, model, model_nn in tqdm(models):
         print('[SYSTEM]', eta)
-        acc, ece, nll, p = compute(model, val_loader, device, 50)
+        results = compute(model, val_loader, device, 50)
         del model
-        acc_nn, ece_nn, nll_nn, p_nn = compute(model_nn, val_loader, device, 1)
+        results_nn = compute(model_nn, val_loader, device, 1)
         del model_nn
         eta_list.append(eta)
-        ece_list.append(ece); ece_list_nn.append(ece_nn)
-        acc_list.append(acc); acc_list_nn.append(acc_nn)
-        nll_list.append(nll); nll_list_nn.append(nll_nn)
-        p_list.append(p); p_list_nn.append(p_nn)
-    plot_curves(eta_list,
-                ece_list,
-                ece_list_nn,
-                acc_list, 
-                acc_list_nn,
-                nll_list,
-                nll_list_nn,
-                p_list,
-                p_list_nn)
+        results_nn_list.append(results_nn)
+        results_list.append(results)
     results = {'eta_list': eta_list,
-                'ece_list': ece_list,
-                'ece_list_nn': ece_list_nn,
-                'acc_list': acc_list,
-                'acc_list_nn': acc_list_nn,
-                'nll_list': nll_list,
-                'nll_list_nn': nll_list_nn,
-                'p_list': p_list,
-                'p_list_nn': p_list_nn}
-
+                'results_list': results_list,
+                'results_nn_list': results_nn_list}
     pkl.dump(results, open('results.pkl', 'wb'))
 
 
