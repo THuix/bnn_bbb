@@ -49,7 +49,7 @@ def load_models():
     return models, device
 
 def load_dataset():
-    batch_size = 300
+    batch_size = 100
     num_works= 0
     test_transform = Compose([
                 transforms.ToTensor(),
