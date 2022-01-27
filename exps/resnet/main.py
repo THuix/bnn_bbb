@@ -1,7 +1,6 @@
 import torch
 import os
 import sys
-import os
 import numpy as np
 from torch import nn
 import torchmetrics
@@ -18,6 +17,7 @@ from model_resnet import Resnet20_classic
 
 
 def load_models():
+    raise ValueError(os.getcwd())
     model_1 = Resnet_regime_3.load_from_checkpoint("../exps/resnet/bnn_1.ckpt")
     model_01 = Resnet_regime_3.load_from_checkpoint("../exps/reset/bnn_01.ckpt")
     model_001 = Resnet_regime_3.load_from_checkpoint("../exps/resnet/bnn_001.ckpt")
