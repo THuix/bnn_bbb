@@ -94,8 +94,6 @@ def plot_curves(eta_list, ece_list, acc_list, nll_list, p_list):
     plot(eta_list, nll_list, 'Negative Log likelihood', 'nll.pdf')
     plot(eta_list, p_list, 'True probability', 'p.pdf')
 
-
-
 if __name__ == '__main__':
     val_loader = load_dataset()
     models, device = load_models()
@@ -108,6 +106,7 @@ if __name__ == '__main__':
         acc_list.append(acc)
         nll_list.append(nll)
         p_list.append(p)
+    plot_curves(eta_list, ece_list, acc_list, nll_list, p_list)
 
 
     
