@@ -26,14 +26,14 @@ def load_models():
     model_500 = Resnet_regime_3.load_from_checkpoint("../../exps/resnet/bnn_500.ckpt").to(device)
     #model_1000 = Resnet_regime_3.load_from_checkpoint("../../explotation/output/linear_bnn_1000.ckpt")
     # model_0001 = Resnet_regime_3.load_from_checkpoint("../../explotation/output/linear_bnn_0001.ckpt")
-    raise ValueError(model_1.device)
+
     models = [(0.01, model_001),
          (0.1, model_01),
          (1., model_1),
          (100, model_100),
          (500, model_500)]
         
-    return models
+    return models, device
 
 def load_dataset():
     batch_size = 50000
@@ -52,16 +52,18 @@ ECE = torchmetrics.CalibrationError(n_bins=15, norm='l1')
 accuracy = torchmetrics.Accuracy()  
 criterion = nn.CrossEntropyLoss(reduction='mean')
 
-def compute(model, dataset):
+def compute(model, dataset, device):
     acc, ece, nll, conf = 0, 0, 0, 0
     for x, y in dataset:
+        x = x.to(device)
+        y = y.to(device)
         pred = torch.empty(nb_samples, x.size()[0], 10)
         for idx in range(nb_samples):
             pred[idx, :] = model(x).softmax(dim=1)
             
         avg_pred = pred.mean(dim=0)
         pred_prob = avg_pred[range(avg_pred.size()[0]), y]
-        nll += - torch.log(pred_prob).mean()
+        nll += - torch.log(pred_prob).mean().item()
         
         accuracy.update(avg_pred, y)
         acc += accuracy.compute().item()
@@ -69,7 +71,7 @@ def compute(model, dataset):
         ECE.update(avg_pred, y)
         ece += ECE.compute().item()
         
-        conf += pred_prob.mean()
+        conf += pred_prob.mean().item()
         
         ECE.reset()
         accuracy.reset()
@@ -93,12 +95,11 @@ def plot_curves(eta_list, ece_list, acc_list, nll_list, p_list):
 
 if __name__ == '__main__':
     val_loader = load_dataset()
-    models = load_models()
+    models, device = load_models()
     eta_list, acc_list, ece_list, nll_list, p_list = [], [], [], [], []
     eta_list_nn, acc_list_nn, ece_list_nn, nll_list_nn, p_list_nn = [], [], [], [], []
     for eta, model in tqdm(models):
-        print(eta, model.model_params['w'])
-        acc, ece, nll, p = compute(model, val_loader)
+        acc, ece, nll, p = compute(model, val_loader, device)
         eta_list.append(eta)
         ece_list.append(ece)
         acc_list.append(acc)
