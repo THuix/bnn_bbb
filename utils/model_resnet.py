@@ -151,10 +151,13 @@ class Resnet_bloc_classic(nn.Module):
         super(Resnet_bloc_classic, self).__init__()
         self.seq = nn.Sequential(
             nn.Conv2d(in_channels, out_channels, ks, stride=stride, padding=1, bias=False),
+            nn.BatchNorm2d(out_channels),
             nn.ReLU(),
-            nn.Conv2d(out_channels, out_channels, ks, stride=1, padding=1, bias=False))
+            nn.Conv2d(out_channels, out_channels, ks, stride=1, padding=1, bias=False),
+            nn.BatchNorm2d(out_channels))
         if conv_in_identity:
-            self.seq_identity = nn.Sequential( nn.Conv2d(in_channels, out_channels, 1, stride=2, bias=False)))
+            self.seq_identity = nn.Sequential( nn.Conv2d(in_channels, out_channels, 1, stride=2, bias=False)),
+            nn.BatchNorm2d(out_channels))
         else:
             self.seq_identity = nn.Sequential()
 
@@ -168,6 +171,7 @@ class Resnet_bloc_classic(nn.Module):
 def create_resnet_classic_seq(model_params):
     return nn.Sequential(
         nn.Conv2d(model_params['in_size'], 16, 3, padding=1, bias=False),
+        nn.BatchNorm2d(16),
         nn.ReLU(),
         Resnet_bloc_classic(16, 16, 3, 1, False),
         Resnet_bloc_classic(16, 16, 3, 1, False),
