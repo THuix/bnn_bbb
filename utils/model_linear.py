@@ -144,7 +144,7 @@ class NN(pl.LightningModule):
         wd = self.train_params['alpha'] * 1e-4 / self.model_params['w']
         #optimizer = torch.optim.Adam(self.parameters(), lr=self.lr, weight_decay=wd)
         #scheduler = torch.optim.lr_scheduler.StepLR(optimizer, 50 , gamma=0.1, verbose=True)
-        optimizer = torch.optim.Adam(self.parameters(), lr=self.lr, momentum=0.9, weight_decay=0.002)
+        optimizer = torch.optim.SGD(self.parameters(), lr=self.lr, momentum=0.9, weight_decay=0.002)
         scheduler = torch.optim.lr_scheduler.MultiplicativeLR(optimizer, lr_lambda=self.lambda_fct)
         return [optimizer], [scheduler]
 
