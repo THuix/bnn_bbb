@@ -3,7 +3,7 @@ import sys
 import os
 
 from attr import has
-sys.path.insert(0,'../../utils')
+sys.path.insert(0,'../utils')
 from pytorch_lightning.loggers.wandb import WandbLogger
 from pytorch_lightning.callbacks import LearningRateMonitor
 import pytorch_lightning as pl
