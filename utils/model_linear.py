@@ -130,10 +130,22 @@ class NN(pl.LightningModule):
         self.w = self.extract_flattened_weights()
         self.plot_hist(self.w, 'Mean', "mu")
 
+    def lambda_fct(self, e):
+        if e < 80:
+            return 0.1
+        elif e < 120:
+            return 0.01
+        elif e < 160:
+            return 0.001
+        else:
+            return 0.0005
+
     def configure_optimizers(self):
         wd = self.train_params['alpha'] * 1e-4 / self.model_params['w']
-        optimizer = torch.optim.Adam(self.parameters(), lr=self.lr, weight_decay=wd)
-        scheduler = torch.optim.lr_scheduler.StepLR(optimizer, 50 , gamma=0.1, verbose=True)
+        #optimizer = torch.optim.Adam(self.parameters(), lr=self.lr, weight_decay=wd)
+        #scheduler = torch.optim.lr_scheduler.StepLR(optimizer, 50 , gamma=0.1, verbose=True)
+        optimizer = torch.optim.Adam(self.parameters(), lr=self.lr, momentum=0.9, weight_decay=0.002)
+        scheduler = torch.optim.lr_scheduler.MultiplicativeLR(optimizer, lr_lambda=self.lambda_fct)
         return [optimizer], [scheduler]
 
 
