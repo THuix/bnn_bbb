@@ -14,6 +14,7 @@ from tqdm import tqdm
 sys.path.insert(0,'../../utils')
 from models import Resnet_regime_3
 from model_resnet import Resnet20_classic
+import pickle as pkl
 
 
 def load_models():
@@ -128,6 +129,17 @@ if __name__ == '__main__':
                 nll_list_nn,
                 p_list,
                 p_list_nn)
+    results = {'eta_list': eta_list,
+                'ece_list': ece_list,
+                'ece_list_nn': ece_list_nn,
+                'acc_list': acc_list,
+                'acc_list_nn': acc_list_nn,
+                'nll_list': nll_list,
+                'nll_list_nn': nll_list_nn,
+                'p_list': p_list,
+                'p_list_nn': p_list_nn}
+
+    pkl.dump(results, open('results.pkl', 'wb'))
 
 
     
