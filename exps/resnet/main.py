@@ -16,6 +16,7 @@ from models import Resnet_regime_3
 from model_resnet import Resnet20_classic
 import pickle as pkl
 
+batch_size = 200
 
 def load_models():
     device = torch.device('cuda')
@@ -49,7 +50,6 @@ def load_models():
     return models, device
 
 def load_dataset():
-    batch_size = 200
     num_works= 0
     test_transform = Compose([
                 transforms.ToTensor(),
@@ -65,8 +65,7 @@ criterion = nn.CrossEntropyLoss(reduction='mean')
 
 def compute(model, dataset, device, nb_samples):
     acc, ece, nll, conf = 0, 0, 0, 0
-    batch_size = 200
-    results = torch.empty(len(dataset), batch_size, nb_samples, 50)
+    results = torch.empty(len(dataset), batch_size, nb_samples, 10)
     labels = torch.empty(len(dataset), batch_size)
     for batch_idx, (x, y) in enumerate(dataset):
         x = x.to(device)
@@ -83,7 +82,7 @@ if __name__ == '__main__':
 
     for eta, model, model_nn in tqdm(models):
         print('[SYSTEM]', eta)
-        results, labels = compute(model, val_loader, device, 15)
+        results, labels = compute(model, val_loader, device, 50)
         del model
         results_nn, labels_nn = compute(model_nn, val_loader, device, 1)
         del model_nn
