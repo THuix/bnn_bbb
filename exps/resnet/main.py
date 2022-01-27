@@ -55,7 +55,7 @@ def load_dataset():
                 transforms.ToTensor(),
                 transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010))
             ])
-    val_dataset = CIFAR10('../', download=True, transform=test_transform, train=False)
+    val_dataset = CIFAR10('../', download=False, transform=test_transform, train=False)
     val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=True, num_workers=num_works)
     return val_loader
 
@@ -113,7 +113,7 @@ if __name__ == '__main__':
     eta_list_nn, acc_list_nn, ece_list_nn, nll_list_nn, p_list_nn = [], [], [], [], []
     for eta, model, model_nn in tqdm(models):
         print('[SYSTEM]', eta)
-        acc, ece, nll, p = compute(model, val_loader, device, 10)
+        acc, ece, nll, p = compute(model, val_loader, device, 50)
         del model
         acc_nn, ece_nn, nll_nn, p_nn = compute(model_nn, val_loader, device, 1)
         del model_nn
