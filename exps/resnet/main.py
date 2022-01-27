@@ -78,7 +78,6 @@ def compute(model, dataset, device, nb_samples):
         pred_prob = avg_pred[range(avg_pred.size()[0]), y]
         nll += - torch.log(pred_prob).mean().item()
         
-        print(avg_pred.device, y.device)
         accuracy.update(avg_pred, y)
         acc += accuracy.compute().item()
         
@@ -114,7 +113,9 @@ if __name__ == '__main__':
     eta_list_nn, acc_list_nn, ece_list_nn, nll_list_nn, p_list_nn = [], [], [], [], []
     for eta, model, model_nn in tqdm(models):
         acc, ece, nll, p = compute(model, val_loader, device, 50)
+        del model
         acc_nn, ece_nn, nll_nn, p_nn = compute(model_nn, val_loader, device, 1)
+        del model_nn
         eta_list.append(eta)
         ece_list.append(ece); ece_list_nn.append(ece_nn)
         acc_list.append(acc); acc_list_nn.append(acc_nn)
