@@ -77,7 +77,7 @@ class NN(pl.LightningModule):
         x, y = batch
         if self.do_flatten:
             x = x.reshape(x.size()[0], -1)
-        pred = self.seq(x) / self.N
+        pred = self.seq(x)
 
         loss = self.criterion(pred, y) * self.train_params['nb_batches']  / self.train_params['p']
         self.accuracy.update(pred, y)
