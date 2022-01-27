@@ -65,6 +65,7 @@ def compute(model, dataset, device):
         pred_prob = avg_pred[range(avg_pred.size()[0]), y]
         nll += - torch.log(pred_prob).mean().item()
         
+        print(avg_pred.device, y.device)
         accuracy.update(avg_pred, y)
         acc += accuracy.compute().item()
         
