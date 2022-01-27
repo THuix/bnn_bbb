@@ -82,7 +82,7 @@ if __name__ == '__main__':
     results_list, results_nn_list, eta_list = [], [], []
     for eta, model, model_nn in tqdm(models):
         print('[SYSTEM]', eta)
-        results, labels = compute(model, val_loader, device, 50)
+        results, labels = compute(model, val_loader, device, 15)
         del model
         results_nn, labels_nn = compute(model_nn, val_loader, device, 1)
         del model_nn

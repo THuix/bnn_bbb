@@ -2,9 +2,9 @@
 #SBATCH --job-name=explo # nom du job
 #SBATCH --nodes=1	# number of nodes
 #SBATCH --gres=gpu:1
-#SBATCH --mem=8G
+#SBATCH --mem=64G
 #SBATCH --partition=gpu
-#SBATCH --cpus-per-task=5       
+#SBATCH --cpus-per-task=10      
 #SBATCH --time=00:20:00             # temps exécution maximum demande (HH:MM:SS)
 #SBATCH --output=output_explo.txt   # nom du fichier de sortie
 #SBATCH --error=error_explo.txt     # nom du fichier d'erreur (ici commun avec la sortie)
