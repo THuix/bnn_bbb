@@ -12,7 +12,7 @@ from torch.utils.data import DataLoader
 from torchvision.transforms import Compose 
 from scipy.special import softmax
 from tqdm import tqdm
-sys.path.insert(0,'../../../utils')
+sys.path.insert(0,'../../utils')
 from models import Resnet_regime_3
 from model_resnet import Resnet20_classic
 
