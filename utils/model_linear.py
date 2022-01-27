@@ -136,7 +136,7 @@ class NN(pl.LightningModule):
         elif e == 120:
             return 0.1
         elif e == 160:
-            return 0.001
+            return 0.1
         elif e == 180:
             return 0.5
         else:
