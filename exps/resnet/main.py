@@ -57,7 +57,7 @@ def compute(model, dataset, device):
     for x, y in dataset:
         x = x.to(device)
         y = y.to(device)
-        pred = torch.empty(nb_samples, x.size()[0], 10)
+        pred = torch.empty(nb_samples, x.size()[0], 10).to(device)
         for idx in range(nb_samples):
             pred[idx, :] = model(x).softmax(dim=1)
             
