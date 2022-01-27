@@ -23,18 +23,27 @@ def load_models():
     model_001 = Resnet_regime_3.load_from_checkpoint("../../exps/resnet/bnn_001.ckpt").to(device)
     model_10 = Resnet_regime_3.load_from_checkpoint("../../exps/resnet/bnn_10.ckpt").to(device)
     model_100 = Resnet_regime_3.load_from_checkpoint("../../exps/resnet/bnn_100.ckpt").to(device)
-    model_500 = Resnet_regime_3.load_from_checkpoint("../../exps/resnet/bnn_500.ckpt").to(device)
+    #model_500 = Resnet_regime_3.load_from_checkpoint("../../exps/resnet/bnn_500.ckpt").to(device)
     model_1000 = Resnet_regime_3.load_from_checkpoint("../../exps/resnet/bnn_1000.ckpt").to(device)
     model_0001 = Resnet_regime_3.load_from_checkpoint("../../exps/resnet/bnn_0001.ckpt").to(device)
 
-    models = [(0.001, model_0001),
-        (0.01, model_001),
-         (0.1, model_01),
-         (1., model_1),
-         (10., model_10),
-         (100, model_100),
-         (500, model_500),
-         (1000, model_1000)]
+    nn_1 = Resnet_regime_3.load_from_checkpoint("../../exps/resnet/nn_1.ckpt").to(device)
+    nn_01 = Resnet_regime_3.load_from_checkpoint("../../exps/resnet/nn_01.ckpt").to(device)
+    nn_001 = Resnet_regime_3.load_from_checkpoint("../../exps/resnet/nn_001.ckpt").to(device)
+    nn_10 = Resnet_regime_3.load_from_checkpoint("../../exps/resnet/nn_10.ckpt").to(device)
+    nn_100 = Resnet_regime_3.load_from_checkpoint("../../exps/resnet/nn_100.ckpt").to(device)
+    #nn_500 = Resnet_regime_3.load_from_checkpoint("../../exps/resnet/nn_500.ckpt").to(device)
+    nn_1000 = Resnet_regime_3.load_from_checkpoint("../../exps/resnet/nn_1000.ckpt").to(device)
+    nn_0001 = Resnet_regime_3.load_from_checkpoint("../../exps/resnet/nn_0001.ckpt").to(device)
+
+
+    models = [(0.001, model_0001, nn_0001),
+        (0.01, model_001, nn_001),
+         (0.1, model_01, nn_01),
+         (1., model_1, nn_1),
+         (10., model_10, nn_10),
+         (100, model_100, nn_100),
+         (1000, model_1000, nn_1000)]
         
     return models, device
 
@@ -49,13 +58,11 @@ def load_dataset():
     val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=True, num_workers=num_works)
     return val_loader
 
-
-nb_samples = 100
 ECE = torchmetrics.CalibrationError(n_bins=15, norm='l1').to('cuda')
 accuracy = torchmetrics.Accuracy().to('cuda')
 criterion = nn.CrossEntropyLoss(reduction='mean')
 
-def compute(model, dataset, device):
+def compute(model, dataset, device, nb_samples):
     acc, ece, nll, conf = 0, 0, 0, 0
     for x, y in dataset:
         accuracy.reset()
@@ -84,32 +91,43 @@ def compute(model, dataset, device):
     return acc/len(dataset), ece / len(dataset), nll / len(dataset), conf / len(dataset)
     
 
-def plot(x, y, title, savefile):
-    plt.plot(x, y, 'o')
+def plot(x, y, y_nn, title, savefile):
+    plt.plot(x, y, '-o', label='BNN')
+    plt.plot(x, y, '-o', label='Baseline SGD')
     plt.title(title)
     plt.xscale('log')
+    plt.legend()
     plt.savefig(savefile)
     plt.close()
 
-def plot_curves(eta_list, ece_list, acc_list, nll_list, p_list):
-    plot(eta_list, ece_list, 'ECE', 'ece.pdf')
-    plot(eta_list, acc_list, 'Accuracy', 'acc.pdf')
-    plot(eta_list, nll_list, 'Negative Log likelihood', 'nll.pdf')
-    plot(eta_list, p_list, 'True probability', 'p.pdf')
+def plot_curves(eta_list, ece_list, ece_list_nn, acc_list, acc_list_nn, nll_list, nll_list_nn, p_list, p_list_nn):
+    plot(eta_list, ece_list, ece_list_nn, 'ECE', 'ece.pdf')
+    plot(eta_list, acc_list, acc_list_nn, 'Accuracy', 'acc.pdf')
+    plot(eta_list, nll_list, nll_list_nn, 'Negative Log likelihood', 'nll.pdf')
+    plot(eta_list, p_list, p_list_nn, 'True probability', 'p.pdf')
 
 if __name__ == '__main__':
     val_loader = load_dataset()
     models, device = load_models()
     eta_list, acc_list, ece_list, nll_list, p_list = [], [], [], [], []
     eta_list_nn, acc_list_nn, ece_list_nn, nll_list_nn, p_list_nn = [], [], [], [], []
-    for eta, model in tqdm(models):
-        acc, ece, nll, p = compute(model, val_loader, device)
+    for eta, model, model_nn in tqdm(models):
+        acc, ece, nll, p = compute(model, val_loader, device, 100)
+        acc_nn, ece_nn, nll_nn, p_nn = compute(model_nn, val_loader, device, 1)
         eta_list.append(eta)
-        ece_list.append(ece)
-        acc_list.append(acc)
-        nll_list.append(nll)
-        p_list.append(p)
-    plot_curves(eta_list, ece_list, acc_list, nll_list, p_list)
+        ece_list.append(ece); ece_list_nn.append(ece_nn)
+        acc_list.append(acc); acc_list_nn.append(acc_nn)
+        nll_list.append(nll); nll_list_nn.append(nll_nn)
+        p_list.append(p); p_list_nn.append(p_nn)
+    plot_curves(eta_list,
+                ece_list,
+                ece_list_nn,
+                acc_list, 
+                acc_list_nn,
+                nll_list,
+                nll_list_nn,
+                p_list,
+                p_list_nn)
 
 
     
