@@ -55,6 +55,8 @@ criterion = nn.CrossEntropyLoss(reduction='mean')
 def compute(model, dataset, device):
     acc, ece, nll, conf = 0, 0, 0, 0
     for x, y in dataset:
+        accuracy.reset()
+        ECE.reset()
         x = x.to(device)
         y = y.to(device)
         pred = torch.empty(nb_samples, x.size()[0], 10).to(device)
