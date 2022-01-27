@@ -67,12 +67,14 @@ def compute(model, dataset, device, nb_samples):
     acc, ece, nll, conf = 0, 0, 0, 0
     batch_size = 200
     results = torch.empty(len(dataset), nb_samples, batch_size, 10).to(device)
+    labels = torch.empty(len(dataset), batch_size)
     for batch_idx, x, y in enumerate(dataset):
         x = x.to(device)
         y = y.to(device)
+        labels[batch_idx, :] = y
         for idx in range(nb_samples):
             results[batch_idx, idx, :, :] = model(x).softmax(dim=1)
-    return results
+    return results.detach().cpu(), labels.detach().cpu()
     
 if __name__ == '__main__':
     val_loader = load_dataset()
@@ -80,13 +82,13 @@ if __name__ == '__main__':
     results_list, results_nn_list, eta_list = [], [], []
     for eta, model, model_nn in tqdm(models):
         print('[SYSTEM]', eta)
-        results = compute(model, val_loader, device, 50)
+        results, labels = compute(model, val_loader, device, 50)
         del model
-        results_nn = compute(model_nn, val_loader, device, 1)
+        results_nn, labels_nn = compute(model_nn, val_loader, device, 1)
         del model_nn
         eta_list.append(eta)
-        results_nn_list.append(results_nn)
-        results_list.append(results)
+        results_nn_list.append((results_nn, labels_nn))
+        results_list.append((results, labels))
     results = {'eta_list': eta_list,
                 'results_list': results_list,
                 'results_nn_list': results_nn_list}
