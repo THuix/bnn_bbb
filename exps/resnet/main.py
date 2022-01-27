@@ -73,13 +73,14 @@ def compute(model, dataset, device, nb_samples):
         y = y.to(device)
         labels[batch_idx, :] = y.detach().cpu()
         for idx in range(nb_samples):
-            results[batch_idx, :, idx, :] = model(x).softmax(dim=1).detach().cpu()
+            results[batch_idx, :, idx, :] = model(x).detach().cpu()
     return results, labels
     
 if __name__ == '__main__':
     val_loader = load_dataset()
     models, device = load_models()
     results_list, results_nn_list, eta_list = [], [], []
+
     for eta, model, model_nn in tqdm(models):
         print('[SYSTEM]', eta)
         results, labels = compute(model, val_loader, device, 15)
