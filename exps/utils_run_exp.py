@@ -50,10 +50,10 @@ def load_cifar(batch_size, num_works):
             transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010))
         ])
 
-    trainset = CIFAR10('../', download=False, transform=train_transform, train=True)
+    trainset = CIFAR10('../', download=True, transform=train_transform, train=True)
     trainset = DataLoader(trainset, batch_size=batch_size, shuffle=True, num_workers=num_works)
     
-    testset = CIFAR10('../', download=False, transform=test_transform, train=False)
+    testset = CIFAR10('../', download=True, transform=test_transform, train=False)
     testset = DataLoader(testset, batch_size=batch_size, shuffle=False, num_workers=num_works)
     print('CIFAR LOADER')
     return trainset, testset
