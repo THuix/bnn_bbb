@@ -48,8 +48,8 @@ def load_dataset():
 
 
 nb_samples = 10
-ECE = torchmetrics.CalibrationError(n_bins=15, norm='l1')  
-accuracy = torchmetrics.Accuracy()  
+ECE = torchmetrics.CalibrationError(n_bins=15, norm='l1').to('cuda')
+accuracy = torchmetrics.Accuracy().to('cuda')
 criterion = nn.CrossEntropyLoss(reduction='mean')
 
 def compute(model, dataset, device):
