@@ -49,7 +49,7 @@ def load_models():
     return models, device
 
 def load_dataset():
-    batch_size = 200
+    batch_size = 50
     num_works= 0
     test_transform = Compose([
                 transforms.ToTensor(),
@@ -65,15 +65,15 @@ criterion = nn.CrossEntropyLoss(reduction='mean')
 
 def compute(model, dataset, device, nb_samples):
     acc, ece, nll, conf = 0, 0, 0, 0
-    batch_size = 200
-    results = torch.empty(len(dataset), nb_samples, batch_size, 10).to(device)
+    batch_size = 50
+    results = torch.empty(len(dataset), batch_size, nb_samples, 10).to(device)
     labels = torch.empty(len(dataset), batch_size)
     for batch_idx, (x, y) in enumerate(dataset):
         x = x.to(device)
         y = y.to(device)
         labels[batch_idx, :] = y
         for idx in range(nb_samples):
-            results[batch_idx, idx, :, :] = model(x).softmax(dim=1)
+            results[batch_idx, :, idx, :] = model(x).softmax(dim=1)
     return results.detach().cpu(), labels.detach().cpu()
     
 if __name__ == '__main__':
