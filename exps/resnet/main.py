@@ -42,7 +42,7 @@ def load_dataset():
                 transforms.ToTensor(),
                 transforms.Normalize((0.4914, 0.4822, 0.4465), (0.2023, 0.1994, 0.2010))
             ])
-    val_dataset = CIFAR10('../../', download=True, transform=test_transform, train=False)
+    val_dataset = CIFAR10('../', download=True, transform=test_transform, train=False)
     val_loader = DataLoader(val_dataset, batch_size=batch_size, shuffle=True, num_workers=num_works)
     return val_loader
 
