@@ -131,15 +131,16 @@ class NN(pl.LightningModule):
         self.plot_hist(self.w, 'Mean', "mu")
 
     def lambda_fct(self, e):
-        print(e)
-        if e < 80:
+        if e == 80:
             return 0.1
-        elif e < 120:
-            return 0.01
-        elif e < 160:
+        elif e == 120:
+            return 0.1
+        elif e == 160:
             return 0.001
+        elif e == 180
+            return 0.5
         else:
-            return 0.0005
+            1.
 
     def configure_optimizers(self):
         #optimizer = torch.optim.Adam(self.parameters(), lr=self.lr, weight_decay=wd)
