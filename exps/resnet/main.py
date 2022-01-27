@@ -21,17 +21,20 @@ def load_models():
     model_1 = Resnet_regime_3.load_from_checkpoint("../../exps/resnet/bnn_1.ckpt").to(device)
     model_01 = Resnet_regime_3.load_from_checkpoint("../../exps/resnet/bnn_01.ckpt").to(device)
     model_001 = Resnet_regime_3.load_from_checkpoint("../../exps/resnet/bnn_001.ckpt").to(device)
-    #model_10 = Resnet_regime_3.load_from_checkpoint("../../explotation/resnet/bnn_10.ckpt")
+    model_10 = Resnet_regime_3.load_from_checkpoint("../../exps/resnet/bnn_10.ckpt").to(device)
     model_100 = Resnet_regime_3.load_from_checkpoint("../../exps/resnet/bnn_100.ckpt").to(device)
     model_500 = Resnet_regime_3.load_from_checkpoint("../../exps/resnet/bnn_500.ckpt").to(device)
-    #model_1000 = Resnet_regime_3.load_from_checkpoint("../../explotation/output/linear_bnn_1000.ckpt")
-    # model_0001 = Resnet_regime_3.load_from_checkpoint("../../explotation/output/linear_bnn_0001.ckpt")
+    model_1000 = Resnet_regime_3.load_from_checkpoint("../../exps/resnet/bnn_1000.ckpt").to(device)
+    model_0001 = Resnet_regime_3.load_from_checkpoint("../../exps/resnetbnn_0001.ckpt").to(device)
 
-    models = [(0.01, model_001),
+    models = [(0.001, model_0001)
+        (0.01, model_001),
          (0.1, model_01),
          (1., model_1),
+         (10., model_10)
          (100, model_100),
-         (500, model_500)]
+         (500, model_500),
+         (1000, model_1000)]
         
     return models, device
 
