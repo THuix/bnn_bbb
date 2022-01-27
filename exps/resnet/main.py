@@ -68,7 +68,7 @@ def compute(model, dataset, device, nb_samples):
     batch_size = 200
     results = torch.empty(len(dataset), nb_samples, batch_size, 10).to(device)
     labels = torch.empty(len(dataset), batch_size)
-    for batch_idx, x, y in enumerate(dataset):
+    for batch_idx, (x, y) in enumerate(dataset):
         x = x.to(device)
         y = y.to(device)
         labels[batch_idx, :] = y
