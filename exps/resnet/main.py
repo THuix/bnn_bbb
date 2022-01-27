@@ -49,7 +49,7 @@ def load_models():
     return models, device
 
 def load_dataset():
-    batch_size = 100
+    batch_size = 200
     num_works= 0
     test_transform = Compose([
                 transforms.ToTensor(),
@@ -112,7 +112,8 @@ if __name__ == '__main__':
     eta_list, acc_list, ece_list, nll_list, p_list = [], [], [], [], []
     eta_list_nn, acc_list_nn, ece_list_nn, nll_list_nn, p_list_nn = [], [], [], [], []
     for eta, model, model_nn in tqdm(models):
-        acc, ece, nll, p = compute(model, val_loader, device, 50)
+        print('[SYSTEM]', eta)
+        acc, ece, nll, p = compute(model, val_loader, device, 10)
         del model
         acc_nn, ece_nn, nll_nn, p_nn = compute(model_nn, val_loader, device, 1)
         del model_nn
