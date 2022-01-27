@@ -39,7 +39,7 @@ def load_models():
     return models, device
 
 def load_dataset():
-    batch_size = 500
+    batch_size = 1000
     num_works= 0
     test_transform = Compose([
                 transforms.ToTensor(),
@@ -50,7 +50,7 @@ def load_dataset():
     return val_loader
 
 
-nb_samples = 10
+nb_samples = 100
 ECE = torchmetrics.CalibrationError(n_bins=15, norm='l1').to('cuda')
 accuracy = torchmetrics.Accuracy().to('cuda')
 criterion = nn.CrossEntropyLoss(reduction='mean')
