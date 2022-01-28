@@ -35,8 +35,8 @@ def load_models():
         (0.01, model_001),
          (0.1, model_01),
          (1., model_1),
-         (10., model_10, nn_10),
-         (100, model_100, nn_100),
+         (10., model_10),
+         (100, model_100),
          (1000, model_1000)]
         
     return models, device, sgd
