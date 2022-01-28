@@ -38,7 +38,6 @@ def load_models():
          (10., model_10),
          (100, model_100),
          (1000, model_1000)]
-        
     return models, device, sgd
 
 def load_dataset():
@@ -72,8 +71,7 @@ if __name__ == '__main__':
     models, device, sgd = load_models()
     results_list, eta_list = [], []
 
-    for idx in range(5):
-        print(idx)
+    for idx in range(3):
         for eta, model in tqdm(models):
             print('[SYSTEM]', eta)
             results, labels = compute(model, val_loader, device, 20)
@@ -82,9 +80,11 @@ if __name__ == '__main__':
             results_list.append((results, labels))
 
         result_nn = compute(sgd, val_loader, device, 1)
+        
         results = {'eta_list': eta_list,
                     'results_list': results_list,
                     'nn': result_nn}
+
         pkl.dump(results, open(f'results_{idx}.pkl', 'wb'))
 
 
