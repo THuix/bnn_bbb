@@ -81,7 +81,7 @@ if __name__ == '__main__':
             eta_list.append(eta)
             results_list.append((results, labels))
 
-        result_nn = compute(model_nn, val_loader, device, 1)
+        result_nn = compute(sgd, val_loader, device, 1)
         results = {'eta_list': eta_list,
                     'results_list': results_list,
                     'nn': result_nn}
