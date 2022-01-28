@@ -24,7 +24,7 @@ def load_models():
     model_01 = Resnet_regime_3.load_from_checkpoint("resnet_01.ckpt").to(device)
     model_001 = Resnet_regime_3.load_from_checkpoint("resnet_001.ckpt").to(device)
     #model_10 = Resnet_regime_3.load_from_checkpoint("../../exps/resnet/bnn_10.ckpt").to(device)
-    #model_100 = Resnet_regime_3.load_from_checkpoint("../../exps/resnet/bnn_100.ckpt").to(device)
+    model_100 = Resnet_regime_3.load_from_checkpoint("resnet_100.ckpt").to(device)
     #model_500 = Resnet_regime_3.load_from_checkpoint("../../exps/resnet/bnn_500.ckpt").to(device)
     model_1000 = Resnet_regime_3.load_from_checkpoint("resnet_1000.ckpt").to(device)
     model_0001 = Resnet_regime_3.load_from_checkpoint("resnet_0001_2.ckpt").to(device)
