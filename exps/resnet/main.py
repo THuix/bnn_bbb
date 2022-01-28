@@ -80,19 +80,20 @@ if __name__ == '__main__':
     models, device = load_models()
     results_list, results_nn_list, eta_list = [], [], []
 
-    for eta, model, model_nn in tqdm(models):
-        print('[SYSTEM]', eta)
-        results, labels = compute(model, val_loader, device, 50)
-        del model
-        results_nn, labels_nn = compute(model_nn, val_loader, device, 1)
-        del model_nn
-        eta_list.append(eta)
-        results_nn_list.append((results_nn, labels_nn))
-        results_list.append((results, labels))
-    results = {'eta_list': eta_list,
-                'results_list': results_list,
-                'results_nn_list': results_nn_list}
-    pkl.dump(results, open('results.pkl', 'wb'))
+    for idx in range(5):
+        for eta, model, model_nn in tqdm(models):
+            print('[SYSTEM]', eta)
+            results, labels = compute(model, val_loader, device, 50)
+            del model
+            results_nn, labels_nn = compute(model_nn, val_loader, device, 1)
+            del model_nn
+            eta_list.append(eta)
+            results_nn_list.append((results_nn, labels_nn))
+            results_list.append((results, labels))
+        results = {'eta_list': eta_list,
+                    'results_list': results_list,
+                    'results_nn_list': results_nn_list}
+        pkl.dump(results, open(f'results_{idx}.pkl', 'wb'))
 
 
     
